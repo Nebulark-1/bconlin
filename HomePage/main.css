@@ -1,0 +1,126 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0a0a0a; /* Dark background for the page */
+    color: #d9d9d9; /* Light grey text color for contrast */
+}
+
+header {
+    background-color: #1a1a1a;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-radius: 10px; /* Rounded corners for the navbar */
+}
+
+#name {
+    margin-left: 20px;
+    font-size: 24px;
+    color: #d9d9d9; /* Light grey color for the name */
+}
+
+#logo img {
+    width: 50px; /* Adjust as needed */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.dropdown {
+    position: relative;
+    margin-right: 20px;
+}
+
+.dropbtn {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px; /* Rounded corners for the More button */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px; /* Add some padding on the sides */
+}
+
+.show {display: block;}
+
+section#home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 15vw;
+    height: 100vh - 30px; /* Adjust height based on your navbar's height */
+}
+
+.image-box {
+    width: 50%; /* Adjust width as needed */
+    flex: 1;
+    padding: 0px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    background-color: #1a1a1a;
+}
+
+.image-box img {
+    max-width: 100%; /* Ensure the image is never larger than the box */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px;
+}
+
+.text-box {
+    flex: 1.5; /* Takes up twice the space of the image box, adjust as needed */
+    padding: 20px; /* Padding inside the text box */
+    border: 2px solid #ccc; /* Border for the text box */
+    border-radius: 10px; /* Rounded corners for the text box */
+    display: flex; /* To align the text content */
+    flex-direction: column; /* Stack content vertically */
+    justify-content: center; /* Center content vertically */
+}
+
+.text-box h1, .text-box p {
+    color: #d9d9d9; /* Adjust text color as needed */
+    margin: 10px 0; /* Space between the title and paragraph */
+    font-size: 1.75vw; /* Adjust font size as needed */
+}
+
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+/* Style additional sections as needed */
