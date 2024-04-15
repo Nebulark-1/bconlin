@@ -103,7 +103,7 @@ function drawWall(x1, y1, x2, y2) {
 function drawMaze() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = '#050505';
+    ctx.fillStyle = '#0B0B0B';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     for (let y = 0; y < rows; y++) {
@@ -139,6 +139,8 @@ window.addEventListener('resize', function() {
     // Redraw the maze
     drawMaze();
 });
+
+
 
 // Home Section Animation
 document.addEventListener('scroll', function() {
