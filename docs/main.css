@@ -1,0 +1,178 @@
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #d9d9d9; /* Light grey text color for contrast */
+    height: 200%;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    z-index: -2;
+}
+
+#name {
+    margin-left: 20px;
+    font-size: 20px;
+    color: #d9d9d9; /* Light grey color for the name */
+}
+
+#logo img {
+    width: 50px; /* Adjust as needed */
+    position: center;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.dropdown {
+    position: relative;
+    margin-right: 20px;
+}
+
+.dropbtn {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px; /* Rounded corners for the More button */
+}
+
+nav {
+    background-color: #1a1a1a;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0 5px 10px; /* Add padding to the top and sides */
+    position: fixed;
+    top: -10px;
+    width: 100%;
+    transition: top 0.5s;
+    border-radius: 10px; /* Rounded corners for the navbar */
+    padding: 10 10px; /* Add some padding on the sides */
+}
+
+.hidden {
+    top: -100%; /* Adjust this value based on the height of your navbar */
+    transition: top 0.3s;
+}
+
+
+.show {display: block;}
+
+section#home {
+    display: flex;
+    position: fixed;
+    z-index: -1;
+    align-items: center;
+    justify-content: center;
+    padding: 7vh 0;
+    margin: 20px 15vw;
+}
+
+.image-box {
+    width: 50%; /* Adjust width as needed */
+    flex: 1;
+    padding: 0px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    background-color: #1a1a1a;
+}
+
+.image-box img {
+    max-width: 100%; /* Ensure the image is never larger than the box */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px;
+}
+
+.text-box {
+    flex: 1.5; /* Takes up twice the space of the image box, adjust as needed */
+    padding: 20px; /* Padding inside the text box */
+    border: 2px solid #ccc; /* Border for the text box */
+    border-radius: 10px; /* Rounded corners for the text box */
+    display: flex; /* To align the text content */
+    flex-direction: column; /* Stack content vertically */
+    justify-content: center; /* Center content vertically */
+    background-color: #1a1a1a; /* Background color for the text box */
+}
+
+.text-box h1, .text-box p {
+    color: #d9d9d9; /* Adjust text color as needed */
+    margin: 10px 0; /* Space between the title and paragraph */
+    font-size: 1.75vw; /* Adjust font size as needed */
+}
+
+.image-box, .text-box {
+    /* Ensure a smooth return to the original state without rotation */
+    transform: translateX(0) scale(1);
+    transition: transform 0.5s ease-in-out, opacity 0.5s;
+}
+
+.image-box.zoom-in, .text-box.zoom-in {
+    /* Start from almost a speck */
+    transform: scale(.01);
+    opacity: 0;
+    transition: transform 0.5s ease-in-out, opacity 0.5s
+}
+
+.image-box.move-left {
+    /* Move left off-screen and rotate counter-clockwise */
+    transform: translateX(-100vw) translateY(20vh) rotate(-60deg) scale(0.5);
+    transition: transform 0.5s ease-in-out;
+}
+
+.text-box.move-right {
+    /* Move right off-screen and rotate clockwise */
+    transform: translateX(100vw) rotate(30deg);
+    transition: transform 0.5s ease-in-out;
+}
+
+
+
+
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+/* Hiding the scrollbar */
+.element::-webkit-scrollbar {
+    display: none;
+}
+.element {
+    scrollbar-width: none; /* For Firefox */
+}
+
+
+/* Style additional sections as needed */
