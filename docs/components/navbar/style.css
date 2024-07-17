@@ -23,7 +23,7 @@ html, body {
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 5px 0; /* Reduced padding */
-  transition: top 0.3s; /* Smooth transition for hiding/showing */
+  transition: top 0.5s ease-in-out; /* Smooth transition for hiding/showing */
 }
 
 .container {
@@ -88,7 +88,40 @@ html, body {
   transform: scale(1.1); /* Slight box grow effect */
 }
 
-/* Responsive Styles */
+/* Side Panel Styles */
+.side-panel {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1001;
+  top: 0;
+  right: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.side-panel a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.side-panel a:hover {
+  color: #f1f1f1;
+}
+
+.side-panel .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 36px;
+}
+
 @media (max-width: 768px) {
   .navbar-toggler {
     display: block;

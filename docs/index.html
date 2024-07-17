@@ -4,28 +4,42 @@
   <meta charset="UTF-8">
   <title>Background with Navbar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="components/background/style.css">
   <link rel="stylesheet" href="components/navbar/style.css">
+  <link rel="stylesheet" href="components/background/style.css">
 </head>
 <body>
   <!-- Navbar placeholder -->
   <div id="navbar"></div>
 
+  <!-- Background placeholder -->
+  <div id="background"></div>
 
-  <script src="components/background/script.js"></script>
   <script>
     // Function to load a component
-    function loadComponent(elementId, url) {
+    function loadComponent(elementId, url, callback) {
       fetch(url)
         .then(response => response.text())
         .then(data => {
           document.getElementById(elementId).innerHTML = data;
+
+          if (callback) {
+            callback();
+          }
         })
         .catch(error => console.error('Error loading the component:', error));
     }
 
+    // Load the background component
+    loadComponent('background', 'components/background/index.html');
+
     // Load the navbar component
-    loadComponent('navbar', 'components/navbar/index.html');
+    loadComponent('navbar', 'components/navbar/index.html', function() {
+      // Dynamically load the script after loading the navbar content
+      const script = document.createElement('script');
+      script.src = 'components/navbar/script.js';
+      script.onload = () => console.log('Navbar script loaded');
+      document.body.appendChild(script);
+    });
   </script>
 </body>
 </html>
