@@ -1,3 +1,4 @@
+/* General Styles */
 body {
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
@@ -6,11 +7,11 @@ body {
   color: #212121;
   overflow-x: hidden;
   transition: all 200ms linear;
-  margin: 0; /* Remove default margin */
+  margin: 0;
 }
 
 html, body {
-  height: 100%; /* Ensure the body and html take full height */
+  height: 100%;
 }
 
 /* Navbar Styles */
@@ -22,8 +23,8 @@ html, body {
   z-index: 1000;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 5px 0; /* Reduced padding */
-  transition: top 0.5s ease-in-out; /* Smooth transition for hiding/showing */
+  padding: 5px 0;
+  transition: top 0.5s ease-in-out;
 }
 
 .container {
@@ -36,19 +37,19 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px; /* Set a fixed height for the navbar */
+  height: 60px;
 }
 
 .navbar-brand {
   display: flex;
-  align-items: center; /* Center the logo vertically */
+  align-items: center;
 }
 
 .navbar-brand .navbar-logo {
-  height: 50px; /* Adjust size to fit the navbar */
+  height: 50px;
   width: 50px;
-  border-radius: 10px; /* Adjust border-radius */
-  object-fit: cover; /* Ensure the image covers the box */
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .navbar-toggler {
@@ -70,22 +71,54 @@ html, body {
 }
 
 .nav-item {
-  margin-left: 10px; /* Decreased margin */
+  margin-left: 10px;
+  position: relative;
 }
 
 .nav-link {
   text-decoration: none;
   color: #212121;
-  font-weight: 700; /* Bold text */
+  font-weight: 700;
   padding: 10px 15px;
   border-radius: 4px;
-  transition: all 500ms linear; /* Half-second transition */
+  transition: all 500ms linear;
 }
 
 .nav-link:hover {
   color: #fff;
   background-color: #8167a9;
-  transform: scale(1.1); /* Slight box grow effect */
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fcfaff;
+  box-shadow: 0 5px 10px 0 rgba(138, 155, 165, 0.15);
+  padding: 10px 0;
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  z-index: 1000;
+}
+
+.nav-item:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 3px 15px;
+  color: #212121;
+  border-radius: 2px;
+  transition: all 200ms linear;
+}
+
+.dropdown-item:hover {
+  color: #fff;
+  background-color: rgba(129,103,169,.6);
 }
 
 /* Side Panel Styles */
