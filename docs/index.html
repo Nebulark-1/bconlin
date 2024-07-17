@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=main.html">
+  <meta charset="UTF-8">
+  <title>Background with Navbar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="components/background/style.css">
+  <link rel="stylesheet" href="components/navbar/style.css">
 </head>
 <body>
-    <p>If you are not redirected automatically, follow this <a href="main.html">link</a>.</p>
+  <!-- Navbar placeholder -->
+  <div id="navbar"></div>
+
+  <script src="components/background/script.js"></script>
+  <script>
+    // Function to load a component
+    function loadComponent(elementId, url) {
+      fetch(url)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById(elementId).innerHTML = data;
+        })
+        .catch(error => console.error('Error loading the component:', error));
+    }
+
+    // Load the navbar component
+    loadComponent('navbar', 'components/navbar/index.html');
+  </script>
 </body>
 </html>
