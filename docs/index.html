@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <title>Background with Navbar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="components/navbar/style.css">
-  <link rel="stylesheet" href="components/background/style.css">
+  <link rel="stylesheet" href="components/navbar/navbar.css">
+  <link rel="stylesheet" href="components/background/background.css">
+  <link rel="stylesheet" href="components/cards/cards.css">
 </head>
 <body>
   <!-- Navbar placeholder -->
@@ -13,6 +14,26 @@
 
   <!-- Background placeholder -->
   <div id="background"></div>
+
+  <!-- Cards placeholder -->
+  <div id="cards" style="height: 100vh; position: relative;">
+    <div class="card" data-width="600" data-height="600" data-top-ratio="0.1" data-left-ratio="0.35">
+      <img src="components/images/pfp.png" alt="Profile Picture" class="profile-pic">
+    </div>
+    <div class="card" data-width="300" data-height="375" data-top-ratio="0.3" data-left-ratio="0.75">
+      <img src="components/images/pfp2.png" alt="Profile Picture" class="profile-pic">
+    </div>
+    <div class="card" data-width="500" data-height="300" data-top-ratio="0.6" data-left-ratio="0.60">
+      <div class="card-title">About Me</div>
+      <div class="card-paragraph">
+          Hi, I'm Ben Conlin, a senior at Michigan Technological University. I'm majoring in computer science and currently serving as Student Body President. 
+          I'm passionate about technology, leadership, and making a positive impact on the world.
+      </div>
+      <div class="card-paragraph">
+        Take a look around, and feel free to contact me if you have any questions!
+      </div>
+    </div>
+  </div>
 
   <script>
     // Function to load a component
@@ -30,16 +51,20 @@
     }
 
     // Load the background component
-    loadComponent('background', 'components/background/index.html');
+    loadComponent('background', 'components/background/background.html');
 
     // Load the navbar component
-    loadComponent('navbar', 'components/navbar/index.html', function() {
+    loadComponent('navbar', 'components/navbar/navbar.html', function() {
       // Dynamically load the script after loading the navbar content
       const script = document.createElement('script');
-      script.src = 'components/navbar/script.js';
+      script.src = 'components/navbar/navbar.js';
       script.onload = () => console.log('Navbar script loaded');
       document.body.appendChild(script);
     });
+
+    // No need to load cards component separately as it is already included in HTML
   </script>
+
+  <script src="components/cards/cards.js"></script>
 </body>
 </html>
