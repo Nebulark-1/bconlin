@@ -1,4 +1,3 @@
-// components/cards/cards.js
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Cards script loaded');
 
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
     card.style.height = `${height}px`;
     card.style.top = `${top}px`;
     card.style.left = `${left}px`;
-    card.style.transform = 'translate(-50%, 0)'; // Center the card horizontally
     console.log(`Positioned card with content: ${card.innerHTML}, top=${top}, left=${left}, width=${width}, height=${height}`);
   }
 
@@ -34,6 +32,24 @@ document.addEventListener('DOMContentLoaded', function() {
     cards.forEach(card => {
       console.log('Processing card:', card);
       positionCard(card);
+      
+      // Add click event listener to make the card fall
+      card.addEventListener('click', function() {
+        card.style.setProperty('--spin-direction', Math.random() > 0.5 ? 1 : -1);
+        card.classList.add('falling');
+      });
+
+      // Add animation end event listener to reset the card
+      card.addEventListener('animationend', function(event) {
+        if (event.animationName === 'fall') {
+          console.log('Fall animation ended, triggering reappear...');
+          card.classList.remove('falling');
+          card.classList.add('reappear');
+        } else if (event.animationName === 'reappear') {
+          console.log('Reappear animation ended, resetting card...');
+          card.classList.remove('reappear');
+        }
+      });
     });
   }
 

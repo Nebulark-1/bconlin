@@ -82,3 +82,46 @@ body {
     display: none;
   }
 }
+
+/* Existing styles... */
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(100vh) rotate(calc(90deg * var(--spin-direction)));
+  }
+}
+
+@keyframes reappear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.falling {
+  animation: fall 2s ease-in forwards;
+  pointer-events: none; /* Disable pointer events to prevent further clicks */
+}
+
+.reappear {
+  animation: reappear 1s ease-in forwards;
+  pointer-events: all; /* Re-enable pointer events after reappearing */
+}
+
+.card {
+  position: absolute;
+  transition: none; /* Disable transitions to avoid interference with animations */
+}
+
+/* Other existing styles... */
+
+
+
+
