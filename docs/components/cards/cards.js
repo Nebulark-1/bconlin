@@ -34,22 +34,24 @@ document.addEventListener('DOMContentLoaded', function() {
       positionCard(card);
       
       // Add click event listener to make the card fall
-      card.addEventListener('click', function() {
-        card.style.setProperty('--spin-direction', Math.random() > 0.5 ? 1 : -1);
-        card.classList.add('falling');
-      });
-
-      // Add animation end event listener to reset the card
-      card.addEventListener('animationend', function(event) {
-        if (event.animationName === 'fall') {
-          console.log('Fall animation ended, triggering reappear...');
-          card.classList.remove('falling');
-          card.classList.add('reappear');
-        } else if (event.animationName === 'reappear') {
-          console.log('Reappear animation ended, resetting card...');
-          card.classList.remove('reappear');
-        }
-      });
+      if (card.id !== 'card6') { // Exclude resume card
+        card.addEventListener('click', function() {
+          card.style.setProperty('--spin-direction', Math.random() > 0.5 ? 1 : -1);
+          card.classList.add('falling');
+        });
+        
+        // Add animation end event listener to reset the card
+        card.addEventListener('animationend', function(event) {
+          if (event.animationName === 'fall') {
+            console.log('Fall animation ended, triggering reappear...');
+            card.classList.remove('falling');
+            card.classList.add('reappear');
+          } else if (event.animationName === 'reappear') {
+            console.log('Reappear animation ended, resetting card...');
+            card.classList.remove('reappear');
+          }
+        });
+      }
     });
   }
 

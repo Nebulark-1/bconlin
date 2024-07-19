@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="components/navbar/navbar.css">
   <link rel="stylesheet" href="components/background/background.css">
   <link rel="stylesheet" href="components/cards/cards.css">
+  <link rel="icon" href="components/images/favicon.ico">
 </head>
 <style>
   body {
@@ -24,7 +25,6 @@
 
   <!-- Cards placeholder -->
   <div id="cards" style="height: 100vh; position: relative;">
-
     <div class="card" data-width="300" data-height="387" data-top-ratio="0.05" data-left-ratio="0.55" id="card1">
       <img src="components/images/pfp3.png" alt="Profile Picture" class="profile-pic">
     </div>
@@ -47,6 +47,14 @@
         Take a look around, and feel free to contact me if you have any questions!
       </div>
     </div>
+    <div class="card" data-width="250" data-height="320" data-top-ratio="0.15" data-left-ratio="0.1" id="card6">
+      <a href="components/resume/resume.html">
+        <img src="components/images/resume.png" alt="Resume" class="clickable">
+      </a>
+    </div>
+    <div class="card" data-width="180" data-height="60" data-top-ratio="0.9" data-left-ratio="0.02" id="card7">
+      <div class="card-title">Click Me!</div>
+    </div>
   </div>
 
   <script>
@@ -64,17 +72,16 @@
         .catch(error => console.error('Error loading the component:', error));
     }
 
-    // Load the background component
-    loadComponent('background', 'components/background/background.html');
-
     // Load the navbar component
     loadComponent('navbar', 'components/navbar/navbar.html', function() {
-      // Dynamically load the script after loading the navbar content
       const script = document.createElement('script');
       script.src = 'components/navbar/navbar.js';
       script.onload = () => console.log('Navbar script loaded');
       document.body.appendChild(script);
     });
+
+    // Load the background component
+    loadComponent('background', 'components/background/background.html');
 
     // No need to load cards component separately as it is already included in HTML
   </script>

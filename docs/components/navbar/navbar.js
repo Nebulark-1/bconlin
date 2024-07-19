@@ -26,3 +26,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Close button clicked, side panel closed');
   });
 });
+
