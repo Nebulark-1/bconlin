@@ -8,10 +8,11 @@
   flex-direction: column;
   align-items: flex-start; /* Align items to the start (left) */
   justify-content: flex-start; /* Justify content to the start (top) */
-  padding: 20px;
+  padding: 1rem;
   box-sizing: border-box; /* Include padding in the height calculation */
   transition: box-shadow 0.3s ease;
   overflow: hidden; /* Ensure content doesn't overflow the card */
+  height: 100vh;
 }
 
 .card:hover {
@@ -106,8 +107,9 @@ body {
 }
 
 .falling {
-  animation: fall 2s ease-in forwards;
+  animation: fall 2s cubic-bezier(0.98, 0.02, 1, 1) forwards;
   pointer-events: none; /* Disable pointer events to prevent further clicks */
+  position: absolute;
 }
 
 .reappear {
