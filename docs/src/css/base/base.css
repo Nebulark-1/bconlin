@@ -1,0 +1,12 @@
+/* src/css/base/base.css */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  html, body {
+    height: 100%;
+  }
+  

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Resume - Ben Conlin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../css/base/base.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/background.css">
+  <link rel="stylesheet" href="../../css/components/resume.css">
+  <link rel="icon" href="../../../assets/icons/favicon.ico">
+  <style>
+    /* Hide content initially */
+    html {
+      visibility: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar placeholder -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- Background placeholder -->
+  <div id="background-placeholder"></div>
+
+  <!-- Resume content -->
+  <div class="resume-container">
+    <div class="resume">
+      <embed src="../../../assets/images/resume.pdf" type="application/pdf" class="full-size-embed" />
+      <a href="../../../assets/images/resume.pdf" download class="download-button">Download Resume</a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = 'visible';
+    });
+  </script>
+  <script src="../../js/modules/loadComponents.js"></script>
+  <noscript>
+    <style>
+      html {
+        visibility: visible;
+      }
+    </style>
+  </noscript>
+</body>
+
+</html>
