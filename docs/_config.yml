@@ -1,0 +1,26 @@
+title: Ben Conlin - Online Resume
+description: A conglomeration of my work, experience, and skills.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "http://bconlin.com" # the base hostname & protocol for your site
+
+# Build settings
+sass:
+  style: compressed
+  sass_dir: _sass
+  css_dir: assets/css
+
+# Plugins (if you need any, list them here)
+# plugins:
+#   - jekyll-sitemap
+#   - jekyll-seo-tag
+
+# Exclusions (to ensure _site is not processed)
+exclude:
+  - _site
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Include any custom configuration settings here
+# (e.g., collections, permalinks, etc.)
