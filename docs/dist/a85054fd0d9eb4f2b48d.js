@@ -1,1 +1,0 @@
-function loadComponent(n,o,t){fetch(o).then((function(n){return n.text()})).then((function(o){document.getElementById(n).innerHTML=o,t&&t()})).catch((function(n){return console.error("Error loading the component:",n)}))}loadComponent("navbar-placeholder","../partials/navbar.html"),loadComponent("background-placeholder","../partials/background.html");

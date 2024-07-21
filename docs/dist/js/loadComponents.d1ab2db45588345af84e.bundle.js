@@ -1,1 +1,0 @@
-(()=>{function n(n,t,e){fetch(t).then((function(n){return n.text()})).then((function(t){document.getElementById(n).innerHTML=t,e&&e()})).catch((function(n){return console.error("Error loading the component:",n)}))}n("navbar-placeholder","../partials/navbar.html"),n("background-placeholder","../partials/background.html")})();
