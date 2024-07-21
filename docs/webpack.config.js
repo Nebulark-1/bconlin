@@ -1,3 +1,9 @@
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = {
   entry: {
     main: './src/js/index.js',
@@ -42,22 +48,22 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/html/index.html',
       filename: 'index.html',
-      chunks: ['main', 'navbar', 'loadComponents', 'cards'] // Include 'navbar'
+      chunks: ['main', 'navbar', 'loadComponents', 'cards'],
     }),
     new HtmlWebpackPlugin({
       template: './src/html/templates/home.html',
       filename: 'templates/home.html',
-      chunks: ['main', 'navbar', 'loadComponents', 'cards'] // Include 'navbar'
+      chunks: ['main', 'navbar', 'loadComponents', 'cards'],
     }),
     new HtmlWebpackPlugin({
       template: './src/html/templates/resume.html',
       filename: 'templates/resume.html',
-      chunks: ['main', 'navbar', 'loadComponents'] // Include 'navbar'
+      chunks: ['main', 'navbar', 'loadComponents'],
     }),
     new HtmlWebpackPlugin({
       template: './src/html/templates/portfolio.html',
       filename: 'templates/portfolio.html',
-      chunks: ['main', 'navbar', 'loadComponents', 'portfolio'] // Include 'navbar'
+      chunks: ['main', 'navbar', 'loadComponents', 'portfolio'],
     }),
     new CopyWebpackPlugin({
       patterns: [
