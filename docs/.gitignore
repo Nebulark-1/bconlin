@@ -59,3 +59,4 @@ Thumbs.db
 
 # Build output directory
 dist/
+temp-deploy/

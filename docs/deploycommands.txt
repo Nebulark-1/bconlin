@@ -1,4 +1,4 @@
-cd C:\Users\Joshua Conlin\Documents\GitHub\bconlin
+cd C:\Users\Joshua Conlin\Documents\GitHub\bconlin\docs
 npm run build
 mkdir temp-deploy
 xcopy dist temp-deploy /E /I
