@@ -8,3 +8,5 @@ rmdir /S /Q temp-deploy
 git add .
 git commit -m "Deploy latest build"
 git push origin gh-pages
+git checkout main
+rmdir /S /Q assets css js partials templates dist
