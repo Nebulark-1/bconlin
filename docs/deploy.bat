@@ -6,9 +6,6 @@ if errorlevel 1 exit /b 1
 REM Navigate to the project directory
 cd /d %~dp0
 
-REM Build the project
-npm run build
-
 REM Create a new directory to temporarily hold the build output
 mkdir temp-deploy
 xcopy dist temp-deploy /E /I
