@@ -20,9 +20,6 @@ coverage/
 # Bower dependency directory (https://bower.io/)
 bower_components/
 
-# Compiled directory
-dist/
-
 # Dependency directories
 jspm_packages/
 
