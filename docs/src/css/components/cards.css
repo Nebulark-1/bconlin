@@ -29,7 +29,7 @@
 }
 
 .card-title {
-  font-size: 2rem;
+  font-size: 2rem; /* Base font size */
   font-weight: bold;
   color: #8167a9;
   margin-bottom: 15px;
@@ -37,7 +37,7 @@
 }
 
 .card-paragraph {
-  font-size: 1rem;
+  font-size: 1rem; /* Base font size */
   font-weight: 550;
   color: #333;
   text-align: left;
@@ -55,26 +55,81 @@
 }
 
 .card p {
-  font-size: 1rem;
+  font-size: 1rem; /* Base font size */
   color: #333;
   text-align: center;
 }
 
-@media (max-width: 1450px) {
-  #card1 {
-    display: none;
+/* Responsive font sizes */
+@media (max-width: 1200px) {
+  .card-title {
+    font-size: 1.75rem; /* Scale down */
   }
-}
-
-@media (max-width: 800px) {
-  #card3 {
-    display: none;
+  .card-paragraph,
+  .card p {
+    font-size: 0.9rem; /* Scale down */
+  }
+  .signature {
+    font-size: 1rem; /* Scale down */
   }
 }
 
 @media (max-width: 900px) {
+  .card-title {
+    font-size: 1.5rem; /* Further scale down */
+  }
+  .card-paragraph,
+  .card p {
+    font-size: 0.8rem; /* Further scale down */
+  }
+  .signature {
+    font-size: 0.9rem; /* Further scale down */
+  }
+}
+
+@media (max-width: 600px) {
+  .card-title {
+    font-size: 1.25rem; /* Further scale down */
+  }
+  .card-paragraph,
+  .card p {
+    font-size: 0.7rem; /* Further scale down */
+  }
+  .signature {
+    font-size: 0.8rem; /* Further scale down */
+  }
+}
+
+@media (max-width: 720px) {
+  .card {
+    position: absolute;
+    margin: 0 auto; /* Ensure cards are centered horizontally */
+    top: auto; /* Reset top positioning */
+  }
+
+  #card1,
+  #card3,
   #card5 {
     display: none;
+  }
+
+  #card2 {
+    width: 90vw;
+    left: 5vw; /* Start from 10vw */
+    top: 5vh; /* 5vh from the navbar */
+  }
+
+  #card6 {
+    width: 30vw;
+    left: 80vw; /* Start from 55vw */
+    top: 3vh; /* 20vh from the navbar */
+    padding: 0.1rem; /* Smaller padding */
+  }
+
+  #card4 {
+    width: 90vw;
+    left: 50vw; /* Start from 5vw */
+    top: 100vh; /* 50vh from the navbar */
   }
 }
 

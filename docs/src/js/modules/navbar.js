@@ -1,3 +1,5 @@
+// src/js/modules/navbar.js
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM fully loaded and parsed');
   
@@ -12,11 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   console.log('Adding click event listener to toggler');
   toggler.addEventListener('click', function() {
-    if (sidePanel.style.width === '250px') {
-      sidePanel.style.width = '0';
-    } else {
-      sidePanel.style.width = '250px';
-    }
+    sidePanel.style.width = sidePanel.style.width === '250px' ? '0' : '250px';
     console.log('Toggler clicked, side panel toggled');
   });
 
@@ -26,4 +24,3 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Close button clicked, side panel closed');
   });
 });
-

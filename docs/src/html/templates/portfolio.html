@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio - Ben Conlin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../css/base/base.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/background.css">
+  <link rel="stylesheet" href="../../css/components/cards.css">
+  <link rel="stylesheet" href="../../css/components/portfolio.css">
+  <link rel="icon" href="../../../assets/icons/favicon.ico">
+  <style>
+    /* Hide content initially */
+    html {
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar placeholder -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- Background placeholder -->
+  <div id="background-placeholder"></div>
+
+  <!-- Portfolio Section -->
+  <div id="portfolio" class="portfolio-container">
+    <!-- Sort Options -->
+    <div class="sort-options">
+      <button onclick="sortPortfolio('date')">Sort by Date</button>
+      <button onclick="sortPortfolio('technicalDifficulty')">Sort by Technical Difficulty</button>
+      <button onclick="sortPortfolio('scale')">Sort by Scale</button>
+    </div>
+
+    <!-- Cards Placeholder -->
+    <div id="cards" class="cards-grid">
+      <!-- Card 1 -->
+      <a href="project1.html" class="card" data-width="400" data-height="600" data-top-ratio="0.05" data-left-ratio="0.3" data-date="2023-05-20" data-technical-difficulty="3" data-scale="5">
+        <img src="../../../assets/images/pfp.png" alt="Project Image 1" class="project-img">
+        <div class="card-content">
+          <div class="card-title">Project Title 1</div>
+          <div class="card-date">Date: May 20, 2023</div>
+          <div class="card-technical-difficulty">Technical Difficulty: 3/5</div>
+          <div class="card-scale">Scale: 5/10</div>
+          <div class="card-description">Short description of the project.</div>
+        </div>
+      </a>
+      <!-- Card 2 -->
+      <a href="project2.html" class="card" data-width="400" data-height="600" data-top-ratio="0.05" data-left-ratio="0.5" data-date="2022-11-15" data-technical-difficulty="4" data-scale="7">
+        <img src="../../../assets/images/pfp.png" alt="Project Image 2" class="project-img">
+        <div class="card-content">
+          <div class="card-title">Project Title 2</div>
+          <div class="card-date">Date: November 15, 2022</div>
+          <div class="card-technical-difficulty">Technical Difficulty: 4/5</div>
+          <div class="card-scale">Scale: 7/10</div>
+          <div class="card-description">Short description of the project.</div>
+        </div>
+      </a>
+      <!-- Card 3 -->
+      <a href="project3.html" class="card" data-width="400" data-height="600" data-top-ratio="0.05" data-left-ratio="0.7" data-date="2021-08-10" data-technical-difficulty="2" data-scale="4">
+        <img src="../../../assets/images/pfp.png" alt="Project Image 3" class="project-img">
+        <div class="card-content">
+          <div class="card-title">Project Title 3</div>
+          <div class="card-date">Date: August 10, 2021</div>
+          <div class="card-technical-difficulty">Technical Difficulty: 2/5</div>
+          <div class="card-scale">Scale: 4/10</div>
+          <div class="card-description">Short description of the project.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <script src="../../js/modules/loadComponents.js"></script>
+  <script src="../../js/modules/portfolio.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = 'visible';
+      loadComponents();
+      updateCards();
+    });
+
+    function updateCards() {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        const width = card.getAttribute('data-width');
+        const height = card.getAttribute('data-height');
+        const topRatio = card.getAttribute('data-top-ratio');
+        const leftRatio = card.getAttribute('data-left-ratio');
+
+        card.style.width = `${width}px`;
+        card.style.height = `${height}px`;
+        card.style.position = 'absolute';
+        card.style.top = `calc(${topRatio} * 100vh + 60px)`;  // Adding buffer from navbar
+        card.style.left = `calc(${leftRatio} * 100vw)`;
+      });
+    }
+  </script>
+  <noscript>
+    <style>
+      html {
+        visibility: visible;
+      }
+    </style>
+  </noscript>
+</body>
+</html>

@@ -42,3 +42,24 @@
 .download-button:hover {
   background-color: #674f8c;
 }
+
+/* Responsive adjustments */
+@media (max-width: 720px) {
+  .resume-container {
+    padding: 20px;
+    margin-top: 10px;
+  }
+
+  .resume {
+    padding: 15px;
+  }
+
+  .full-size-embed {
+    height: calc(100vh - 220px);
+  }
+
+  .download-button {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+}
