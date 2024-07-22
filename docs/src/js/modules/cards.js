@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Updating cards...');
     const cardsContainer = document.getElementById('cards');
     if (!cardsContainer) {
-      console.error('Cards container not found');
       return;
     }
 

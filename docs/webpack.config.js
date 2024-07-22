@@ -48,7 +48,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/html/index.html',
       filename: 'index.html',
-      chunks: ['main', 'navbar', 'loadComponents', 'cards'],
     }),
     new HtmlWebpackPlugin({
       template: './src/html/templates/home.html',
