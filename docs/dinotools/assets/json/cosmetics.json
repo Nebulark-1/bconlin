@@ -16,5 +16,23 @@
         "image": "demon_horns.png",
         "category": "head",
         "position": {"x": 31, "y": 12, "width": 38, "height": 25}
+    },
+    {
+        "name": "Bat Wings",
+        "image": "bat_wings.png",
+        "category": "body",
+        "position": {"x": 0, "y": -2, "width": 100, "height": 100}
+    },
+    {
+        "name": "Dragon",
+        "image": "dragon.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    },
+    {
+        "name": "Glider",
+        "image": "glider.png",
+        "category": "legs",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
     }
 ]

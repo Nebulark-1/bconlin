@@ -250,7 +250,7 @@ input[type="checkbox"]:checked + .color-square {
 /* Add styles for the cosmetics section */
 .cosmetics-options {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Adjust as needed */
+    grid-template-columns: repeat(5, 1fr); /* Adjust as needed */
     gap: 1vw;
 }
 
