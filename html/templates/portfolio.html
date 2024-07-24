@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio - Ben Conlin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../../../assets/icons/favicon.ico">
+  <style>
+    /* Hide content initially */
+    html {
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar placeholder -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- Background placeholder -->
+  <div id="background-placeholder"></div>
+
+  <!-- Portfolio Section -->
+  <div id="portfolio" class="portfolio-container">
+    <!-- Sort Options -->
+    <div class="sort-options">
+      <button onclick="sortPortfolio('date')">Sort by Date</button>
+      <button onclick="sortPortfolio('technicalDifficulty')">Sort by Technical Difficulty</button>
+      <button onclick="sortPortfolio('scale')">Sort by Scale</button>
+      <button onclick="sortPortfolio('title')">Sort by Name</button>
+    </div>
+
+    <!-- Cards Placeholder -->
+    <div id="cards" class="cards-grid">
+      <!-- Example Card -->
+      <a href="project1.html" class="card" data-date="2023-05-20" data-technical-difficulty="3" data-scale="5" data-title="Project Title 1">
+        <img src="../../../assets/images/pfp.png" alt="Project Image 1" class="project-img">
+        <div class="card-content">
+          <div class="card-title">Project Title 1</div>
+          <div class="card-date">Date: May 20, 2023</div>
+          <div class="card-technical-difficulty">Technical Difficulty: 3/5</div>
+          <div class="card-scale">Scale: 5/10</div>
+          <div class="card-description">Short description of the project.</div>
+        </div>
+      </a>
+      <!-- Add more cards as needed -->
+    </div>
+  </div>
+
+  <script src="../../js/modules/loadComponents.js"></script>
+  <script src="../../js/modules/portfolio.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = 'visible';
+      loadComponents();
+      updateCards();
+    });
+
+    function updateCards() {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.style.width = '60vw';
+        card.style.margin = '20px auto';
+      });
+    }
+  </script>
+  <noscript>
+    <style>
+      html {
+        visibility: visible;
+      }
+    </style>
+  </noscript>
+</body>
+</html>
