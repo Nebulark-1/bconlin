@@ -17,6 +17,19 @@ body {
     width: 100%; /* Ensures the navbar container spans the full width */
 }
 
+footer {
+    background-color: #556B2F; /* Dark olive green */
+    color: white;
+    text-align: center;
+    padding: 1vh;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 1000;
+    font-size: 1.5vh; /* Responsive font size */
+    height: 4vh; /* Responsive height */
+}
+
 .main-content {
     width: 100%;
     max-width: 90vw; /* Responsive width */
@@ -111,7 +124,7 @@ body {
     flex: 1;
     overflow-y: auto; /* Makes the right column scrollable */
     padding: 2vw;
-    height: 78vh; /* Ensures the right column takes full height */
+    height: 75vh; /* Ensures the right column takes full height */
     background-color: #A0522D; /* Sienna background color */
     border: 0.3vw solid #8B4513; /* Responsive border */
     border-radius: 1.5vw; /* Responsive border-radius */
