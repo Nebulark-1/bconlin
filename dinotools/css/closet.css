@@ -1,0 +1,322 @@
+body {
+    font-family: 'Lato', sans-serif; /* Gives a more prehistoric feel */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #E0E0E0; /* Light grey background */
+    overflow: hidden; /* Prevents body scroll */
+    background-image: url('../assets/images/prehistoric_background.jpg'); /* Optional background image */
+    background-size: cover;
+    padding-top: 10vh; /* Adjust for navbar height */
+}
+
+#navbar-container {
+    width: 100%; /* Ensures the navbar container spans the full width */
+}
+
+.main-content {
+    width: 100%;
+    max-width: 90vw; /* Responsive width */
+    height: 80vh; /* Adjusted to 80vh */
+    gap: 2vw; /* Responsive gap */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 2vw; /* Responsive gap */
+}
+
+#left-column {
+    width: 18vw; /* Responsive width */
+    padding: 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0.3vw solid #8B4513; /* Responsive border */
+    position: sticky;
+    top: 10vh; /* Adjust for navbar height */
+    height: 82vh; /* Adjust for navbar height */
+    background-color: #A0522D; /* Sienna background color */
+    border-radius: 1.5vw; /* Responsive border-radius */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+#canvas-container {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* Aspect ratio padding */
+    border: 0; /* Remove border */
+    border-radius: 1.5vw; /* Responsive border-radius */
+    background-color: #D2B48C; /* Tan background color */
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2); /* Responsive shadow */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+#default-image, #body-canvas, #belly-canvas, #pattern-canvas {
+    position: absolute;
+    justify-content: center;
+    top: 15% !important;
+    left: 15% !important;
+    border-radius: 1.5vw; /* Responsive border-radius */
+    width: 70%;
+    height: 70%
+}
+
+#cosmetic-canvas {
+    z-index: 1; /* Ensure cosmetics are on top */
+    position: absolute;
+    justify-content: center;
+    border-radius: 1.5vw; /* Responsive border-radius */
+    width: 100%;
+    height: 100%;
+    padding: 0vw;
+}
+
+#tabs {
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tab-button {
+    margin: 1vh 0;
+    width: 14vw;
+    padding: 1vh 2vw;
+    cursor: pointer;
+    background-color: #556B2F; /* Dark olive green */
+    color: white;
+    border: none;
+    border-radius: 2vw; /* Responsive border-radius */
+    font-family: 'Lato', sans-serif;
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2); /* Responsive shadow */
+    transition: background-color 0.3s ease;
+    font-size: 1.5vw; /* Responsive font size */
+}
+
+.tab-button:hover {
+    background-color: #6B8E23; /* Lighter green on hover */
+}
+
+#right-column {
+    flex: 1;
+    overflow-y: auto; /* Makes the right column scrollable */
+    padding: 2vw;
+    height: 78vh; /* Ensures the right column takes full height */
+    background-color: #A0522D; /* Sienna background color */
+    border: 0.3vw solid #8B4513; /* Responsive border */
+    border-radius: 1.5vw; /* Responsive border-radius */
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+#sort-bar,
+#body-sort-bar,
+#belly-sort-bar, #pattern-sort-bar {
+    margin-bottom: 2vh;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    color: white;
+}
+
+select {
+    background-color: #556B2F; /* Dark olive green background */
+    color: white;
+    border: none;
+    border-radius: 1vw; /* Responsive border-radius */
+    padding: 0.5vh;
+    font-family: 'Copperplate', sans-serif;
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2); /* Responsive shadow */
+    font-size: 1.2vw; /* Responsive font size */
+}
+
+.color-options,
+.pattern-options,
+.cosmetics-options {
+    display: grid;
+    grid-template-columns: 1fr; /* Default to one column */
+    gap: 1vh;
+    width: 100%; /* Ensures the color options take full width */
+}
+
+@media (min-width: 60vw) {
+    .color-options {
+        grid-template-columns: 1fr 1fr 1fr; /* Three columns on larger screens */
+    }
+
+    .pattern-options, .cosmetics-options {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* Two columns on larger screens */
+    }
+}
+
+label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1vh 0; /* Adjusted margin for better spacing */
+    color: white;
+    text-align: center;
+    background-color: #A0522D; /* Sienna background color */
+    border: 0.2vw solid #8B4513; /* Responsive border */
+    border-radius: 1vw; /* Responsive border-radius */
+    padding: 1vh;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2); /* Responsive shadow */
+    font-size: 1.2vw; /* Responsive font size */
+}
+
+label:hover {
+    background-color: #6B8E23; /* Lighter green on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
+}
+
+.color-square {
+    width: 2vw; /* Responsive size */
+    height: 2vw; /* Responsive size */
+    margin-right: 1vw;
+    border: 0.1vw solid #8B4513; /* Responsive border */
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    display: none; /* Hide the actual radio and checkbox inputs */
+}
+
+input[type="radio"]:checked + .color-square,
+input[type="checkbox"]:checked + .color-square {
+    border: 0.2vw solid white; /* Change border color when selected */
+}
+
+.pattern-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 7.2vw; /* Responsive size */
+    height: 12.2vw; /* Responsive size */
+    border: 0.2vw solid #8B4513; /* Responsive border */
+    border-radius: 1vw; /* Responsive border-radius */
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    background-color: #A0522D; /* Tan background color */
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2); /* Responsive shadow */
+    padding: 1vh;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.pattern-label:hover {
+    background-color: #6B8E23; /* Lighter green on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
+}
+
+.pattern-image {
+    width: 5.2vw; /* Responsive size */
+    height: 4.2vw; /* Responsive size */
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 0.5vh;
+    border: 0.1vw solid #8B4513; /* Responsive border */
+    background-color: #D2B48C; /* Tan background color */
+}
+
+/* Add styles for the cosmetics section */
+.cosmetics-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Adjust as needed */
+    gap: 1vw;
+}
+
+.cosmetics-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 7.2vw; /* Responsive size */
+    height: 12.2vw; /* Responsive size */
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    border: 0.2vw solid #8B4513; /* Responsive border */
+    border-radius: 1vw; /* Responsive border-radius */
+    background-color: #A0522D; /* Tan background color */
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2); /* Responsive shadow */
+    padding: 1vh;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cosmetics-image {
+    width: 5.2vw; /* Responsive size */
+    height: 4.2vw; /* Responsive size */
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 0.5vh;
+    border: 0.1vw solid #8B4513; /* Responsive border */
+    background-color: #D2B48C; /* Tan background color */
+}
+
+@media (max-width: 720px) {
+    #left-column {
+        width: 40vw; /* Make the left column wider */
+    }
+
+    #right-column {
+        width: 30vw; /* Make the right column narrower */
+    }
+
+    #canvas-container {
+        max-width: 30vw; /* Make the canvas container wider */
+    }
+
+    .color-options {
+        grid-template-columns: 1fr; /* Single column on smaller screens */
+        gap: 0; /* Remove gap between boxes */
+    }
+
+    .pattern-options, .cosmetics-options {
+        grid-template-columns: 1fr 1fr; /* Two columns on smaller screens */
+        gap: 0;
+    }
+
+    .tab-button {
+        width: 30vw; /* Make the tab buttons wider */
+        margin: 1vh;
+        font-size: 3vw;
+    }
+
+    label {
+        margin: 1vh; /* Remove margin between elements */
+        font-size: 3vw; /* Adjust font size for readability */
+    }
+
+    select {
+        font-size: 3vw; /* Adjust font size for readability */
+    }
+
+    .color-square {
+        width: 4vw; /* Adjust size for readability */
+        height: 4vw; /* Adjust size for readability */
+    }
+
+    .pattern-label {
+        width: 14.4vw; /* Adjust size for readability */
+        height: 24.4vw; /* Adjust size for readability */
+        margin: 0vh;
+    }
+
+    .pattern-image {
+        width: 10.4vw; /* Adjust size for readability */
+        height: 8.4vw; /* Adjust size for readability */
+    }
+}

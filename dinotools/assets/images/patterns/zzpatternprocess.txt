@@ -1,0 +1,10 @@
+Save image as x.png
+posterize on photopea
+crop on photopea
+open on pixilart
+import template
+check lineup
+merge down
+fill bucket clear
+save to patterns as x.png
+

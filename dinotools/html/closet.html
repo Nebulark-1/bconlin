@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Froggy's Dino Tools</title>
+    <link rel="stylesheet" href="../css/closet.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png"> <!-- Add this line -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="navbar-container"></div> <!-- Placeholder for navbar -->
+    <div class="main-content">
+        <div class="container">
+            <div id="left-column">
+                <div id="canvas-container">
+                    <img id="default-image" src="../assets/images/default.png" alt="Default">
+                    <canvas id="body-canvas" width="160" height="160"></canvas>
+                    <canvas id="belly-canvas" width="160" height="160" style="position: absolute; top: 0; left: 0;"></canvas>
+                    <canvas id="pattern-canvas" width="160" height="160" style="position: absolute; top: 0; left: 0;"></canvas>
+                </div>
+                <div id="tabs">
+                    <button class="tab-button" data-target="body-color">Body Color</button>
+                    <button class="tab-button" data-target="belly-color">Belly Color</button>
+                    <button class="tab-button" data-target="pattern">Pattern</button>
+                    <button class="tab-button" data-target="pattern-color">Pattern Color</button>
+                    <button class="tab-button" data-target="cosmetics">Cosmetics</button>
+                </div>
+            </div>
+            <div id="right-column">
+                <div id="body-color" class="tab-content">
+                    <h2>Select a Body Color:</h2>
+                    <div id="body-sort-bar">
+                        <label for="body-sort-options">Sort by:</label>
+                        <select id="body-sort-options">
+                            <option value="default">Default</option>
+                            <option value="name">Name</option>
+                            <option value="hex">Hex Color</option>
+                        </select>
+                    </div>
+                    <div id="body-color-options" class="color-options"></div>
+                </div>
+                <div id="belly-color" class="tab-content">
+                    <h2>Select a Belly Color:</h2>
+                    <div id="belly-sort-bar">
+                        <label for="belly-sort-options">Sort by:</label>
+                        <select id="belly-sort-options">
+                            <option value="default">Default</option>
+                            <option value="name">Name</option>
+                            <option value="hex">Hex Color</option>
+                        </select>
+                    </div>
+                    <div id="belly-color-options" class="color-options"></div>
+                </div>
+                <div id="pattern-color" class="tab-content">
+                    <h2>Select a Pattern Color:</h2>
+                    <div id="pattern-sort-bar">
+                        <label for="pattern-sort-options">Sort by:</label>
+                        <select id="pattern-sort-options">
+                            <option value="default">Default</option>
+                            <option value="name">Name</option>
+                            <option value="hex">Hex Color</option>
+                        </select>
+                    </div>
+                    <div id="pattern-color-options" class="color-options"></div>
+                </div>            
+                <div id="pattern" class="tab-content">
+                    <h2>Select a Pattern:</h2>
+                    <div id="pattern-options" class="pattern-options"></div>
+                </div>
+                <div id="cosmetics" class="tab-content">
+                    <h2>Select Cosmetics:</h2>
+                    <div id="cosmetics-options" class="cosmetics-options"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+    </footer>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/closet.js"></script>
+    <script>
+        // JavaScript to load the navbar
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-container').innerHTML = data;
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+/* navbar.css */
+.navbar {
+    display: flex;
+    align-items: center;
+    background-color: #556B2F; /* Dark olive green */
+    padding: 1vh;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 6vh; /* Responsive height */
+}
+
+.logo {
+    width: 7vh; /* Responsive size */
+    height: 7vh; /* Responsive size */
+    margin-right: 1vh;
+    margin-left: 10vw;
+}
+
+.navbar-title {
+    font-family: 'Abril Fatface', sans-serif;
+    font-size: 3vh; /* Responsive font size */
+    color: white;
+}
+
+/* Footer styling */
+footer {
+    background-color: #556B2F; /* Dark olive green */
+    color: white;
+    text-align: center;
+    padding: 1vh;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 1000;
+    font-size: 1.5vh; /* Responsive font size */
+    height: 4vh; /* Responsive height */
+}
