@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
             "category": "body",
             "position": {"x": 36, "y": 32, "width": 30, "height": 30}
         },
-
     ]; // Default to show the crown
     let bodyColor = '#69944f'; // Olive
     let bellyColor = '#d3fe09'; // Lime
