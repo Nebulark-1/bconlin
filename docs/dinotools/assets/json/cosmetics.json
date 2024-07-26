@@ -12,6 +12,48 @@
         "position": {"x": 36, "y": 32, "width": 30, "height": 30}
     },
     {
+        "name": "Spikes",
+        "image": "spikes.png",
+        "category": "head",
+        "position": {"x": 3, "y": 6, "width": 93, "height": 93}
+    },   
+    {
+        "name": "Fire",
+        "image": "fire.png",
+        "category": "body",
+        "position": {"x": 5, "y": 0, "width": 100, "height": 100}
+    }, 
+    {
+        "name": "Angel Wings",
+        "image": "angel_wings.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    }, 
+    {
+        "name": "Halo",
+        "image": "halo.png",
+        "category": "head",
+        "position": {"x": 2, "y": 2, "width": 100, "height": 100}
+    },    
+    {
+        "name": "Bunny Ears",
+        "image": "bunny_ears.png",
+        "category": "head",
+        "position": {"x": 0, "y": -3, "width": 100, "height": 100}
+    }, 
+    {
+        "name": "Ribbon",
+        "image": "ribbon.png",
+        "category": "legs",
+        "position": {"x": 2, "y": -5, "width": 100, "height": 100}
+    },  
+    {
+        "name": "Royal Crown",
+        "image": "royal_crown.png",
+        "category": "head",
+        "position": {"x": -2, "y": -1, "width": 100, "height": 100}
+    }, 
+    {
         "name": "Dragon",
         "image": "dragon.png",
         "category": "body",
