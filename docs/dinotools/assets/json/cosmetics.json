@@ -12,10 +12,22 @@
         "position": {"x": 36, "y": 32, "width": 30, "height": 30}
     },
     {
+        "name": "Dragon",
+        "image": "dragon.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    },
+    {
         "name": "Demon Horns",
         "image": "demon_horns.png",
         "category": "head",
         "position": {"x": 31, "y": 12, "width": 38, "height": 25}
+    },
+    {
+        "name": "Headdress",
+        "image": "headdress.png",
+        "category": "head",
+        "position": {"x": 0.5, "y": -4.5, "width": 100, "height": 100}
     },
     {
         "name": "Bat Wings",
@@ -24,33 +36,51 @@
         "position": {"x": 0, "y": -2, "width": 100, "height": 100}
     },
     {
-        "name": "Dragon",
-        "image": "dragon.png",
-        "category": "body",
+        "name": "Glider",
+        "image": "glider.png",
+        "category": "legs",
         "position": {"x": 0, "y": 0, "width": 100, "height": 100}
     },
+    {
+        "name": "Lady Dragon",
+        "image": "lady_dragon.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    }, 
+    {
+        "name": "Pink Demon Horns",
+        "image": "pink_demon_horns.png",
+        "category": "head",
+        "position": {"x": -0.5, "y": 4.5, "width": 100, "height": 100}
+    }, 
+    {
+        "name": "White Bat Wings",
+        "image": "white_bat_wings.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    }, 
+    {
+        "name": "White Glider",
+        "image": "white_glider.png",
+        "category": "legs",
+        "position": {"x": 0, "y": 0, "width": 95, "height": 95}
+    },      
     {
         "name": "Regal Wings",
         "image": "regal_wings.png",
         "category": "body",
         "position": {"x": 0, "y": 0, "width": 100, "height": 100}
-    },
-    {
-        "name": "Regal Shin Pads",
-        "image": "regal_shin_pads.png",
-        "category": "legs",
-        "position": {"x": 3, "y": -3, "width": 95, "height": 95}
     }, 
     {
         "name": "Regal Helmet",
         "image": "regal_helmet.png",
         "category": "head",
         "position": {"x": 3, "y": 8, "width": 95, "height": 95}
-    }, 
+    },
     {
-        "name": "Glider",
-        "image": "glider.png",
+        "name": "Regal Shin Pads",
+        "image": "regal_shin_pads.png",
         "category": "legs",
-        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+        "position": {"x": 3, "y": -3, "width": 95, "height": 95}
     }
 ]
