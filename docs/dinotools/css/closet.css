@@ -322,14 +322,14 @@ input[type="checkbox"]:checked + .color-square {
         height: 4vw; /* Adjust size for readability */
     }
 
-    .pattern-label {
+    .pattern-label, .cosmetics-label {
         width: 14.4vw; /* Adjust size for readability */
         height: 24.4vw; /* Adjust size for readability */
         margin: 0vh;
     }
 
-    .pattern-image {
-        width: 10.4vw; /* Adjust size for readability */
-        height: 8.4vw; /* Adjust size for readability */
+    .pattern-image, .cosmetics-image {
+        width: 15.4vw; /* Adjust size for readability */
+        height: 12.4vw; /* Adjust size for readability */
     }
 }
