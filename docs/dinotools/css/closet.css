@@ -49,8 +49,10 @@ footer {
 
 #left-column {
     width: 18vw; /* Responsive width */
-    padding: 2vw;
-    display: flex;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    padding-top: 2vh;
+    padding-top: 2vh;    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -65,8 +67,8 @@ footer {
 
 #canvas-container {
     position: relative;
-    width: 100%;
-    padding-top: 100%; /* Aspect ratio padding */
+    width: 15vw;
+    padding-top: 12vw; /* Aspect ratio padding */
     border: 0; /* Remove border */
     border-radius: 1.5vw; /* Responsive border-radius */
     background-color: #D2B48C; /* Tan background color */
@@ -123,8 +125,11 @@ footer {
 #right-column {
     flex: 1;
     overflow-y: auto; /* Makes the right column scrollable */
-    padding: 2vw;
-    height: 75vh; /* Ensures the right column takes full height */
+    padding-left: 2vw;
+    padding-right: 2vw;
+    padding-top: 2vh;
+    padding-top: 2vh;
+    height: 96.5%; /* Ensures the right column takes full height */
     background-color: #A0522D; /* Sienna background color */
     border: 0.3vw solid #8B4513; /* Responsive border */
     border-radius: 1.5vw; /* Responsive border-radius */
