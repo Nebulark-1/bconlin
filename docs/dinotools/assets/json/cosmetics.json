@@ -242,7 +242,7 @@
     {
         "name": "Feather Band",
         "image": "feather_band.png",
-        "category": "leg",
+        "category": "legs",
         "position": {"x": 0, "y": 1, "width": 97, "height": 97}
     },
     {
