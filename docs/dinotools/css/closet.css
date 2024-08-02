@@ -57,7 +57,7 @@ footer {
     border: 0.3vw solid #8B4513; /* Responsive border */
     position: sticky;
     top: 10vh; /* Adjust for navbar height */
-    height: 82vh; /* Adjust for navbar height */
+    height: 100%; /* Adjust for navbar height */
     background-color: #A0522D; /* Sienna background color */
     border-radius: 1.5vw; /* Responsive border-radius */
     box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */

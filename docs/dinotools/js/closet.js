@@ -30,16 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedPatternColor = '#9e5722'; // Brown
     let selectedCosmetics = [
         {
-            "name": "Gold Crown",
-            "image": "gold_crown.png",
-            "category": "head",
-            "position": {"x": 38, "y": 2, "width": 30, "height": 30}
-        },    
-        {
-            "name": "Royal Cloak",
-            "image": "royal_cloak.png",
-            "category": "body",
-            "position": {"x": 36, "y": 32, "width": 30, "height": 30}
+            "name": "Leg Fin",
+            "image": "leg_fin.png",
+            "category": "legs",
+            "position": {"x": 2, "y": 0, "width": 100, "height": 100}
         },
 
     ]; // Default to show the crown

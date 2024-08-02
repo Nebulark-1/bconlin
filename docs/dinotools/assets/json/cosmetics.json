@@ -1,5 +1,47 @@
 [
     {
+        "name": "Leaf Tail",
+        "image": "leaf_tail.png",
+        "category": "body",
+        "position": {"x": 1, "y": 2, "width": 100, "height": 100}
+    },
+    {
+        "name": "Heart Stamp",
+        "image": "heart_stamp.png",
+        "category": "legs",
+        "position": {"x": 1, "y": -3, "width": 100, "height": 100}
+    },
+    {
+        "name": "Anklet",
+        "image": "anklet.png",
+        "category": "legs",
+        "position": {"x": 2, "y": -5, "width": 100, "height": 100}
+    },
+    {
+        "name": "Choker",
+        "image": "choker.png",
+        "category": "body",
+        "position": {"x": 6, "y": 6, "width": 90, "height": 90}
+    },
+    {
+        "name": "Leg Fin",
+        "image": "leg_fin.png",
+        "category": "legs",
+        "position": {"x": 2, "y": 0, "width": 100, "height": 100}
+    },
+    {
+        "name": "Face Paint",
+        "image": "face_paint.png",
+        "category": "body",
+        "position": {"x": 0, "y": 6, "width": 100, "height": 100}
+    },
+    {
+        "name": "Butt Fur",
+        "image": "butt_fur.png",
+        "category": "legs",
+        "position": {"x": 3, "y": -3, "width": 100, "height": 100}
+    },
+    {
         "name": "Antennae",
         "image": "antennae.png",
         "category": "head",
@@ -12,17 +54,113 @@
         "position": {"x": 38, "y": 2, "width": 30, "height": 30}
     },    
     {
+        "name": "Cotton Tail",
+        "image": "cotton_tail.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    },
+    {
+        "name": "Shackle",
+        "image": "shackle.png",
+        "category": "legs",
+        "position": {"x": 3, "y": -5, "width": 95, "height": 95}
+    },
+    {
+        "name": "Sheep",
+        "image": "sheep.png",
+        "category": "body",
+        "position": {"x": 6, "y": 7, "width": 84, "height": 84}
+    },
+    {
+        "name": "Sheep Wig",
+        "image": "sheep_wig.png",
+        "category": "head",
+        "position": {"x": 7, "y": 3, "width": 90, "height": 90}
+    },
+    {
         "name": "Royal Cloak",
         "image": "royal_cloak.png",
         "category": "body",
         "position": {"x": 36, "y": 32, "width": 30, "height": 30}
     },
     {
+        "name": "Apron",
+        "image": "apron.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    },
+    {
+        "name": "Bear Hat",
+        "image": "bear_hat.png",
+        "category": "head",
+        "position": {"x": 3, "y": -3, "width": 100, "height": 100}
+    },
+    {
+        "name": "Kitty",
+        "image": "kitty.png",
+        "category": "legs",
+        "position": {"x": 6, "y": 0, "width": 100, "height": 100}
+    },
+    {
+        "name": "Chef Hat",
+        "image": "chef_hat.png",
+        "category": "head",
+        "position": {"x": 2, "y": -5, "width": 100, "height": 100}
+    },
+    {
+        "name": "Bandana Star",
+        "image": "bandana_star.png",
+        "category": "body",
+        "position": {"x": 2, "y": 2, "width": 97, "height": 97}
+    },
+    {
+        "name": "Western Hat",
+        "image": "western_hat.png",
+        "category": "head",
+        "position": {"x": 4, "y": -2, "width": 97, "height": 97}
+    },
+    {
+        "name": "Tail Feather",
+        "image": "tail_feather.png",
+        "category": "body",
+        "position": {"x": 0, "y": 0, "width": 100, "height": 100}
+    },
+    {
+        "name": "Ancient Jewelry",
+        "image": "ancient_jewelry.png",
+        "category": "body",
+        "position": {"x": 10, "y": 12.5, "width": 85, "height": 80}
+    },
+    {
+        "name": "Ancient Band",
+        "image": "ancient_band.png",
+        "category": "legs",
+        "position": {"x": 9, "y": 12.5, "width": 85, "height": 80}
+    },
+    {
         "name": "Spikes",
         "image": "spikes.png",
         "category": "head",
         "position": {"x": 3, "y": 6, "width": 93, "height": 93}
-    },   
+    },  
+    {
+        "name": "Wolverine",
+        "image": "wolverine.png",
+        "category": "head",
+        "position": {"x": 9, "y": 7, "width": 85, "height": 85}
+    },
+    {
+        "name": "Balloon",
+        "image": "balloon_tail.png",
+        "category": "body",
+        "position": {"x": 2, "y": 1, "width": 100, "height": 100}
+    },
+    {
+        "name": "Puppy",
+        "image": "puppy.png",
+        "category": "legs",
+        "position": {"x": 2, "y": 1, "width": 100, "height": 100}
+    },
     {
         "name": "Wolf",
         "image": "wolf.png",
@@ -34,6 +172,18 @@
         "image": "bee_wings.png",
         "category": "body",
         "position": {"x": 2, "y": 1, "width": 100, "height": 100}
+    },
+    {
+        "name": "Sci-Fi Glasses",
+        "image": "sci-fi_glasses.png",
+        "category": "head",
+        "position": {"x": 0, "y": 3, "width": 100, "height": 100}
+    },
+    {
+        "name": "Pink Shackle",
+        "image": "pink_shackle.png",
+        "category": "legs",
+        "position": {"x": 2, "y": -5, "width": 100, "height": 100}
     },
     {
         "name": "Radioactive",
