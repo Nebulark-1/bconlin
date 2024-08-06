@@ -59,6 +59,26 @@
   text-align: center;
 }
 
+.download-button {
+  display: inline-block;
+  margin-top: 0vh;
+  padding: 1vh 2vw;
+  font-size: 1.2rem;
+  color: white;
+  background-color: #8167a9;
+  border: none;
+  border-radius: 1vw;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: table;
+  margin: 0 auto;
+}
+
+.download-button:hover {
+  background-color: #674f8c;
+}
+
 /* Responsive font sizes */
 @media (max-width: 1200px) {
   .card-title {
@@ -129,6 +149,11 @@
     width: 90vw;
     left: 50vw; /* Start from 5vw */
     top: 100vh; /* 50vh from the navbar */
+  }
+
+  .download-button {
+    font-size: .7rem; /* Scale down */
+    padding: .5vh 2vw; /* Scale down */
   }
 }
 
