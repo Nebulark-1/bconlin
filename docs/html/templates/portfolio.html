@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <title>Portfolio - Ben Conlin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../css/base/base.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/background.css">
+  <link rel="stylesheet" href="../../css/components/cards.css">
   <link rel="icon" href="../../../assets/icons/favicon.ico">
   <style>
     /* Hide content initially */
@@ -25,26 +29,37 @@
     <!-- Sort Options -->
     <div class="sort-options">
       <button onclick="sortPortfolio('date')">Sort by Date</button>
-      <button onclick="sortPortfolio('technicalDifficulty')">Sort by Technical Difficulty</button>
-      <button onclick="sortPortfolio('scale')">Sort by Scale</button>
       <button onclick="sortPortfolio('title')">Sort by Name</button>
     </div>
 
     <!-- Cards Placeholder -->
+   
     <div id="cards" class="cards-grid">
       <!-- Example Card -->
-      <a href="project1.html" class="card" data-date="2023-05-20" data-technical-difficulty="3" data-scale="5" data-title="Project Title 1">
-        <img src="../../../assets/images/pfp.png" alt="Project Image 1" class="project-img">
+      <a href="../../dinotools/index.html" class="card" data-date="2024-08-20" data-title="Dino Tools" data-width="32.5" data-height="60.2" data-top-ratio="0.02" data-left-ratio="0.2" id="card2" style="width: 44vw; top: 20vh; left: 51vw; margin-top: 8vh; transform: none; margin-bottom: 8vh;">
+        <img src="../../dinotools/assets/images/prehistoric_background.jpg" alt="Project Image 1" class="project-img">
         <div class="card-content">
-          <div class="card-title">Project Title 1</div>
-          <div class="card-date">Date: May 20, 2023</div>
-          <div class="card-technical-difficulty">Technical Difficulty: 3/5</div>
-          <div class="card-scale">Scale: 5/10</div>
-          <div class="card-description">Short description of the project.</div>
+          <div class="card-title">Dino Tools</div>
+          <div class="card-date">Date: August 20, 2024</div>
+          <div class="card-description">This was designed within a week to explore the different patters and designs for Dino Mutant. It is still used to this day by thousands of community members, despite its lack of polish.</div>
         </div>
       </a>
       <!-- Add more cards as needed -->
     </div>
+    
+    <div id="cards" class="cards-grid">
+      <!-- Example Card -->
+      <a href="../../dinotools/index.html" class="card" data-date="2024-08-20" data-title="Dino Tools" data-width="32.5" data-height="60.2" data-top-ratio="0.02" data-left-ratio="0.2" id="card2" style="width: 44vw; top: 10vh; left: 5vw; margin-top: 8vh; transform: none; margin-bottom: 8vh;">
+        <img src="../../projects/dinotools.png" alt="Project Image 1" class="project-img">
+        <div class="card-content">
+          <div class="card-title">Dino Tools</div>
+          <div class="card-date">Date: August 20, 2024</div>
+          <div class="card-description">This was designed within a week to explore the different patters and designs for Dino Mutant. It is still used to this day by thousands of community members, despite its lack of polish.</div>
+        </div>
+      </a>
+      <!-- Add more cards as needed -->
+    </div>
+
   </div>
 
   <script src="../../js/modules/loadComponents.js"></script>
@@ -59,7 +74,7 @@
     function updateCards() {
       const cards = document.querySelectorAll('.card');
       cards.forEach(card => {
-        card.style.width = '60vw';
+        card.style.width = '45vw';
         card.style.margin = '20px auto';
       });
     }
