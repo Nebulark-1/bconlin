@@ -1,16 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import "./src/index.css";
-
+import "./src/snake.css";
 
 /**
- * Snake (single-file React app)
+ * Snake (no Tailwind)
  * - Arrow keys / WASD to move
  * - Space to pause/resume
  * - R to restart
- * - Optional on-screen D-pad for mobile
- *
- * Drop into a Vite + React project as App.jsx and run.
+ * - Mobile: swipe on board
  */
 
 const GRID_SIZE = 20; // 20x20
@@ -89,7 +86,7 @@ function initialState() {
   };
 }
 
-export default function App() {
+function App() {
   const [state, setState] = useState(() => initialState());
 
   const dirRef = useRef(state.dir);
@@ -104,7 +101,7 @@ export default function App() {
     overRef.current = state.gameOver;
   }, [state.dir, state.queuedDir, state.paused, state.gameOver]);
 
-  const occupied = useMemo(() => buildOccupiedSet(state.snake), [state.snake]);
+  useMemo(() => buildOccupiedSet(state.snake), [state.snake]); // keeps parity w/ old code (not strictly needed)
 
   const restart = () => setState(() => initialState());
 
@@ -163,11 +160,16 @@ export default function App() {
         const next = { x: head.x + delta.x, y: head.y + delta.y };
 
         // Wall collision
-        if (next.x < 0 || next.x >= GRID_SIZE || next.y < 0 || next.y >= GRID_SIZE) {
+        if (
+          next.x < 0 ||
+          next.x >= GRID_SIZE ||
+          next.y < 0 ||
+          next.y >= GRID_SIZE
+        ) {
           return { ...s, gameOver: true };
         }
 
-        // Build a set excluding the last tail cell IF we are moving without growing
+        // Self collision (exclude tail if not growing)
         const willEat = s.food && next.x === s.food.x && next.y === s.food.y;
         const bodyToCheck = willEat ? s.snake : s.snake.slice(0, -1);
         const bodySet = buildOccupiedSet(bodyToCheck);
@@ -182,9 +184,7 @@ export default function App() {
 
         if (willEat) {
           newScore = s.score + 1;
-          // speed up gently
           newTick = clamp(TICK_MS_BASE - newScore * 3, MIN_TICK_MS, TICK_MS_BASE);
-
           const occ = buildOccupiedSet(newSnake);
           newFood = randCell(occ);
         } else {
@@ -267,64 +267,59 @@ export default function App() {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const cellSize = 18;
+  const speedPct =
+    ((TICK_MS_BASE - state.tickMs) / (TICK_MS_BASE - MIN_TICK_MS)) * 100;
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 text-slate-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-3xl">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-5">
+    <div className="container">
+      <div className="wrap">
+        <div className="header">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Snake</h1>
-            <p className="text-slate-300 mt-1">
+            <div className="title">Snake</div>
+            <div className="sub">
               Arrow keys / WASD to move • Space to pause • R to restart
-            </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-slate-900/70 border border-slate-800 px-4 py-2">
-              <div className="text-xs text-slate-400">Score</div>
-              <div className="text-xl font-semibold tabular-nums">{state.score}</div>
+          <div className="scoreRow">
+            <div className="card">
+              <div className="cardLabel">Score</div>
+              <div className="cardVal">{state.score}</div>
             </div>
-            <div className="rounded-2xl bg-slate-900/70 border border-slate-800 px-4 py-2">
-              <div className="text-xs text-slate-400">Best</div>
-              <div className="text-xl font-semibold tabular-nums">{state.best}</div>
+            <div className="card">
+              <div className="cardLabel">Best</div>
+              <div className="cardVal">{state.best}</div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-5">
+        <div className="mainGrid">
           {/* Board */}
           <div
             ref={touchRef}
-            className="relative rounded-3xl bg-slate-900/40 border border-slate-800 shadow-2xl overflow-hidden"
-            style={{
-              width: "100%",
-              aspectRatio: "1 / 1",
-              touchAction: "none",
-            }}
+            className="board"
+            style={{ width: "100%", aspectRatio: "1 / 1", touchAction: "none" }}
           >
             {/* Subtle grid */}
             <div
-              className="absolute inset-0"
+              className="gridOverlay"
               style={{
-                backgroundImage:
-                  "linear-gradient(to right, rgba(148,163,184,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(148,163,184,0.06) 1px, transparent 1px)",
                 backgroundSize: `${100 / GRID_SIZE}% ${100 / GRID_SIZE}%`,
               }}
             />
 
             {/* Cells layer */}
-            <div className="absolute inset-0">
+            <div className="layer">
               {/* Food */}
               {state.food && (
                 <div
-                  className="absolute rounded-full"
                   style={{
+                    position: "absolute",
                     left: `${(state.food.x / GRID_SIZE) * 100}%`,
                     top: `${(state.food.y / GRID_SIZE) * 100}%`,
                     width: `${100 / GRID_SIZE}%`,
                     height: `${100 / GRID_SIZE}%`,
-                    transform: "translate(0, 0)",
+                    borderRadius: 999,
                     boxShadow: "0 0 18px rgba(248,113,113,0.45)",
                     background:
                       "radial-gradient(circle at 30% 30%, rgba(248,113,113,1), rgba(244,63,94,1))",
@@ -335,26 +330,29 @@ export default function App() {
               {/* Snake */}
               {state.snake.map((p, idx) => {
                 const isHead = idx === 0;
-                const r = isHead ? "rounded-xl" : "rounded-lg";
-                const base = isHead
-                  ? "bg-emerald-400"
+                const radius = isHead ? 14 : 12;
+
+                const fill = isHead
+                  ? "#34d399"
                   : idx % 2 === 0
-                  ? "bg-emerald-300"
-                  : "bg-emerald-200";
+                  ? "#6ee7b7"
+                  : "#a7f3d0";
 
                 return (
                   <div
                     key={`${p.x},${p.y},${idx}`}
-                    className={`absolute ${r} ${base}`}
                     style={{
+                      position: "absolute",
                       left: `${(p.x / GRID_SIZE) * 100}%`,
                       top: `${(p.y / GRID_SIZE) * 100}%`,
                       width: `${100 / GRID_SIZE}%`,
                       height: `${100 / GRID_SIZE}%`,
+                      borderRadius: radius,
+                      background: fill,
                       boxShadow: isHead
                         ? "0 10px 20px rgba(16,185,129,0.25)"
                         : "none",
-                      opacity: isHead ? 1 : 0.95,
+                      opacity: isHead ? 1 : 0.96,
                     }}
                   />
                 );
@@ -363,27 +361,26 @@ export default function App() {
 
             {/* Overlay */}
             {(state.paused || state.gameOver) && (
-              <div className="absolute inset-0 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm">
-                <div className="text-center px-6">
-                  <div className="text-2xl font-semibold">
+              <div className="overlay">
+                <div className="overlayInner">
+                  <div className="overlayTitle">
                     {state.gameOver ? "Game Over" : "Paused"}
                   </div>
-                  <div className="text-slate-300 mt-2">
+                  <div className="overlaySub">
                     {state.gameOver
                       ? "Press R to restart"
                       : "Press Space to resume"}
                   </div>
-                  <div className="mt-4 flex items-center justify-center gap-3">
+                  <div className="btnRow">
                     <button
-                      onClick={() => (state.gameOver ? restart() : togglePause())}
-                      className="px-4 py-2 rounded-xl bg-slate-100 text-slate-950 font-semibold hover:bg-white active:scale-[0.99] transition"
+                      onClick={() =>
+                        state.gameOver ? restart() : togglePause()
+                      }
+                      className="btnPrimary"
                     >
                       {state.gameOver ? "Restart" : "Resume"}
                     </button>
-                    <button
-                      onClick={restart}
-                      className="px-4 py-2 rounded-xl border border-slate-700 text-slate-100 hover:bg-slate-900/60 active:scale-[0.99] transition"
-                    >
+                    <button onClick={restart} className="btnGhost">
                       Reset
                     </button>
                   </div>
@@ -393,63 +390,46 @@ export default function App() {
           </div>
 
           {/* Side panel */}
-          <div className="rounded-3xl bg-slate-900/40 border border-slate-800 shadow-2xl p-4 flex flex-col gap-4">
-            <div className="rounded-2xl bg-slate-950/40 border border-slate-800 p-4">
-              <div className="text-sm text-slate-300">Speed</div>
-              <div className="mt-2">
-                <div className="flex items-center justify-between text-xs text-slate-400">
-                  <span>Fast</span>
-                  <span>Slow</span>
-                </div>
-                <div className="mt-2 h-2 rounded-full bg-slate-800 overflow-hidden">
-                  <div
-                    className="h-full bg-slate-100"
-                    style={{
-                      width: `${
-                        ((TICK_MS_BASE - state.tickMs) / (TICK_MS_BASE - MIN_TICK_MS)) *
-                        100
-                      }%`,
-                    }}
-                  />
-                </div>
+          <div className="side">
+            <div className="panel">
+              <div className="panelTitle">Speed</div>
+              <div className="barWrap">
+                <div
+                  className="barFill"
+                  style={{ width: `${clamp(speedPct, 0, 100)}%` }}
+                />
               </div>
-              <div className="text-xs text-slate-500 mt-2">
-                Eats speed you up a bit.
-              </div>
+              <div className="muted">Eats speed you up a bit.</div>
             </div>
 
-            <div className="rounded-2xl bg-slate-950/40 border border-slate-800 p-4">
-              <div className="text-sm text-slate-300">Controls</div>
-              <div className="text-xs text-slate-400 mt-2 leading-relaxed">
-                • Move: Arrow keys / WASD<br />
-                • Pause: Space<br />
-                • Restart: R<br />
+            <div className="panel">
+              <div className="panelTitle">Controls</div>
+              <div className="muted">
+                • Move: Arrow keys / WASD
+                <br />
+                • Pause: Space
+                <br />
+                • Restart: R
+                <br />
                 • Mobile: swipe on board
               </div>
             </div>
 
-            <div className="rounded-2xl bg-slate-950/40 border border-slate-800 p-4">
-              <div className="text-sm text-slate-300">Quick actions</div>
-              <div className="mt-3 flex gap-2">
-                <button
-                  onClick={togglePause}
-                  className="flex-1 px-3 py-2 rounded-xl bg-slate-100 text-slate-950 font-semibold hover:bg-white active:scale-[0.99] transition"
-                >
+            <div className="panel">
+              <div className="panelTitle">Quick actions</div>
+              <div className="quickRow">
+                <button onClick={togglePause} className="btnPrimary">
                   {state.paused ? "Resume" : "Pause"}
                 </button>
-                <button
-                  onClick={restart}
-                  className="flex-1 px-3 py-2 rounded-xl border border-slate-700 text-slate-100 hover:bg-slate-900/60 active:scale-[0.99] transition"
-                >
+                <button onClick={restart} className="btnGhost">
                   Restart
                 </button>
               </div>
             </div>
 
-            {/* D-pad */}
-            <div className="rounded-2xl bg-slate-950/40 border border-slate-800 p-4">
-              <div className="text-sm text-slate-300">D-pad</div>
-              <div className="mt-3 grid grid-cols-3 gap-2 place-items-center">
+            <div className="panel">
+              <div className="panelTitle">D-pad</div>
+              <div className="dpad">
                 <div />
                 <PadButton label="↑" onClick={() => requestTurn("up")} />
                 <div />
@@ -463,21 +443,16 @@ export default function App() {
                 <PadButton label="↓" onClick={() => requestTurn("down")} />
                 <div />
               </div>
-              <div className="text-xs text-slate-500 mt-3">
-                Handy on touch devices.
-              </div>
+              <div className="muted">Handy on touch devices.</div>
             </div>
 
-            <div className="text-xs text-slate-600 mt-auto">
-              Tip: avoid 180° turns — the game blocks them.
-            </div>
+            <div className="muted">Tip: avoid 180° turns — the game blocks them.</div>
           </div>
         </div>
 
-        <footer className="mt-6 text-xs text-slate-500">
-          Built as a single React component. Grid: {GRID_SIZE}×{GRID_SIZE} • Cell
-          size: {cellSize}px (visual)
-        </footer>
+        <div className="footer">
+          Built as a single React component. Grid: {GRID_SIZE}×{GRID_SIZE}
+        </div>
       </div>
     </div>
   );
@@ -485,15 +460,10 @@ export default function App() {
 
 function PadButton({ label, onClick }) {
   return (
-    <button
-      onClick={onClick}
-      className="w-12 h-12 rounded-2xl border border-slate-700 bg-slate-900/40 hover:bg-slate-900/70 active:scale-[0.98] transition flex items-center justify-center text-lg"
-      aria-label={label}
-      type="button"
-    >
+    <button onClick={onClick} className="padBtn" aria-label={label} type="button">
       {label}
     </button>
   );
 }
 
-createRoot(document.getElementById("root")).render(<App />)
+createRoot(document.getElementById("root")).render(<App />);
