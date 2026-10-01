@@ -1,0 +1,667 @@
+/* ── "Behind the scenes" switch ─────────────────────────────
+   Day/night-style toggle at the foot of the rail: a paintbrush (the art)
+   flips to a code glyph (the machinery). */
+.bts {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 12px 0;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 500 0.66rem var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bts:hover,
+.bts:focus-visible {
+  color: var(--text);
+}
+
+.bts:focus-visible {
+  outline: none;
+}
+
+.bts:focus-visible .bts__track {
+  box-shadow: 0 0 0 3px rgba(255, 180, 140, 0.35);
+}
+
+.bts__track {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  background: #15132e;
+  transition:
+    background 0.45s,
+    border-color 0.45s;
+}
+
+/* a faint grid fades into the track when it's on */
+.bts__track::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(rgba(120, 210, 255, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 210, 255, 0.25) 1px, transparent 1px);
+  background-size: 6px 6px;
+  opacity: 0;
+  transition: opacity 0.45s;
+}
+
+.bts__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #ffe0c4, #ffab80);
+  box-shadow: 0 2px 8px rgba(255, 160, 120, 0.4);
+  transition:
+    transform 0.5s cubic-bezier(0.7, 0, 0.2, 1),
+    background 0.45s,
+    box-shadow 0.45s;
+}
+
+.bts__icon {
+  position: absolute;
+  inset: 3px;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #3a2440;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    opacity 0.3s,
+    transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.bts__icon--code {
+  stroke: #062543;
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.bts[aria-checked="true"] .bts__track {
+  background: #082445;
+  border-color: rgba(120, 210, 255, 0.55);
+}
+
+.bts[aria-checked="true"] .bts__track::before {
+  opacity: 1;
+}
+
+.bts[aria-checked="true"] .bts__knob {
+  transform: translateX(24px);
+  background: linear-gradient(160deg, #d9f6ff, #5ec8ff);
+  box-shadow: 0 2px 10px rgba(94, 200, 255, 0.55);
+}
+
+.bts[aria-checked="true"] .bts__icon--art {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.bts[aria-checked="true"] .bts__icon--code {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .bts {
+    margin: 10px 2px 0;
+  }
+  .bts__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+/* ── Blueprint mode ─────────────────────────────────────── */
+
+/* the exploded stack needs a 3D stage - only while it's exploded, so the
+   normal view keeps its flat compositing (and the aurora's blend mode) */
+.is-exploded .panel {
+  perspective: 1600px;
+}
+
+.is-exploded .art {
+  transform-style: preserve-3d;
+}
+
+/* blueprint grid behind everything (only visible once the art goes wire) */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #051329;
+  background-image:
+    linear-gradient(rgba(90, 170, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 170, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(rgba(90, 170, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 170, 255, 0.05) 1px, transparent 1px);
+  background-size:
+    80px 80px,
+    80px 80px,
+    16px 16px,
+    16px 16px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+[data-blueprint="on"] .panel::before {
+  opacity: 1;
+}
+
+/* Every shape becomes a hairline in its plane's colour. */
+[data-blueprint="on"] svg.layer :is(path, rect, circle, ellipse) {
+  fill: transparent !important;
+  stroke: var(--wire) !important;
+  stroke-width: 0.8px !important;
+  stroke-dasharray: none !important;
+  vector-effect: non-scaling-stroke;
+}
+
+[data-blueprint="on"] svg.layer * {
+  filter: none !important;
+  mask: none !important;
+}
+
+[data-blueprint="on"] .layer--aurora,
+[data-blueprint="on"] svg.layer .beam {
+  mix-blend-mode: normal !important;
+}
+
+[data-blueprint="on"] :is(.vignette, .grain, .cards, .pips) {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s,
+    visibility 0s 0.3s;
+}
+
+/* annotations: hidden normally, crisp mono labels in blueprint mode */
+.bp {
+  display: none;
+}
+
+[data-blueprint="on"] .bp {
+  display: inline;
+}
+
+[data-blueprint="on"] svg.layer .bp :is(path, circle, rect) {
+  stroke: #9fe3ff !important;
+  stroke-width: 1px !important;
+}
+
+[data-blueprint="on"] svg.layer .bp-note circle {
+  fill: #9fe3ff !important;
+}
+
+[data-blueprint="on"] svg.layer .bp-frame {
+  fill: rgba(94, 200, 255, 0.025) !important;
+  stroke: var(--wire) !important;
+  stroke-dasharray: 6 5 !important;
+  opacity: 0.7;
+}
+
+.bp text {
+  font-family: var(--font-mono);
+  font-size: calc(11px / var(--k, 1));
+  letter-spacing: 0.03em;
+  fill: #d4f1ff;
+  paint-order: stroke;
+  stroke: #051329;
+  stroke-width: calc(3px / var(--k, 1));
+}
+
+.bp .bp-name {
+  font-size: calc(14px / var(--k, 1));
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--wire);
+}
+
+.bp .bp-detail {
+  fill: #9fc4e0;
+}
+
+/* live readout */
+.bp-hud {
+  position: absolute;
+  left: 18px;
+  bottom: 16px;
+  max-width: calc(100% - 36px);
+  margin: 0;
+  padding: 12px 14px;
+  overflow: hidden;
+  border: 1px solid rgba(120, 210, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(4, 16, 36, 0.82);
+  color: #bfe6ff;
+  font: 400 0.68rem/1.65 var(--font-mono);
+  white-space: pre;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.4s,
+    transform 0.4s;
+}
+
+[data-blueprint="on"] .bp-hud {
+  opacity: 1;
+  transform: none;
+}
+
+@container plate (max-width: 600px) {
+  .bp-hud {
+    font-size: 0.56rem;
+    left: 10px;
+    bottom: 10px;
+    padding: 8px 10px;
+  }
+}
+
+/* one-shot scan line when the switch flips */
+.bp-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #9fe3ff 20%, #fff 50%, #9fe3ff 80%, transparent);
+  box-shadow: 0 0 18px 4px rgba(94, 200, 255, 0.5);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bp-scan .bp-scanline {
+  animation: scan 0.7s cubic-bezier(0.5, 0, 0.3, 1);
+}
+
+@keyframes scan {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100cqh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-scan .bp-scanline {
+    animation: none;
+  }
+}
+
+/* ── Code inspector ─────────────────────────────────────── */
+
+/* wireframe shapes never catch the pointer; only the notes do */
+[data-blueprint="on"] svg.layer,
+[data-blueprint="on"] svg.layer * {
+  pointer-events: none;
+}
+
+[data-blueprint="on"] svg.layer .bp-note[data-topic] {
+  pointer-events: all;
+  cursor: pointer;
+}
+
+[data-blueprint="on"] svg.layer .bp-note[data-topic] text {
+  text-decoration: underline;
+  text-decoration-color: rgba(159, 227, 255, 0.4);
+  text-underline-offset: 3px;
+}
+
+[data-blueprint="on"] svg.layer .bp-note[data-topic]:hover text,
+[data-blueprint="on"] svg.layer .bp-note[data-topic]:focus text {
+  fill: #fff;
+}
+
+.bp-chips {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.35s,
+    transform 0.35s,
+    visibility 0s 0.35s;
+}
+
+[data-blueprint="on"] .bp-chips {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.35s 0.2s,
+    transform 0.35s 0.2s;
+}
+
+.bp-chips__lead {
+  flex: none;
+  margin-right: 4px;
+  font: 500 0.62rem var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6f9cc4;
+}
+
+.bp-chips button {
+  flex: none;
+  padding: 6px 11px;
+  border: 1px solid rgba(120, 210, 255, 0.35);
+  border-radius: 999px;
+  background: rgba(4, 18, 40, 0.75);
+  color: #bfe6ff;
+  font: 500 0.7rem var(--font-mono);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.bp-chips button:hover,
+.bp-chips button:focus-visible {
+  border-color: #9fe3ff;
+  color: #fff;
+  outline: none;
+}
+
+.bp-chips button.is-on {
+  background: #5ec8ff;
+  border-color: #5ec8ff;
+  color: #04122a;
+}
+
+.inspector {
+  position: absolute;
+  z-index: 3;
+  top: 56px;
+  right: 14px;
+  bottom: 14px;
+  width: min(500px, 46cqw);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(120, 210, 255, 0.3);
+  border-radius: 14px;
+  background: rgba(3, 12, 30, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+  color: #cfe8ff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(24px);
+  transition:
+    opacity 0.35s,
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s 0.45s;
+}
+
+[data-blueprint="on"] .inspector-open .inspector {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.35s,
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.inspector__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 10px;
+  border-bottom: 1px solid rgba(120, 210, 255, 0.15);
+}
+
+.inspector__kicker {
+  margin: 0 0 4px;
+  font: 500 0.64rem var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6cf0c2;
+}
+
+.inspector__title {
+  margin: 0;
+  font: 700 1.15rem/1.2 var(--font-display);
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.inspector__close {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(120, 210, 255, 0.3);
+  border-radius: 8px;
+  background: none;
+  color: #bfe6ff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.inspector__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px 18px 18px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 210, 255, 0.3) transparent;
+}
+
+.inspector__summary {
+  margin: 0 0 14px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #b7cfe6;
+}
+
+.inspector__viz {
+  display: block;
+  width: 100%;
+  height: 170px;
+  border: 1px solid rgba(120, 210, 255, 0.18);
+  border-radius: 10px;
+  background: #020a1c;
+}
+
+.inspector__live {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: rgba(94, 200, 255, 0.06);
+  color: #9fe3ff;
+  font: 400 0.68rem/1.6 var(--font-mono);
+  white-space: pre;
+}
+
+.inspector__actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.inspector__actions:empty {
+  display: none;
+}
+
+.inspector__actions button {
+  padding: 8px 14px;
+  border: 1px solid rgba(120, 210, 255, 0.4);
+  border-radius: 8px;
+  background: transparent;
+  color: #bfe6ff;
+  font: 600 0.74rem var(--font-mono);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.inspector__actions button:hover {
+  border-color: #9fe3ff;
+  color: #fff;
+}
+
+/* commands are solid; toggles are outlines until selected */
+.inspector__actions button.is-primary,
+.inspector__actions button.is-on {
+  border-color: #5ec8ff;
+  background: #5ec8ff;
+  color: #04122a;
+}
+
+.inspector__actions button:focus-visible,
+.inspector__actions input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.inspector__actions input {
+  flex: 1 1 100%;
+  padding: 9px 12px;
+  border: 1px solid rgba(120, 210, 255, 0.4);
+  border-radius: 8px;
+  background: #020a1c;
+  color: #e9f6ff;
+  font: 400 0.8rem var(--font-mono);
+}
+
+.inspector__actions input::placeholder {
+  color: #4f7aa0;
+}
+
+.inspector__summary b {
+  color: #e9f6ff;
+  font-weight: 600;
+}
+
+/* source listings */
+.src {
+  margin: 14px 0 0;
+}
+
+.src figcaption {
+  margin-bottom: 6px;
+  font: 500 0.66rem var(--font-mono);
+  color: #6f9cc4;
+}
+
+.src figcaption span {
+  color: #3f6a90;
+}
+
+.src pre {
+  margin: 0;
+  padding: 10px 0;
+  overflow-x: auto;
+  border: 1px solid rgba(120, 210, 255, 0.14);
+  border-radius: 10px;
+  background: #020916;
+  font: 400 0.68rem/1.6 var(--font-mono);
+  tab-size: 2;
+}
+
+.ln {
+  display: block;
+  padding: 0 12px 0 0;
+  white-space: pre;
+  color: #c9d8ea;
+}
+
+.ln.is-mark {
+  background: rgba(94, 200, 255, 0.12);
+  box-shadow: inset 2px 0 #5ec8ff;
+}
+
+.ln__n {
+  display: inline-block;
+  width: 3.4em;
+  margin-right: 12px;
+  padding-right: 8px;
+  text-align: right;
+  color: #355777;
+  user-select: none;
+}
+
+.tk-kw { color: #c792ea; }
+.tk-fn { color: #82aaff; }
+.tk-str { color: #c3e88d; }
+.tk-num { color: #f78c6c; }
+.tk-com { color: #5f7e9c; font-style: italic; }
+.tk-at { color: #ffcb6b; }
+.tk-op { color: #89ddff; }
+
+/* narrow panels: the inspector becomes a bottom sheet and the HUD steps aside */
+@container plate (max-width: 760px) {
+  .inspector {
+    top: auto;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: auto;
+    height: 62cqh;
+    transform: translateY(24px);
+  }
+  .bp-chips {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+  .inspector-open .bp-hud {
+    opacity: 0 !important;
+  }
+}
+
+.inspector__badge {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid rgba(255, 180, 140, 0.5);
+  border-radius: 4px;
+  color: #ffb48c;
+  letter-spacing: 0.08em;
+  cursor: help;
+}
+
+.inspector__actions {
+  flex-wrap: wrap;
+}
+

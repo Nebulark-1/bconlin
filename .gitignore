@@ -1,0 +1,8 @@
+node_modules
+dist
+
+# private: source résumés and cover letters (phone number, applications)
+resumes/
+
+# local tool settings
+.claude/

@@ -1,0 +1,661 @@
+/* ── UCHealth: "Vital Signs" ────────────────────────────────
+   A bedside monitor: black glass, phosphor traces, condensed numerics,
+   colour as meaning (green ECG, cyan pleth, amber OR). The panel powers on
+   and off like a CRT. */
+
+.scene--uch {
+  height: 780vh;
+  --ecg: #39ff88;
+  --pleth: #3fe0ff;
+  --amber: #ffd23f;
+  --m-text: #d4ebe2;
+  --m-dim: #5f7f74;
+  --m-line: #13241e;
+  --beat: var(--ecg);
+  --cond: "Barlow Condensed", "Arial Narrow", sans-serif;
+}
+
+.panel--monitor {
+  clip-path: none;
+  background: radial-gradient(120% 90% at 50% 40%, #07110d, #020403 70%);
+  border: 1px solid var(--m-line);
+  color: var(--m-text);
+  transform: scale(0.002, 0.004);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+/* scanlines + the bright flash of a tube warming up */
+.mon-crt {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 3px),
+    radial-gradient(120% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.55));
+  box-shadow: inset 0 0 0 999px rgba(200, 255, 230, calc(var(--flash, 0) * 0.55));
+}
+
+.mon-head {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--m-line);
+  font: 500 0.68rem var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--m-dim);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mon-head__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mon-live::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--ecg);
+  box-shadow: 0 0 8px var(--ecg);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.mon-clock {
+  font: 600 1.15rem var(--cond);
+  letter-spacing: 0.04em;
+  color: var(--m-text);
+}
+
+/* ── Waveform strips ─────────────────────────────────────── */
+.mon-strips {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  width: 64%;
+  height: 128px;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  border-bottom: 1px solid var(--m-line);
+}
+
+.mon-strip {
+  position: relative;
+  border-bottom: 1px solid rgba(19, 36, 30, 0.6);
+}
+
+.mon-strip canvas {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 54px;
+  right: 104px;
+  width: calc(100% - 158px);
+  height: calc(100% - 8px);
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+.mon-strip:first-child canvas {
+  color: var(--ecg);
+}
+
+.mon-strip:last-child canvas {
+  color: var(--pleth);
+}
+
+.mon-strip__lbl {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  font: 500 0.66rem var(--font-mono);
+  color: var(--m-dim);
+}
+
+.mon-num {
+  position: absolute;
+  top: 0;
+  right: 14px;
+  bottom: 0;
+  width: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  line-height: 1;
+}
+
+.mon-num small {
+  font: 500 0.62rem var(--font-mono);
+  color: var(--m-dim);
+}
+
+.mon-num b {
+  font: 700 2.4rem var(--cond);
+  text-shadow: 0 0 14px currentColor;
+}
+
+.mon-num--hr {
+  color: var(--ecg);
+}
+
+.mon-num--spo2 {
+  color: var(--pleth);
+}
+
+/* ── The unit (floor plan) ───────────────────────────────── */
+.mon-stage {
+  position: absolute;
+  top: 170px;
+  left: 0;
+  width: 64%;
+  bottom: 0;
+}
+
+.mon-plan {
+  position: absolute;
+  inset: 8px 8px 58px;
+  width: calc(100% - 16px);
+  height: calc(100% - 66px);
+  opacity: var(--dim, 1);
+}
+
+/* A floor plan in the monitor's palette: walls a muted green, rooms dark,
+   corridors a shade lighter. Simple on purpose - it teaches the flow. */
+.mon-plan .building {
+  fill: #1f3c32;
+}
+
+.mon-plan .floor {
+  fill: #07110d;
+}
+
+.mon-plan .floor--quiet {
+  fill: #060e0b;
+}
+
+.mon-plan .floor--or {
+  fill: #081511;
+}
+
+.mon-plan .floor--core {
+  fill: #0a1a15;
+}
+
+.mon-plan .hall {
+  fill: #0e211a;
+}
+
+.mon-plan .restrict {
+  stroke: #ff6b6b;
+  stroke-width: 3;
+  opacity: 0.7;
+}
+
+.mon-plan .sep {
+  stroke: #1f3c32;
+  stroke-width: 3;
+}
+
+.mon-plan .swing {
+  fill: none;
+  stroke: #3b6657;
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.mon-plan .curtain {
+  stroke: #2c6b56;
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.mon-plan :is(.bed, .table) {
+  fill: #0d1f19;
+  stroke: #2d5346;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.mon-plan .sterile {
+  fill: none;
+  stroke: rgba(57, 255, 136, 0.35);
+  stroke-width: 0.8;
+  stroke-dasharray: 3 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.mon-plan :is(.seat, .furn) {
+  fill: #0f231c;
+  stroke: #2d5346;
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.mon-plan .desk {
+  fill: #0e221c;
+  stroke: #3b6657;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* lighting, as a hint: --lit 0 → 1 per bay / room */
+.mon-plan .glow {
+  opacity: var(--lit, 0);
+  transition: opacity 1.5s;
+}
+
+.mon-plan .bay--pre .glow {
+  fill: rgba(255, 190, 110, 0.09); /* warm and calm */
+}
+
+.mon-plan .bay--pacu .glow {
+  fill: rgba(63, 224, 255, 0.1);
+}
+
+.mon-plan .room .glow {
+  fill: rgba(235, 255, 245, 0.11); /* bright, clinical */
+}
+
+.mon-plan .room.is-closed .glow {
+  opacity: 0;
+}
+
+.mon-plan .room.is-closed .table {
+  stroke-dasharray: 2 2;
+}
+
+.mon-plan .lbl {
+  font: 500 8px var(--font-mono);
+  fill: #46685c;
+}
+
+.mon-plan .lbl--desk {
+  fill: #7fae9d;
+}
+
+.mon-plan .sign {
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.14em;
+  fill: #7fae9d;
+}
+
+.mon-plan .sign--hall {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  fill: #2f5c4c;
+}
+
+/* people: patients are dots in their stage's colour, staff are rings */
+.mon-plan .pt {
+  stroke: #020403;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: fill 0.4s;
+}
+
+.pt--arriving,
+.pt--waiting {
+  fill: #e8f0ee;
+}
+
+.pt--preop {
+  fill: var(--ecg);
+}
+
+.pt--or {
+  fill: var(--amber);
+}
+
+.pt--toPacu,
+.pt--pacu {
+  fill: var(--pleth);
+}
+
+.pt--discharge {
+  fill: #9fb8ae;
+}
+
+.mon-plan .staff {
+  fill: #07110d;
+  stroke: var(--c);
+  stroke-width: 1.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.mon-plan .staff--you {
+  fill: var(--c);
+  stroke: #020403;
+  filter: drop-shadow(0 0 4px var(--c));
+}
+
+/* planned windows: only behind the scenes */
+.mon-plan .paths {
+  display: none;
+}
+
+.mon-legend {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 38px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font: 500 0.6rem var(--font-mono);
+  letter-spacing: 0.05em;
+  color: var(--m-dim);
+  pointer-events: none;
+}
+
+.mon-legend i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 5px;
+  border: 1.5px solid var(--c);
+  border-radius: 50%;
+}
+
+.mon-legend i.is-dot {
+  background: var(--c);
+}
+
+.mon-census {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 8px;
+  height: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 18px;
+  font: 500 0.68rem var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--m-dim);
+}
+
+.mon-census i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 6px var(--c);
+}
+
+.mon-census b {
+  font: 700 1rem var(--cond);
+  color: var(--m-text);
+  margin-left: 4px;
+}
+
+.is-system .mon-census {
+  color: var(--m-text);
+}
+
+.mon-log {
+  display: none;
+}
+
+/* ── Copy column ─────────────────────────────────────────── */
+.mon-copy {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  bottom: 0;
+  width: 36%;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px 22px;
+  border-left: 1px solid var(--m-line);
+}
+
+.mon-heads {
+  position: relative;
+  flex: none;
+  height: 108px;
+}
+
+.mon-headline {
+  position: absolute;
+  inset: 0;
+}
+
+.mon-headline p {
+  margin: 0 0 8px;
+  font: 500 0.66rem var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--beat);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mon-headline h2 {
+  margin: 0;
+  font: 700 clamp(2.4rem, 5cqw, 3.8rem) / 0.95 var(--cond);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--beat);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--beat) 45%, transparent);
+  white-space: nowrap;
+  /* types on from the left, like text drawn by the monitor */
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.5s steps(14, end);
+}
+
+.mon-headline.is-on p {
+  opacity: 1;
+}
+
+.mon-headline.is-on h2 {
+  clip-path: inset(0 -10% 0 0);
+}
+
+/* the shared résumé deck, re-skinned as a monitor readout */
+.scene--uch .card {
+  position: relative;
+  width: auto;
+  margin-top: 14px;
+  flex: 1;
+  min-height: 0;
+  transform: none !important;
+}
+
+.scene--uch .card__box {
+  max-height: 100%;
+  overflow: hidden auto;
+  border: 1px solid var(--m-line);
+  border-left: 3px solid var(--beat);
+  border-radius: 4px;
+  background: rgba(57, 255, 136, 0.025);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  transform-origin: 0 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--m-line) transparent;
+}
+
+.scene--uch .slide {
+  padding: 16px 18px;
+}
+
+.scene--uch .card__eyebrow {
+  display: block;
+  margin: 0 0 6px;
+  font: 500 0.64rem var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--beat);
+}
+
+.scene--uch .card__title {
+  margin: 0 0 4px;
+  font: 600 1.55rem / 1.05 var(--cond);
+  color: var(--m-text);
+}
+
+.scene--uch .card__meta {
+  margin: 0 0 10px;
+  font: 500 0.7rem var(--font-mono);
+  color: var(--m-dim);
+}
+
+.scene--uch .card__list {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font: 400 0.88rem / 1.5 var(--font-body);
+  color: #bcd4ca;
+}
+
+.scene--uch .card__list li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.scene--uch .card__list li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  background: none;
+  color: var(--beat);
+}
+
+/* ── Narrow panels: strips, then the unit, then the copy ── */
+@container plate (max-width: 760px) {
+  .mon-strips {
+    width: 100%;
+    height: 104px;
+  }
+  .mon-stage {
+    top: 146px;
+    width: 100%;
+    bottom: auto;
+    height: 38%;
+  }
+  .mon-copy {
+    top: calc(146px + 38%);
+    width: 100%;
+    border-left: 0;
+    border-top: 1px solid var(--m-line);
+    padding: 14px 14px 12px;
+  }
+  .mon-heads {
+    height: 74px;
+  }
+  .mon-headline h2 {
+    font-size: 2.2rem;
+  }
+  .mon-num b {
+    font-size: 1.8rem;
+  }
+  .mon-strip canvas {
+    left: 40px;
+    right: 80px;
+    width: calc(100% - 120px);
+  }
+  .mon-head > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ── Blueprint: the simulation's event log comes up on screen ── */
+[data-blueprint="on"] .scene--uch .mon-log {
+  display: block;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(94, 200, 255, 0.35);
+  border-radius: 6px;
+  background: rgba(4, 16, 36, 0.85);
+  font: 400 0.62rem / 1.5 var(--font-mono);
+  color: #9fe3ff;
+  pointer-events: none;
+}
+
+/* the same building as a wireframe - same people, same movement - with
+   everyone's planned window drawn on top: the next dozen steps the
+   cooperative planner has reserved for them, and an × at each goal */
+[data-blueprint="on"] .scene--uch .mon-plan .building {
+  fill: #0b2244;
+}
+
+[data-blueprint="on"] .scene--uch .mon-plan :is(.floor, .hall, .bed, .table, .seat, .furn, .desk) {
+  fill: #051329;
+  stroke: rgba(94, 200, 255, 0.4);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+[data-blueprint="on"] .scene--uch .mon-plan :is(.glow, .sterile) {
+  display: none;
+}
+
+[data-blueprint="on"] .scene--uch .mon-plan :is(.swing, .curtain, .sep) {
+  stroke: rgba(94, 200, 255, 0.35);
+}
+
+[data-blueprint="on"] .scene--uch .mon-plan :is(.sign, .lbl) {
+  fill: rgba(159, 227, 255, 0.7);
+}
+
+[data-blueprint="on"] .scene--uch .mon-plan .paths {
+  display: inline;
+}
+
+.mon-plan .plan {
+  fill: none;
+  stroke: var(--c);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 2;
+  stroke-linejoin: round;
+  opacity: 0.85;
+  vector-effect: non-scaling-stroke;
+}
+
+.mon-plan .goals {
+  fill: none;
+  stroke: #ffd23f;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mon-live::before {
+    animation: none;
+  }
+  .mon-headline h2 {
+    transition: none;
+  }
+}

@@ -1,0 +1,341 @@
+/* ── The résumé generator ────────────────────────────────────
+   Controls on the left in the site's dark style; the résumé itself on
+   white paper, set the way it will print. */
+
+.page-resume {
+  min-height: 100vh;
+}
+
+.resume-page {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 8.5in);
+  justify-content: center;
+  align-items: start;
+  gap: 36px;
+  padding: calc(var(--nav-h) + 32px) var(--gutter) 64px;
+}
+
+/* ── Controls ── */
+.tailor {
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+}
+
+.tailor__kicker {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.tailor__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.9rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.tailor__lede {
+  margin: 12px 0 22px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.tailor__label {
+  margin: 18px 0 8px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tailor__lenses {
+  display: grid;
+  gap: 6px;
+}
+
+.tailor__lenses button,
+.tailor__seg button,
+.tailor__switch,
+.tailor__btn {
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.tailor__lenses button {
+  display: grid;
+  gap: 2px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  text-align: left;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.tailor__lenses button:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tailor__lenses button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(255, 180, 140, 0.1);
+}
+
+.tailor__lenses b {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.tailor__lenses small {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.tailor__seg {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.tailor__seg button {
+  padding: 7px 16px;
+  border: 0;
+  background: none;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.tailor__seg button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.tailor__switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.tailor__knob {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.2s;
+}
+
+.tailor__knob::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: transform 0.2s;
+}
+
+.tailor__switch[aria-checked="true"] .tailor__knob {
+  background: var(--accent);
+}
+
+.tailor__switch[aria-checked="true"] .tailor__knob::after {
+  transform: translateX(14px);
+  background: #1a0d06;
+}
+
+.tailor__count {
+  margin: 20px 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.tailor__actions {
+  display: grid;
+  gap: 8px;
+}
+
+.tailor__btn {
+  padding: 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+}
+
+.tailor__btn--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #1a0d06;
+  font-weight: 600;
+}
+
+/* ── The paper ── */
+.paper {
+  --ink: #16161d;
+  --ink2: #3c3c46;
+  --rule: #d9d9e0;
+  --mark: #b4532a;
+  width: 100%;
+  min-height: 11in;
+  padding: 0.5in 0.55in;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 9.6pt;
+  line-height: 1.38;
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+}
+
+.paper a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.r-head h1 {
+  margin: 0;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 22pt;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.r-head p {
+  margin: 2px 0 0;
+  font-size: 9pt;
+  color: var(--ink2);
+}
+
+.r-summary {
+  margin: 10px 0 4px;
+  color: var(--ink2);
+}
+
+.r-section h2 {
+  margin: 12px 0 6px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mark);
+}
+
+.r-entry + .r-entry {
+  margin-top: 7px;
+}
+
+.r-entry__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.r-entry__head p {
+  margin: 0;
+}
+
+.r-where {
+  margin-left: 8px;
+  color: var(--ink2);
+}
+
+.r-when {
+  flex: none;
+  color: var(--ink2);
+}
+
+.r-role {
+  margin: 0;
+  font-style: italic;
+  color: var(--ink2);
+}
+
+.paper ul {
+  margin: 3px 0 0;
+  padding-left: 15px;
+}
+
+.paper li {
+  margin: 1.5px 0;
+}
+
+.paper li::marker {
+  color: var(--mark);
+}
+
+.r-skill {
+  margin: 2px 0;
+}
+
+/* the swap: lines glide to their new places (view transitions) */
+::view-transition-group(*) {
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (max-width: 960px) {
+  .resume-page {
+    grid-template-columns: 1fr;
+  }
+  .tailor {
+    position: static;
+  }
+  .paper {
+    min-height: 0;
+    padding: 24px 20px;
+    font-size: 9pt;
+  }
+}
+
+/* ── Print: just the paper, on letter ── */
+@page {
+  size: letter;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff;
+  }
+  .site-head,
+  .tailor {
+    display: none;
+  }
+  .resume-page {
+    display: block;
+    padding: 0;
+  }
+  .paper {
+    width: 8.5in;
+    min-height: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}

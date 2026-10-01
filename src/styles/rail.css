@@ -1,0 +1,252 @@
+.rail {
+  position: fixed;
+  inset: var(--nav-h) auto 0 0;
+  z-index: 10;
+  width: var(--rail-w);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 0 22px;
+  opacity: var(--rail-presence, 0.45);
+  transition: opacity 0.4s ease;
+}
+
+.rail:hover,
+.rail:focus-within {
+  opacity: 1;
+}
+
+
+
+
+.rail__track {
+  position: relative;
+  flex: 1;
+}
+
+.rail__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.rail__path,
+.rail__progress {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.rail__path {
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 6;
+}
+
+.rail__progress {
+  stroke: var(--accent);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(255, 180, 140, 0.5));
+}
+
+.rail__marker {
+  fill: #fff;
+  filter: drop-shadow(0 0 8px rgba(255, 200, 160, 0.9));
+}
+
+.rail__stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rail__stops li {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.stop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 6px 12px 6px 52px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.stop__dot {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: var(--bg);
+  transform: translate(-50%, -50%);
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    transform 0.3s;
+}
+
+.stop__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stop__label {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.stop__when {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stop:hover .stop__label,
+.stop:focus-visible .stop__label,
+.stop.is-current .stop__label {
+  opacity: 1;
+}
+
+.stop:hover .stop__dot,
+.stop:focus-visible .stop__dot {
+  transform: translate(-50%, -50%) scale(1.3);
+}
+
+.stop:focus-visible {
+  outline: none;
+}
+
+.stop:focus-visible .stop__label {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.stop.is-passed .stop__dot,
+.stop.is-current .stop__dot {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.stop.is-current .stop__dot {
+  box-shadow: 0 0 0 5px rgba(255, 180, 140, 0.18);
+}
+
+.stop.is-soon {
+  cursor: default;
+}
+
+.stop.is-soon .stop__label {
+  opacity: 0.4;
+}
+
+.stop.is-soon .stop__dot {
+  border-style: dashed;
+}
+
+@media (max-width: 760px) {
+  .stop__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .stop {
+    height: 32px;
+    padding: 0;
+  }
+}
+
+/* ── Sub-stops: a chapter's beats, quieter than chapters ─── */
+.rail__ticks {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.stop--sub {
+  padding: 3px 12px 3px 60px;
+}
+
+.stop--sub .stop__label {
+  overflow: hidden;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.76rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.45;
+}
+
+.stop--sub.is-passed .stop__label {
+  opacity: 0.6;
+}
+
+.stop--sub.is-current .stop__label {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.stop--sub::before {
+  content: "";
+  position: absolute;
+  left: 46px;
+  top: 50%;
+  width: 6px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.stop--sub.is-current::before {
+  opacity: 0.8;
+  background: var(--accent);
+}
+
+@media (max-width: 760px) {
+  .stop--sub {
+    height: 18px;
+    padding: 0;
+  }
+  .stop--sub .stop__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+/* short windows: sub-stops keep their ticks but drop their labels */
+.rail--compact .stop--sub .stop__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.rail--compact .stop--sub {
+  height: 14px;
+  padding: 0;
+}
