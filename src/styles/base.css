@@ -218,8 +218,8 @@ main {
    with corner marks, numbered notes, and a title block in the corner. */
 .thesis {
   position: relative;
-  max-width: 660px;
-  padding: 30px 34px 26px;
+  max-width: 720px;
+  padding: 24px 40px 24px;
   border: 1px solid rgba(120, 210, 255, 0.55);
   outline: 1px solid rgba(120, 210, 255, 0.22);
   outline-offset: 6px;
@@ -268,6 +268,82 @@ main {
   margin: 0;
 }
 
+/* the drawing up top: a path out to the horizon, the sun coming up. The
+   lines draw themselves in each time Behind the scenes is turned on. */
+.thesis__view {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 14px;
+  overflow: visible;
+}
+
+.thesis__ink,
+.thesis__dim {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.thesis__ink {
+  stroke: #9fe3ff;
+  stroke-width: 1.2;
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
+}
+
+/* the sun is the one warm thing on the sheet */
+.thesis__ink--sun,
+.thesis__ink--rays {
+  stroke: #ffd2a0;
+}
+
+.thesis__dim {
+  stroke: rgba(120, 210, 255, 0.55);
+  stroke-width: 0.8;
+}
+
+.thesis__view text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: #6f9cc4;
+}
+
+[data-blueprint="on"] .thesis__ink {
+  animation: thesis-draw 2.4s 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+[data-blueprint="on"] .thesis__ink--sun {
+  animation-delay: 1s;
+}
+
+[data-blueprint="on"] .thesis__ink--rays {
+  animation-delay: 1.6s;
+}
+
+[data-blueprint="on"] .thesis__view :is(text, .thesis__dim) {
+  animation: thesis-fade 1s 1.4s both;
+}
+
+@keyframes thesis-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes thesis-fade {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thesis__ink {
+    stroke-dashoffset: 0;
+  }
+  [data-blueprint="on"] .thesis__ink,
+  [data-blueprint="on"] .thesis__view :is(text, .thesis__dim) {
+    animation: none;
+  }
+}
+
 .thesis__head {
   padding-bottom: 16px;
   margin-bottom: 18px;
@@ -286,7 +362,7 @@ main {
 .thesis__lead {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 1.45rem;
+  font-size: 1.7rem;
   line-height: 1.3;
   color: #fff;
 }
@@ -294,7 +370,8 @@ main {
 /* numbered like the notes on a drawing */
 .thesis__notes {
   display: grid;
-  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 28px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -359,9 +436,10 @@ main {
     margin-bottom: 12px;
   }
   .thesis__lead {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
   }
   .thesis__notes {
+    grid-template-columns: 1fr;
     gap: 8px;
   }
   .thesis__notes li {
