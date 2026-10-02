@@ -360,45 +360,24 @@ main {
 }
 
 .thesis__lead {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 1.7rem;
-  line-height: 1.3;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 2.1rem;
+  line-height: 1.15;
   color: #fff;
 }
 
-/* numbered like the notes on a drawing */
-.thesis__notes {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 28px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: note;
+/* the words: a warm serif on the cool sheet */
+.thesis__body p {
+  margin: 0 0 14px;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 1.22rem;
+  line-height: 1.55;
+  color: #dcefff;
 }
 
-.thesis__notes li {
-  position: relative;
-  padding-left: 38px;
-  counter-increment: note;
-}
-
-.thesis__notes li::before {
-  content: counter(note, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 0.3em;
-  padding: 0 5px;
-  border: 1px solid rgba(120, 210, 255, 0.45);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  line-height: 1.5;
-  color: #9fe3ff;
-}
-
-.thesis__notes li:last-child {
-  color: #fff;
+.thesis__body p:last-child {
+  margin-bottom: 0;
+  color: #fff6e6;
 }
 
 /* the title block, as on any drawing */
@@ -436,14 +415,12 @@ main {
     margin-bottom: 12px;
   }
   .thesis__lead {
-    font-size: 1.15rem;
+    font-size: 1.45rem;
   }
-  .thesis__notes {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  .thesis__notes li {
-    padding-left: 30px;
+  .thesis__body p {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    line-height: 1.4;
   }
   .thesis__block {
     margin-top: 12px;
