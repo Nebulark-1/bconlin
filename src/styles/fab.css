@@ -588,3 +588,158 @@
     animation: none;
   }
 }
+
+/* ── First visit: "this site has sound", pointing at the button ── */
+.sound-invite {
+  position: absolute;
+  right: calc(100% + 16px);
+  bottom: 96px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 300px;
+  padding: 16px 16px 16px 18px;
+  border: 1px solid rgba(255, 180, 140, 0.45);
+  border-radius: 16px;
+  background: rgba(12, 11, 30, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 24px 60px -20px rgba(0, 0, 0, 0.85),
+    0 0 40px -16px rgba(255, 180, 140, 0.45);
+  color: var(--text, #ece8ff);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(14px);
+  transition:
+    opacity 0.45s,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s 0.6s;
+}
+
+.sound-invite.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.45s,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* the little point toward the sound button */
+.sound-invite::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  bottom: 30px;
+  width: 12px;
+  height: 12px;
+  border-top: 1px solid rgba(255, 180, 140, 0.45);
+  border-right: 1px solid rgba(255, 180, 140, 0.45);
+  background: rgba(12, 11, 30, 0.95);
+  transform: rotate(45deg);
+}
+
+/* the bow from the home page, sweeping the four strings */
+.sound-invite__bow {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 22px;
+  margin-top: 4px;
+  background:
+    linear-gradient(#a99bff, #a99bff) 0 3px / 100% 1.5px no-repeat,
+    linear-gradient(#ff8a7a, #ff8a7a) 0 8px / 100% 1.5px no-repeat,
+    linear-gradient(#39ff88, #39ff88) 0 13px / 100% 1.5px no-repeat,
+    linear-gradient(#ff4da6, #ff4da6) 0 18px / 100% 1.5px no-repeat;
+}
+
+.sound-invite__bow::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 3px;
+  height: 30px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 10px #fff;
+  animation: invite-sweep 2.2s ease-in-out infinite;
+}
+
+@keyframes invite-sweep {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(31px); }
+}
+
+.sound-invite__text p {
+  margin: 0 0 4px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--muted, #8d88ad);
+}
+
+.sound-invite__text b {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--text, #ece8ff);
+}
+
+.sound-invite__on {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffb48c;
+  color: #1a0d06;
+  font-weight: 600;
+  font-size: 0.86rem;
+  transition:
+    transform 0.2s,
+    box-shadow 0.3s;
+}
+
+.sound-invite__on:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px -6px rgba(255, 180, 140, 0.7);
+}
+
+.sound-invite__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted, #8d88ad);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.sound-invite__close:hover {
+  color: var(--text, #ece8ff);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 760px) {
+  .sound-invite {
+    right: 0;
+    bottom: calc(100% + 14px);
+    width: min(300px, calc(100vw - 28px));
+  }
+  .sound-invite::after {
+    right: 18px;
+    bottom: -7px;
+    transform: rotate(135deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-invite__bow::after {
+    animation: none;
+  }
+}

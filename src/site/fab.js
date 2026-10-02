@@ -1,5 +1,5 @@
 import { nextChapter } from "../content.js";
-import { toggleSound, onSound, isSoundPlaying, chime, PENTATONIC, LAYERS, getMix, setMix, resetMix, level, bend } from "./sound.js";
+import { toggleSound, onSound, isSoundPlaying, soundWanted, chime, PENTATONIC, LAYERS, getMix, setMix, resetMix, level, bend } from "./sound.js";
 import { isOn, discover } from "./eggs.js";
 import { installConsole } from "./console.js";
 
@@ -123,6 +123,7 @@ export function mountFab({ current, blueprint = false }) {
     if (held) return (held = false);
     toggleSound();
   });
+  inviteToSound(root, soundBtn);
   onSound((on, wanted) => {
     soundBtn.setAttribute("aria-pressed", String(wanted));
     soundBtn.classList.toggle("is-playing", on);
@@ -265,4 +266,54 @@ function createStudio(root) {
       discover("studio");
     },
   };
+}
+
+/**
+ * First visit only: a small card beside the sound button saying the site
+ * has sound, with a way to turn it on. Closing it, turning sound on, or
+ * using the sound button directly means it never shows again.
+ */
+const INVITE_KEY = "bc-sound-invite";
+function inviteToSound(root, soundBtn) {
+  let seen = true;
+  try {
+    seen = !!localStorage.getItem(INVITE_KEY);
+  } catch {
+    // can't remember it, so don't nag
+  }
+  if (seen || soundWanted()) return;
+
+  const card = document.createElement("div");
+  card.className = "sound-invite";
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-label", "This site has sound");
+  card.innerHTML = `
+    <span class="sound-invite__bow" aria-hidden="true"></span>
+    <div class="sound-invite__text">
+      <p><b>This site has sound</b></p>
+      <p>Soft strings, a little wind when you scroll. Nothing loud.</p>
+      <button type="button" class="sound-invite__on">Turn it on</button>
+    </div>
+    <button type="button" class="sound-invite__close" aria-label="No thanks">×</button>`;
+  root.appendChild(card);
+
+  let gone = false;
+  const dismiss = () => {
+    if (gone) return;
+    gone = true;
+    try {
+      localStorage.setItem(INVITE_KEY, "1");
+    } catch {
+      // fine
+    }
+    card.classList.remove("is-on");
+    setTimeout(() => card.remove(), 500);
+  };
+  setTimeout(() => !gone && card.classList.add("is-on"), 2200);
+  card.querySelector(".sound-invite__on").addEventListener("click", () => {
+    toggleSound(true);
+    dismiss();
+  });
+  card.querySelector(".sound-invite__close").addEventListener("click", dismiss);
+  soundBtn.addEventListener("click", dismiss);
 }
