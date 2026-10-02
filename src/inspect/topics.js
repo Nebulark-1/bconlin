@@ -94,7 +94,7 @@ const ridgeTopic = {
   kicker: "Procedural terrain",
   title: "Control points + octaves of sine",
   summary:
-    "Each ridge is a piecewise-linear backbone through hand-placed control points, plus three octaves of sine (frequency ×2.6, amplitude ×½ each step) with seeded phases and a pinch of jitter. The ends are ramped to zero over 60 units so neighbouring pieces meet exactly. Below: Hancock’s ridge with the octaves accumulating (wobble amplified ×6).",
+    "Each ridge is a piecewise-linear backbone through hand-placed control points, plus three octaves of sine (frequency ×2.6, amplitude ×½ each step) with seeded phases and a pinch of jitter. The ends are ramped to zero over 60 units so neighboring pieces meet exactly. Below: Hancock’s ridge with the octaves accumulating (wobble amplified ×6).",
   sources: [{ file: "src/art/draw.js", src: drawSrc, name: "ridge", marks: ["Math.sin", "edge"] }],
   viz(ctx, w, h, t, S) {
     axes(ctx, w, h);

@@ -1,4 +1,4 @@
-import { createDirector } from "./engine/scroll.js";
+import { createDirector, glideTo } from "./engine/scroll.js";
 import { range, easeOutCubic } from "./engine/math.js";
 import * as houghtonMod from "./scenes/houghton/index.js";
 import * as blgMod from "./scenes/blg/index.js";
@@ -7,16 +7,19 @@ import * as chaosMod from "./scenes/chaos/index.js";
 import { createTimeline } from "./timeline.js";
 import { chapters, nextChapter } from "./content.js";
 import { createBlueprint } from "./blueprint.js";
+import { mountFab } from "./site/fab.js";
 
 const director = createDirector();
-const blueprint = createBlueprint(document.querySelector(".bts"));
+const fab = mountFab({ current: "career", blueprint: true });
+const blueprint = createBlueprint(document.querySelector(".bts"), fab.blueprintButton);
 const $ = (sel) => document.querySelector(sel);
 
-// Prologue: the line drifts up and dissolves into the dark.
+// Prologue: the quote (or behind the scenes, the thesis) drifts up and
+// dissolves into the dark.
 const intro = $('[data-scene="intro"]');
 director.add(intro, {
   update(p) {
-    const t = range(p, 0.1, 0.85);
+    const t = range(p, 0.2, 0.9);
     intro.style.setProperty("--intro-opacity", 1 - t);
     intro.style.setProperty("--intro-shift", `${-t * 50}px`);
     intro.style.setProperty("--intro-blur", `${t * 6}px`);
@@ -111,3 +114,17 @@ const timeline = createTimeline(
 director.onFrame(timeline.update);
 
 director.start();
+
+// Deep links from the home page (career.html#law): open on that chapter's
+// first card once layout has settled. The browser mustn't restore an old
+// scroll position over it.
+const linked = () => sceneFor(location.hash.slice(1));
+if (linked()) history.scrollRestoration = "manual";
+window.addEventListener("load", () => {
+  const s = linked();
+  if (s) window.scrollTo(0, holdAt(s, 0.01));
+});
+window.addEventListener("hashchange", () => {
+  const s = linked();
+  if (s) glideTo(holdAt(s, 0.01));
+});

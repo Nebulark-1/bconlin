@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ben Conlin - Secrets</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/blueprint.css" />
+    <link rel="stylesheet" href="/src/styles/fab.css" />
+    <link rel="stylesheet" href="/src/styles/eggs.css" />
+  </head>
+  <body class="page-eggs">
+    <header class="site-head">
+      <a class="site-head__brand" href="./">
+        <span class="site-head__mark">BC</span>
+        <span class="site-head__name">Ben Conlin</span>
+      </a>
+      <nav class="site-head__nav" aria-label="Site">
+        <a href="./">Home</a>
+        <a href="career.html">Career</a>
+        <a href="resume.html">Résumé</a>
+        <span class="is-soon" title="Coming soon">Projects</span>
+        <span class="is-soon" title="Coming soon">About</span>
+      </nav>
+      <div class="site-head__cta">
+        <a class="site-head__resume" href="resume/Ben-Conlin-Resume.pdf" download>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0L4.5 6.5M8 10l3.5-3.5M3 13h10" /></svg>
+          Résumé PDF
+        </a>
+      </div>
+    </header>
+
+    <main class="eggs">
+      <section class="sky wrap">
+        <div class="sky__text">
+          <h1>Secrets</h1>
+          <p class="sky__lede" data-lede></p>
+          <p class="sky__count"><b data-found>0</b> found <span data-left></span></p>
+        </div>
+        <figure class="sky__chart">
+          <canvas class="sky__canvas" aria-hidden="true"></canvas>
+          <figcaption>Your stars, connected in the order you found them.</figcaption>
+        </figure>
+      </section>
+
+      <section class="finds wrap" aria-labelledby="finds-title">
+        <header class="section-head">
+          <h2 id="finds-title">Found so far</h2>
+        </header>
+        <div class="finds__list"></div>
+      </section>
+
+      <section class="stuck wrap" aria-labelledby="stuck-title">
+        <header class="section-head">
+          <h2 id="stuck-title">Need a hint?</h2>
+        </header>
+        <button type="button" class="stuck__show" aria-expanded="false" aria-controls="stuck-list">Show the list</button>
+        <ol class="stuck__list" id="stuck-list" hidden></ol>
+        <button type="button" class="stuck__reset">Reset progress</button>
+      </section>
+    </main>
+
+    <script type="module" src="/src/eggs/main.js"></script>
+  </body>
+</html>

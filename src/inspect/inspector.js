@@ -30,7 +30,7 @@ export function createInspector(host, topics, scene) {
   chips.className = "bp-chips";
   chips.setAttribute("aria-label", "Inspect the code behind the scene");
   chips.innerHTML =
-    `<span class="bp-chips__lead">inspect</span>` +
+    `<span class="bp-chips__lead">Inspect the code</span>` +
     topics.map((t) => `<button type="button" data-topic="${t.id}">${t.chip}</button>`).join("");
 
   const panel = document.createElement("aside");
@@ -60,13 +60,19 @@ export function createInspector(host, topics, scene) {
   let current = null;
   let tick = 0;
 
-  // Source is extracted and highlighted once per topic, on first open.
+  // A topic's title, summary and sources can be fixed, or functions of the
+  // scene's stats (for a topic that shows one of several things).
+  const read = (v) => (typeof v === "function" ? v(scene.stats) : v);
+
+  // Source is extracted and highlighted once per topic (or per variant of
+  // one, when the topic has a key), on first open.
   const codeCache = new Map();
   const codeFor = (topic) => {
-    if (!codeCache.has(topic.id)) {
+    const key = `${topic.id}:${topic.key ? topic.key(scene.stats) : ""}`;
+    if (!codeCache.has(key)) {
       codeCache.set(
-        topic.id,
-        topic.sources
+        key,
+        read(topic.sources)
           .map(({ file, src, name, marks }) => {
             // a named function / block, or the whole file when no name is given
             const found = name ? extract(src, name) : { code: src.trimEnd(), line: 1 };
@@ -77,7 +83,7 @@ export function createInspector(host, topics, scene) {
           .join(""),
       );
     }
-    return codeCache.get(topic.id);
+    return codeCache.get(key);
   };
 
   // Actions come in three kinds: commands (do something once), toggles (pick
@@ -113,6 +119,8 @@ export function createInspector(host, topics, scene) {
       b.classList.toggle("is-primary", !a.isOn);
       b.addEventListener("click", () => {
         a.run(scene);
+        // picking a variant redraws the whole panel for it
+        if (a.reopen) return open(topic.id, true);
         const input = actions.querySelector("input");
         if (input && a.fills) input.value = a.fills;
         refresh();
@@ -122,20 +130,20 @@ export function createInspector(host, topics, scene) {
     refresh();
   }
 
-  function open(id) {
+  function open(id, keepScroll = false) {
     const topic = topics.find((t) => t.id === id);
     if (!topic) return;
     current = topic;
     const badge = BADGES[topic.provenance];
     $(".inspector__kicker").innerHTML = topic.kicker + (badge ? ` <span class="inspector__badge" title="${badge.title}">${badge.label}</span>` : "");
-    $(".inspector__title").textContent = topic.title;
-    $(".inspector__summary").innerHTML = topic.summary;
+    $(".inspector__title").textContent = read(topic.title);
+    $(".inspector__summary").innerHTML = read(topic.summary);
     $(".inspector__code").innerHTML = codeFor(topic);
     renderActions(topic);
     canvas.style.height = `${topic.vizHeight || 170}px`;
     chips.querySelectorAll("button").forEach((b) => b.classList.toggle("is-on", b.dataset.topic === id));
     host.classList.add("inspector-open");
-    $(".inspector__body").scrollTop = 0;
+    if (!keepScroll) $(".inspector__body").scrollTop = 0;
     live.textContent = topic.live(scene.stats).join("\n");
     tick = 1;
   }

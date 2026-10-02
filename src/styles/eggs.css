@@ -1,0 +1,400 @@
+/* ── Secrets ───────────────────────────────────────────────
+   A night sky with one star per secret, then what you've found, then the
+   spoiler list. Gold marks anything to do with a found secret. */
+
+.page-eggs {
+  --gold: #ffe2c4;
+  --gold-deep: #ffd2a0;
+  --hair: rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(50% 40% at 70% 10%, rgba(255, 210, 160, 0.08), transparent 70%),
+    radial-gradient(60% 50% at 20% 0%, rgba(80, 64, 190, 0.14), transparent 70%),
+    var(--bg);
+}
+
+.page-eggs main {
+  position: relative;
+  z-index: 2;
+  margin-left: 0;
+  padding-top: var(--nav-h);
+}
+
+.rain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.kicker {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.section-head {
+  max-width: 640px;
+  margin-bottom: 28px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  letter-spacing: -0.02em;
+}
+
+.section-head p {
+  margin: 10px 0 0;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ── The sky ── */
+.sky {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
+  min-height: min(720px, calc(100svh - var(--nav-h)));
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.sky h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.sky__lede {
+  margin: 18px 0 0;
+  max-width: 520px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.sky__count {
+  margin: 24px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.sky__count b {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--gold);
+}
+
+.sky__chart {
+  margin: 0;
+}
+
+.sky__canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.15;
+  border: 1px solid rgba(255, 226, 196, 0.08);
+  border-radius: 22px;
+  background: radial-gradient(80% 80% at 50% 50%, rgba(30, 24, 70, 0.6), rgba(5, 5, 20, 0.6));
+}
+
+.sky__chart figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ── What you've found ── */
+.finds,
+.stuck {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+.finds__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.finds__empty {
+  margin: 0;
+  padding: 28px;
+  border: 1px dashed var(--hair);
+  border-radius: 16px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.find {
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 226, 196, 0.22);
+  border-radius: 16px;
+  background: rgba(16, 14, 38, 0.7);
+  transition:
+    opacity 0.3s,
+    border-color 0.3s;
+}
+
+.find.is-off {
+  opacity: 0.55;
+  border-color: var(--hair);
+}
+
+.find__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.find__head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.find__star {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  filter: drop-shadow(0 0 6px var(--gold-deep));
+}
+
+.find h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.15rem;
+}
+
+.find__meta {
+  margin: 3px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+.tag {
+  font-style: normal;
+}
+
+.tag--own {
+  color: var(--gold);
+}
+
+.tag--hint {
+  color: #9fe3ff;
+}
+
+.tag--spoiler {
+  color: #ff8a7a;
+}
+
+.find__what {
+  margin: 12px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.find__code {
+  margin-top: 12px;
+}
+
+.find__code summary,
+.spoil summary {
+  width: fit-content;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--gold);
+  cursor: pointer;
+}
+
+.find__src .src pre {
+  max-height: 340px;
+}
+
+/* the on/off switch */
+.switch {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--hair);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.switch span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 0.25s;
+}
+
+.switch[aria-checked="true"] {
+  background: rgba(255, 210, 160, 0.25);
+  border-color: rgba(255, 210, 160, 0.5);
+}
+
+.switch[aria-checked="true"] span {
+  transform: translateX(18px);
+  background: var(--gold);
+}
+
+/* ── Stuck? ── */
+.stuck__show,
+.stuck__reset {
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 226, 196, 0.4);
+  border-radius: 999px;
+  background: none;
+  color: var(--gold);
+  font: 500 0.9rem var(--font-body);
+  cursor: pointer;
+}
+
+.stuck__show:hover {
+  background: rgba(255, 226, 196, 0.08);
+}
+
+.stuck__list {
+  display: grid;
+  gap: 8px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spoil {
+  padding: 12px 16px;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  background: rgba(10, 10, 30, 0.6);
+}
+
+.spoil.is-found {
+  border-color: rgba(255, 226, 196, 0.25);
+}
+
+.spoil__row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto auto 70px;
+  align-items: center;
+  gap: 14px;
+}
+
+.spoil__n {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.spoil__name {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.spoil__page {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.spoil__level {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-deep);
+}
+
+.spoil__state {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-align: right;
+  color: var(--muted);
+}
+
+.spoil__state.is-found {
+  color: var(--gold);
+}
+
+.spoil details {
+  margin: 8px 0 0 44px;
+}
+
+.spoil details p {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.spoil details p b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.spoil__spoiler summary {
+  color: #ff8a7a;
+}
+
+.stuck__reset {
+  display: block;
+  margin-top: 40px;
+  border-color: var(--hair);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.stuck__reset:hover {
+  border-color: #ff8a7a;
+  color: #ff8a7a;
+}
+
+@media (max-width: 860px) {
+  .sky {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .spoil__row {
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+  }
+  .spoil__page,
+  .spoil__level {
+    display: none;
+  }
+  .spoil details {
+    margin-left: 40px;
+  }
+}

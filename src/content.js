@@ -1,13 +1,16 @@
 // Career copy lives here, separate from the art, so it can be edited freely.
 // House style: lead with the action, end on the result, use real numbers,
 // no em dashes. Card titles double as the timeline's sub-stops, so keep
-// them short (about 24 characters).
+// them short (about 24 characters). Each chapter's summary is its one-line
+// introduction on the home page.
 
 export const chapters = [
   {
     id: "houghton",
     label: "Michigan Tech",
     when: "2022–2025",
+    summary:
+      "Earned a computer science degree while running NCAA cross country and serving as student body president.",
     cards: [
       {
         eyebrow: "Houghton, Michigan",
@@ -24,7 +27,7 @@ export const chapters = [
         bullets: [
           "Built a Pascal-like compiler in C with Flex and Yacc, from lexing and parsing through semantic analysis and code generation",
           "Led a 7-person team that designed and shipped a bullet-hell game, presenting progress to stakeholders every week",
-          "Directed a 6-person capstone team that built, deployed and marketed a health analytics platform on external REST APIs",
+          "Directed a 6-person capstone team that built, deployed, and marketed a health analytics platform on external REST APIs",
           "Managed a 5-person team through a full e-commerce system build",
         ],
       },
@@ -56,6 +59,8 @@ export const chapters = [
     id: "law",
     label: "Business Law Group",
     when: "2021–2026",
+    summary:
+      "Rose from legal assistant to operations manager, building the firm's document pipeline, data warehouse, and intranet.",
     cards: [
       {
         eyebrow: "Colorado Springs · Summers 2021–2024",
@@ -63,7 +68,7 @@ export const chapters = [
         bullets: [
           "Organized the share purchase agreement for a $3M acquisition and the asset purchase agreement for a $20M acquisition",
           "Drafted contracts and disclosures and worked directly with clients and opposing counsel",
-          "Formed LLCs, wrote cease-and-desist letters and filed court documents",
+          "Formed LLCs, wrote cease-and-desist letters, and filed court documents",
         ],
       },
       {
@@ -73,7 +78,7 @@ export const chapters = [
           "Eliminated hundreds of hours of manual filing a year with a Python and SQLite pipeline that ingests tens of thousands of documents",
           "OCR'd every file and transcribed audio in-house with Whisper, then routed known forms by rule and everything else through a trained classifier",
           "Sent low-confidence results to staff for review and fed their corrections back in as training data",
-          "Managed 100+ active IRS cases a year: transcripts, notices, powers of attorney and filings",
+          "Managed 100+ active IRS cases a year: transcripts, notices, powers of attorney, and filings",
         ],
       },
       {
@@ -89,9 +94,9 @@ export const chapters = [
         eyebrow: "Firm analytics",
         title: "Margins nobody could see",
         bullets: [
-          "Consolidated decades of firm records and tens of millions in case income into one SQL warehouse, using VBA, SQL and Python",
+          "Consolidated decades of firm records and tens of millions in case income into one SQL warehouse, using VBA, SQL, and Python",
           "Reconciled my models to leadership's exact figures, then exposed per-attorney and per-matter margins",
-          "The results drove compensation, staffing and the firm's move to flat-rate billing",
+          "The results drove compensation, staffing, and the firm's move to flat-rate billing",
           "Presented monthly performance reviews to firm leadership and senior attorneys",
         ],
       },
@@ -100,7 +105,7 @@ export const chapters = [
         title: "Running the firm",
         bullets: [
           "Promoted twice in twelve months and given ownership of one of the firm's five strategic pillars",
-          "Led the build of a firm intranet for time tracking, PTO, intake, IT requests and benefits, saving 50+ staff hours a week",
+          "Led the build of a firm intranet for time tracking, PTO, intake, IT requests, and benefits, saving 50+ staff hours a week",
           "Cut IT costs 82% by bringing IT in-house for 20+ staff ($135/hr to $25/hr)",
           "Wrote the firm's operations manual, cutting leadership interruptions by about half",
         ],
@@ -111,6 +116,8 @@ export const chapters = [
     id: "uchealth",
     label: "UCHealth",
     when: "2026–now",
+    summary:
+      "Coordinate patients through 12 operating rooms at a Level I trauma center as a perioperative assistant.",
     cards: [
       {
         eyebrow: "UCHealth Medical Center of the Rockies",
@@ -118,8 +125,8 @@ export const chapters = [
         meta: "May 2026–present",
         bullets: [
           "Coordinate patient flow through 20+ pre- and post-op bays supporting 12 operating rooms at a Level I trauma center",
-          "Work alongside nurses, anesthesia providers and surgeons on time-critical handoffs",
-          "Use Epic every day, seeing mission-critical software from the user's side",
+          "Work alongside nurses, anesthesia providers, and surgeons on time-critical handoffs",
+          "Use Epic every shift, from the user's side of the screen",
         ],
       },
       {
@@ -135,17 +142,17 @@ export const chapters = [
         eyebrow: "Shadowing",
         title: "Inside the OR",
         bullets: [
-          "Shadowed craniotomies, open-heart surgeries and Whipple procedures",
-          "Watched surgical teams run hours-long procedures on checklists, clear roles and closed-loop communication",
+          "Shadowed craniotomies, open-heart surgeries, and Whipple procedures",
+          "Watched surgical teams run hours-long procedures on checklists, clear roles, and closed-loop communication",
         ],
       },
       {
         eyebrow: "What carries over",
         title: "Systems that can't fail",
         bullets: [
-          "Work daily under HIPAA, sterile technique and documentation rules in one of the most regulated industries there is",
-          "Handoffs are where hospitals and software both break, so I now design for them first",
-          "Built the composure and patience that incident response and user support depend on",
+          "Work daily under HIPAA, sterile technique, and strict documentation rules",
+          "Saw firsthand that handoffs are where things go wrong, in hospitals and in software",
+          "Learned to stay calm and patient under pressure, which is most of incident response and user support",
         ],
       },
     ],
@@ -154,15 +161,17 @@ export const chapters = [
     id: "chaos",
     label: "Chaos Coaching",
     when: "2026–now",
+    summary:
+      "Founded and built a training platform where an AI coach plans each athlete's week from their real training.",
     cards: [
       {
         eyebrow: "Founder and developer · chaoscoaching.co",
         title: "Chaos Coaching",
         meta: "2026–present · invitation-only alpha",
         bullets: [
-          "Designed, built and deployed a training platform where an AI coach plans each athlete's week from their real training, notes and goals",
-          "Integrated Strava (by webhook), the Claude API and Stripe payments",
-          "Shipped about 24,000 lines of Node, Express and SQLite, covered by 298 automated tests and deployed with Docker",
+          "Designed, built, and deployed a training platform where an AI coach plans each athlete's week from their real training, notes, and goals",
+          "Integrated Strava (by webhook), the Claude API, and Stripe payments",
+          "Shipped about 24,000 lines of Node, Express, and SQLite, covered by 298 automated tests and deployed with Docker",
         ],
       },
       {
@@ -170,7 +179,7 @@ export const chapters = [
         title: "Feedback that counts",
         bullets: [
           "Athletes rate each session's feel and effort and place any pain on a body map",
-          "Pain is read by behaviour, not just the number: a 3 that changed someone's stride outranks a 7 side stitch",
+          "Weighs pain by what it did to the run, so a 3 that changed someone's stride outranks a 7 side stitch",
           "A spot that keeps coming back is treated as a pattern and holds the next week's load",
         ],
       },
@@ -187,7 +196,7 @@ export const chapters = [
         eyebrow: "Guardrails",
         title: "Rules the AI can't skip",
         bullets: [
-          "Enforced injury-prevention rules in code instead of trusting the prompt: mileage step limits, two hard days, scheduled deloads",
+          "Hard-coded the injury-prevention rules: mileage step limits, two hard days, scheduled deloads",
           "Unsafe weeks are refused before they're saved; borderline ones are saved with a visible warning",
           "Stress-tested against 13 simulated athletes, from a first-time runner to elite volume",
         ],
@@ -201,7 +210,70 @@ export const nextChapter = {
   label: "Next chapter",
   when: "Open to work",
   pitch: "I turn messy real-world processes into software that people rely on.",
-  looking: "Looking for software engineering, data and solutions roles. Based in Fort Collins, Colorado.",
+  looking: "Looking for software engineering, data, and solutions roles. Based in Fort Collins, Colorado (willing to relocate).",
   email: "benaconlin@gmail.com",
   linkedin: "https://www.linkedin.com/in/benconlin/",
 };
+
+/**
+ * The home page timeline: what I was doing at each point, shown as you
+ * scrub through the years. Years are fractional (2022.62 ≈ August 2022).
+ */
+export const eras = [
+  { from: 2021.0, to: 2021.4, when: "Early 2021", text: "Coaching high school cross country runners as a volunteer", ids: [] },
+  { from: 2021.4, to: 2021.65, when: "Summer 2021", text: "Legal assistant at Business Law Group in Colorado Springs", ids: ["law"] },
+  { from: 2021.65, to: 2022.4, when: "2021–22", text: "Running Division I cross country and track at BYU", ids: [] },
+  { from: 2022.4, to: 2022.62, when: "Summer 2022", text: "Back at the law firm as a legal assistant", ids: ["law"] },
+  { from: 2022.62, to: 2023.4, when: "2022–23", text: "Transferred to Michigan Tech for computer science and Division II cross country and track", ids: ["houghton"] },
+  { from: 2023.4, to: 2023.65, when: "Summer 2023", text: "A third summer at the law firm", ids: ["law"] },
+  { from: 2023.65, to: 2024.4, when: "2023–24", text: "Parliamentarian of student government, while studying and racing for Michigan Tech", ids: ["houghton"] },
+  { from: 2024.4, to: 2024.65, when: "Summer 2024", text: "A fourth summer at the law firm", ids: ["law"] },
+  { from: 2024.65, to: 2025.38, when: "2024–25", text: "Student Body President for 8,000+ students, then a B.S. in computer science", ids: ["houghton"] },
+  { from: 2025.38, to: 2026.0, when: "2025", text: "Joined the firm full time as a tax paralegal, then took over its IT and operations", ids: ["law"] },
+  { from: 2026.0, to: 2026.35, when: "Early 2026", text: "Running the firm's operations while building Chaos Coaching", ids: ["law", "chaos"] },
+  { from: 2026.35, to: 2026.8, when: "May 2026 to now", text: "Perioperative assistant at UCHealth, and founder of Chaos Coaching", ids: ["uchealth", "chaos"] },
+];
+
+/** Four results for the home page, each drawn with the same 400 points. */
+export const results = [
+  {
+    id: "houghton",
+    label: "8,000+ students",
+    tag: "Michigan Tech · Student Body President",
+    from: 0,
+    to: 8000,
+    show: "8,000+",
+    caption: "students represented to university leadership, while leading 30+ student reps",
+    unit: "20 students",
+  },
+  {
+    id: "law",
+    label: "82% lower IT cost",
+    tag: "Business Law Group · In-house IT",
+    from: 0,
+    to: 82,
+    show: "82%",
+    caption: "lower IT costs after bringing IT in-house for 20+ staff ($135/hr down to $25/hr)",
+    unit: "$1 an hour",
+  },
+  {
+    id: "law",
+    label: "200 → 50 hours",
+    tag: "Business Law Group · Tax audit",
+    from: 200,
+    to: 50,
+    show: "200 → 50",
+    caption: "attorney hours on a six-year tax audit, down from a projected 200+",
+    unit: "1 attorney hour",
+  },
+  {
+    id: "chaos",
+    label: "298 tests",
+    tag: "Chaos Coaching · Founder",
+    from: 0,
+    to: 298,
+    show: "298",
+    caption: "automated tests on about 24,000 lines of Chaos Coaching",
+    unit: "1 automated test",
+  },
+];

@@ -184,20 +184,196 @@ main {
 
 /* ── Prologue ───────────────────────────────────────────── */
 .scene--intro {
-  height: 170vh;
+  height: 200vh;
 }
 
-.scene--intro .stage {
+/* the quote normally; behind the scenes, the thesis in its place */
+.intro {
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
-}
-
-.intro {
-  padding: 0 var(--gutter);
+  align-content: center;
+  padding: var(--nav-h) var(--gutter) 0;
   text-align: center;
   opacity: var(--intro-opacity, 1);
   transform: translateY(var(--intro-shift, 0px));
   filter: blur(var(--intro-blur, 0px));
+}
+
+.intro--quote > * {
+  max-width: 900px;
+}
+
+.intro--thesis,
+[data-blueprint="on"] .intro--quote {
+  visibility: hidden;
+}
+
+[data-blueprint="on"] .intro--thesis {
+  visibility: visible;
+}
+
+/* The thesis is a blueprint: a drawing sheet on the grid, a double frame
+   with corner marks, numbered notes, and a title block in the corner. */
+.thesis {
+  position: relative;
+  max-width: 660px;
+  padding: 30px 34px 26px;
+  border: 1px solid rgba(120, 210, 255, 0.55);
+  outline: 1px solid rgba(120, 210, 255, 0.22);
+  outline-offset: 6px;
+  background-color: #051329;
+  background-image:
+    linear-gradient(rgba(90, 170, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 170, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(90, 170, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 170, 255, 0.05) 1px, transparent 1px);
+  background-size:
+    80px 80px,
+    80px 80px,
+    16px 16px,
+    16px 16px;
+  text-align: left;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: #cfe8ff;
+}
+
+/* corner marks, just outside the frame */
+.thesis::before,
+.thesis::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid #9fe3ff;
+}
+
+.thesis::before {
+  top: -12px;
+  left: -12px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.thesis::after {
+  bottom: -12px;
+  right: -12px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+.thesis p {
+  margin: 0;
+}
+
+.thesis__head {
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+  border-bottom: 1px dashed rgba(120, 210, 255, 0.35);
+}
+
+.thesis__kicker {
+  margin-bottom: 8px !important;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #6f9cc4;
+}
+
+.thesis__lead {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.45rem;
+  line-height: 1.3;
+  color: #fff;
+}
+
+/* numbered like the notes on a drawing */
+.thesis__notes {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: note;
+}
+
+.thesis__notes li {
+  position: relative;
+  padding-left: 38px;
+  counter-increment: note;
+}
+
+.thesis__notes li::before {
+  content: counter(note, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.3em;
+  padding: 0 5px;
+  border: 1px solid rgba(120, 210, 255, 0.45);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  line-height: 1.5;
+  color: #9fe3ff;
+}
+
+.thesis__notes li:last-child {
+  color: #fff;
+}
+
+/* the title block, as on any drawing */
+.thesis__block {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 14px;
+  width: max-content;
+  margin: 22px 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid rgba(120, 210, 255, 0.45);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.thesis__block span {
+  color: #6f9cc4;
+}
+
+.thesis__block b {
+  font-weight: 500;
+  color: #d4f1ff;
+}
+
+@media (max-width: 760px) {
+  .thesis {
+    padding: 16px 14px 14px;
+    font-size: 0.8rem;
+    line-height: 1.55;
+  }
+  .thesis__head {
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+  .thesis__lead {
+    font-size: 1.05rem;
+  }
+  .thesis__notes {
+    gap: 8px;
+  }
+  .thesis__notes li {
+    padding-left: 30px;
+  }
+  .thesis__block {
+    margin-top: 12px;
+    font-size: 0.52rem;
+  }
+  [data-blueprint="on"] .scene--intro .scroll-hint {
+    display: none;
+  }
 }
 
 .intro__kicker {
@@ -210,10 +386,10 @@ main {
 }
 
 .intro__line {
-  margin: 0;
+  margin: 0 0 24px;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.7rem, 4.2vw, 3.4rem);
+  font-size: clamp(1.2rem, 3vw, 2.4rem);
   letter-spacing: -0.02em;
   background: linear-gradient(180deg, #fff 20%, #8e87c0);
   -webkit-background-clip: text;
@@ -345,5 +521,42 @@ main {
 @media (prefers-reduced-motion: reduce) {
   .scroll-hint::after {
     animation: none;
+  }
+}
+
+/* ── Scrollbars ─────────────────────────────────────────────
+   A slim pill on a clear track instead of the system bar. It's faint at
+   rest and takes on the four chapter colours when you reach for it. Every
+   scrolling area on the site gets it, including the code inspector. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: rgba(236, 232, 255, 0.16) padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  border-width: 2px;
+  background: linear-gradient(180deg, #a99bff, #ff8a7a, #39ff88, #ff4da6) padding-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #c4b9ff, #ffa89b, #7dffb0, #ff80c0) padding-box;
+}
+
+/* Firefox has no pseudo-elements for this; give it the thin, quiet version */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 232, 255, 0.18) transparent;
   }
 }

@@ -4,28 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ben Conlin</title>
+    <meta
+      name="description"
+      content="Ben Conlin: software, data, and operations. Computer science at Michigan Tech, a law firm, a surgical department, and an AI coaching startup."
+    />
+    <link rel="icon" href="data:," />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/base.css" />
-    <link rel="stylesheet" href="/src/styles/rail.css" />
-    <link rel="stylesheet" href="/src/styles/houghton.css" />
-    <link rel="stylesheet" href="/src/styles/blg.css" />
-    <link rel="stylesheet" href="/src/styles/uch.css" />
-    <link rel="stylesheet" href="/src/styles/chaos.css" />
     <link rel="stylesheet" href="/src/styles/blueprint.css" />
+    <link rel="stylesheet" href="/src/styles/fab.css" />
+    <link rel="stylesheet" href="/src/styles/home.css" />
   </head>
-  <body id="top">
+  <body id="top" class="page-home">
     <header class="site-head">
-      <a class="site-head__brand" href="#top">
+      <a class="site-head__brand" href="./">
         <span class="site-head__mark">BC</span>
         <span class="site-head__name">Ben Conlin</span>
       </a>
       <nav class="site-head__nav" aria-label="Site">
-        <a href="./" aria-current="page">Career</a>
+        <a href="./" aria-current="page">Home</a>
+        <a href="career.html">Career</a>
         <a href="resume.html">Résumé</a>
         <span class="is-soon" title="Coming soon">Projects</span>
         <span class="is-soon" title="Coming soon">About</span>
@@ -38,156 +41,99 @@
       </div>
     </header>
 
-    <nav class="rail" aria-label="Career timeline">
-      <div class="rail__track">
-        <svg class="rail__svg" aria-hidden="true">
-          <path class="rail__path" />
-          <path class="rail__progress" />
-          <path class="rail__ticks" />
-          <circle class="rail__marker" r="5" />
-        </svg>
-        <ol class="rail__stops"></ol>
-      </div>
-      <button class="bts" type="button" role="switch" aria-checked="false" title="Behind the scenes">
-        <span class="bts__track" aria-hidden="true">
-          <span class="bts__knob">
-            <svg class="bts__icon bts__icon--art" viewBox="0 0 16 16"><path d="M10.5 2.5l3 3-6 6H4.5v-3z M3 13.5h4" /></svg>
-            <svg class="bts__icon bts__icon--code" viewBox="0 0 16 16"><path d="M5.5 4.5L2 8l3.5 3.5 M10.5 4.5L14 8l-3.5 3.5" /></svg>
-          </span>
-        </span>
-        <span class="bts__label">Behind the scenes</span>
-      </button>
-    </nav>
+    <!-- the 400 points live here, over the whole page -->
+    <canvas class="field" aria-hidden="true"></canvas>
 
-    <main>
-      <!-- Prologue: black screen -->
-      <section class="scene scene--intro" data-scene="intro">
-        <div class="stage">
-          <div class="intro">
-            <p class="intro__kicker">A career, in scenes</p>
-            <p class="intro__line">Every story starts in the dark.</p>
-          </div>
-          <p class="scroll-hint" aria-hidden="true">scroll</p>
+    <main class="home">
+      <!-- Hello -->
+      <section class="hero wrap">
+        <div class="hero__text">
+          <p class="kicker"><span class="status-dot" aria-hidden="true"></span><span data-status></span></p>
+          <h1 class="hero__name">Hi, I'm Ben.</h1>
+          <p class="hero__pitch" data-pitch></p>
+          <p class="hero__lede">
+            I studied computer science at Michigan Tech, spent five years turning a law firm's paperwork into online tools and systems, now work in a
+            hospital's surgical department, and I'm building Chaos Coaching, an AI-coached training platform.
+          </p>
+        </div>
+        <div class="hero__rings" data-structure="rings">
+          <img class="hero__photo" src="photos/headshot-studio.png" alt="Ben Conlin" width="1600" height="1600" />
+        </div>
+        <p class="hero__scroll" aria-hidden="true">scroll<span class="bow bow--down"></span></p>
+      </section>
+
+      <!-- The timeline -->
+      <section class="tl wrap" aria-labelledby="tl-title">
+        <header class="section-head">
+          <p class="kicker">A Timeline: 2021 to now</p>
+          <h2 id="tl-title">Where I've Been</h2>
+        </header>
+        <div class="lanes" data-structure="lanes" tabindex="0" aria-label="Timeline. Use the arrow keys to move through the years."></div>
+        <div class="era" aria-live="polite">
+          <p class="era__when"></p>
+          <p class="era__text"></p>
+          <p class="era__links"></p>
         </div>
       </section>
 
-      <!-- Chapter: Houghton / Michigan Tech -->
-      <section class="scene scene--houghton" data-scene="houghton" aria-label="Michigan Technological University">
-        <div class="stage">
-          <div class="panel">
-            <div class="art"></div>
-            <div class="vignette" aria-hidden="true"></div>
-            <div class="grain" aria-hidden="true"></div>
-            <div class="cards"><div class="card" aria-live="polite"></div></div>
-            <div class="pips" aria-hidden="true"></div>
-            <pre class="bp-hud" aria-hidden="true"></pre>
-            <div class="bp-scanline" aria-hidden="true"></div>
-          </div>
-        </div>
+      <!-- Results -->
+      <section class="results wrap" aria-labelledby="res-title">
+        <header class="section-head">
+          <p class="kicker">Results</p>
+          <h2 id="res-title">What I've Achieved</h2>
+        </header>
+        <div class="results__list"></div>
       </section>
 
-      <!-- Chapter: Business Law Group -->
-      <section class="scene scene--blg" data-scene="law" aria-label="Business Law Group">
-        <div class="stage">
-          <div class="panel panel--paper">
-            <div class="paper-tex" aria-hidden="true"></div>
-            <div class="blg-grid" aria-hidden="true"></div>
-            <header class="blg-masthead">
-              <span>Business Law Group</span>
-              <span>Colorado Springs, CO</span>
-              <span>2021 – 2026</span>
-            </header>
-            <div class="blg-visual" aria-hidden="true"></div>
-            <div class="blg-copy">
-              <div class="blg-heads"></div>
-              <div class="card" aria-live="polite"></div>
-            </div>
-            <footer class="blg-folio">
-              <span>§ 2 · Paper → Systems</span>
-              <span class="blg-folio__n">01 / 05</span>
-            </footer>
-          </div>
+      <!-- Where to next -->
+      <section class="ways wrap" aria-labelledby="ways-title">
+        <h2 id="ways-title">Where I'm Going</h2>
+        <div class="doors">
+          <a class="door door--career" href="career.html">
+            <span class="door__art" aria-hidden="true">
+              <svg viewBox="0 0 300 120">
+                <path d="M30 60 C80 14 110 106 150 60 S230 14 270 60" />
+                <circle cx="30" cy="60" r="6" /><circle cx="150" cy="60" r="6" /><circle cx="270" cy="60" r="6" />
+              </svg>
+            </span>
+            <span class="door__kick">Career</span>
+            <span class="door__title">An Interactive Timeline <span aria-hidden="true">→</span></span>
+            <span class="door__text">A chapter by chapter view of my life.</span>
+          </a>
+          <a class="door door--resume" href="resume.html">
+            <span class="door__art" aria-hidden="true">
+              <span class="door__sheet"><i></i><i></i><i></i><i></i></span>
+            </span>
+            <span class="door__kick">Résumé</span>
+            <span class="door__title">Tailor it to your role <span aria-hidden="true">→</span></span>
+            <span class="door__text">My résumé, automatically customized based on your needs.</span>
+          </a>
+          <a class="door door--chaos" href="https://chaoscoaching.co" target="_blank" rel="noopener">
+            <span class="door__art" aria-hidden="true">
+              <img src="chaos/logo-horizontal.png" alt="" width="726" height="344" />
+            </span>
+            <span class="door__kick">Chaos Coaching</span>
+            <span class="door__title">See it live <span aria-hidden="true">↗</span></span>
+            <span class="door__text">The custom training coach I'm building.</span>
+          </a>
         </div>
-      </section>
-
-      <!-- Chapter: UCHealth -->
-      <section class="scene scene--uch" data-scene="uchealth" aria-label="UCHealth">
-        <div class="stage">
-          <div class="panel panel--monitor">
-            <header class="mon-head">
-              <span>UCHealth · Medical Center of the Rockies · Periop</span>
-              <span class="mon-head__right"><span class="mon-live">live</span><span class="mon-clock">--:--</span></span>
-            </header>
-            <div class="mon-strips" aria-hidden="true">
-              <div class="mon-strip">
-                <span class="mon-strip__lbl">II</span><canvas></canvas>
-                <div class="mon-num mon-num--hr"><small>HR</small><b>74</b></div>
-              </div>
-              <div class="mon-strip">
-                <span class="mon-strip__lbl">Pleth</span><canvas></canvas>
-                <div class="mon-num mon-num--spo2"><small>SpO₂</small><b>98</b></div>
-              </div>
-            </div>
-            <div class="mon-stage" aria-hidden="true">
-              <svg class="mon-plan" viewBox="40 40 1520 830" preserveAspectRatio="xMidYMid meet"></svg>
-              <div class="mon-census"></div>
-              <pre class="mon-log"></pre>
-            </div>
-            <div class="mon-copy">
-              <div class="mon-heads"></div>
-              <div class="card" aria-live="polite"></div>
-            </div>
-            <div class="mon-crt" aria-hidden="true"></div>
-          </div>
+        <p class="ways__looking" data-looking></p>
+        <div class="ways__actions">
+          <a class="next__btn next__btn--primary" data-email>Email me</a>
+          <a class="next__btn" data-linkedin target="_blank" rel="noopener">LinkedIn</a>
         </div>
-      </section>
-
-      <!-- Chapter: Chaos Coaching -->
-      <section class="scene scene--chaos" data-scene="chaos" aria-label="Chaos Coaching">
-        <div class="stage">
-          <div class="panel panel--app">
-            <header class="cc-bar">
-              <img class="cc-bar__logo" src="chaos/logo-horizontal.png" alt="Chaos Coaching" width="726" height="344" />
-              <nav class="cc-nav" aria-hidden="true">
-                <span data-tab="training">Training</span>
-                <span data-tab="plan">Plan</span>
-                <span data-tab="log">Log</span>
-              </nav>
-              <a class="cc-bar__site" href="https://chaoscoaching.co" target="_blank" rel="noopener">chaoscoaching.co ↗</a>
-            </header>
-            <p class="cc-strip">
-              <span><b>Portfolio preview.</b> Sample data, drawn in the app's own design.</span>
-              <a href="https://chaoscoaching.co" target="_blank" rel="noopener">See the real one →</a>
-            </p>
-            <div class="cc-body">
-              <div class="cc-views" aria-hidden="true"></div>
-              <div class="cc-copy">
-                <div class="cc-heads"></div>
-                <div class="card" aria-live="polite"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- The last stop: where this is heading -->
-      <section class="scene scene--outro" data-scene="outro" aria-label="Next chapter">
-        <div class="stage">
-          <div class="next">
-            <p class="next__kicker"></p>
-            <h2 class="next__pitch"></h2>
-            <p class="next__looking"></p>
-            <div class="next__actions">
-              <a class="next__btn next__btn--primary" href="resume/Ben-Conlin-Resume.pdf" download>Download my résumé</a>
-              <a class="next__btn" href="resume.html">Tailor it to your role</a>
-              <a class="next__btn next__btn--ghost" data-email>Email me</a>
-              <a class="next__btn next__btn--ghost" data-linkedin target="_blank" rel="noopener">LinkedIn</a>
-            </div>
-          </div>
-        </div>
+        <div class="harp" data-structure="harp" aria-hidden="true"></div>
+        <p class="harp__note"><span class="bow" aria-hidden="true"></span>Give them a strum.</p>
+        <a class="secrets-link" href="eggs.html"><i aria-hidden="true"></i><span>Secrets</span></a>
       </section>
     </main>
 
-    <script type="module" src="/src/main.js"></script>
+    <!-- behind the scenes: readout and code inspector -->
+    <div class="bp-host">
+      <pre class="bp-hud" aria-hidden="true"></pre>
+      <div class="bp-scanline" aria-hidden="true"></div>
+    </div>
+
+    <script type="module" src="/src/home/main.js"></script>
   </body>
 </html>

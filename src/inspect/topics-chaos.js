@@ -72,7 +72,7 @@ const guardTopic = {
   },
 };
 
-// ── Pain as behaviour ───────────────────────────────────────
+// ── Pain as behavior ───────────────────────────────────────
 const PAIN_OPTIONS = [
   ["recurring", "Same spot, three times"],
   ["moved", "A 3 that changed my stride"],
@@ -81,13 +81,13 @@ const PAIN_OPTIONS = [
 ];
 const painTopic = {
   id: "pain",
-  chip: "Pain as behaviour",
+  chip: "Pain as behavior",
   kicker: "Not just a number",
   provenance: "productSketch",
   vizHeight: 130,
   title: "A 3 that changed your stride outranks a stitch",
   summary:
-    "After a session the athlete taps where it hurt on a body map and says how it behaved. The number matters, but behaviour matters more. Pain that changed how you moved, or the same spot coming back again and again, means next week's load doesn't go up, even if each rating was low. Pick a pain history; the guardrails screen re-checks the current week against it. The code is a simplified sketch written for this page.",
+    "After a session the athlete taps where it hurt on a body map and says how it behaved. The number matters, but behavior matters more. Pain that changed how you moved, or the same spot coming back again and again, means next week's load doesn't go up, even if each rating was low. Pick a pain history; the guardrails screen re-checks the current week against it. The code is a simplified sketch written for this page.",
   sources: [{ file: "src/scenes/chaos/guardrails.js", src: guardSrc, name: "painSaysHold", marks: ["p.moved"] }],
   actions: PAIN_OPTIONS.map(([key, name]) => ({ label: name, run: (scene) => scene.setPain(key), isOn: (S) => S.pain === key })),
   viz(ctx, w, h, t, S) {

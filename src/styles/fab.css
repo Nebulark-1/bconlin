@@ -1,0 +1,590 @@
+/* ── The floating circles, bottom right, on every page ───── */
+
+.fab {
+  --fab-main: 58px;
+  --fab-small: 44px;
+  --fab-sat: 40px;
+  --fab-r: 132px;
+  position: fixed;
+  z-index: 40;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+}
+
+.fab button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.fab svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* the big one: the site menu */
+.fab__main {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--fab-main);
+  height: var(--fab-main);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(10, 10, 30, 0.86);
+  color: var(--text, #ece8ff);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.8);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fab__main:hover,
+.fab[data-open="true"] .fab__main {
+  transform: scale(1.06);
+}
+
+/* four chapter colours in a slowly turning ring */
+.fab__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  padding: 2px;
+  background: conic-gradient(#a99bff, #ff8a7a, #39ff88, #ff4da6, #a99bff);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: fab-turn 14s linear infinite;
+}
+
+.fab[data-open="true"] .fab__ring {
+  animation-duration: 3s;
+}
+
+@keyframes fab-turn {
+  to { transform: rotate(1turn); }
+}
+
+.fab__mark {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+/* the two small switches */
+.fab__btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--fab-small);
+  height: var(--fab-small);
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: rgba(10, 10, 30, 0.82);
+  color: var(--muted, #8d88ad);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.8);
+  transition:
+    color 0.25s,
+    border-color 0.25s,
+    background 0.3s,
+    box-shadow 0.3s,
+    transform 0.25s;
+}
+
+.fab__btn:hover {
+  color: var(--text, #ece8ff);
+  transform: scale(1.06);
+}
+
+.fab__btn--bp[aria-checked="true"] {
+  border-color: rgba(120, 210, 255, 0.7);
+  background:
+    linear-gradient(rgba(120, 210, 255, 0.22) 1px, transparent 1px) 0 0 / 6px 6px,
+    linear-gradient(90deg, rgba(120, 210, 255, 0.22) 1px, transparent 1px) 0 0 / 6px 6px,
+    #082445;
+  color: #9fe3ff;
+  box-shadow: 0 0 18px -2px rgba(94, 200, 255, 0.55);
+}
+
+.fab__btn--bp[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.fab__waves {
+  display: none;
+}
+
+.fab__mute {
+  stroke: #ff8a7a;
+}
+
+.fab__btn--sound[aria-pressed="true"] {
+  border-color: rgba(255, 180, 140, 0.6);
+  color: #ffb48c;
+}
+
+.fab__btn--sound[aria-pressed="true"] .fab__waves {
+  display: inline;
+}
+
+.fab__btn--sound[aria-pressed="true"] .fab__mute {
+  display: none;
+}
+
+.fab__btn--sound.is-playing {
+  animation: fab-hum 3.2s ease-in-out infinite;
+}
+
+@keyframes fab-hum {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 180, 140, 0.25); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 180, 140, 0); }
+}
+
+/* labels slide out to the left on hover */
+.fab__tip {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(10, 10, 30, 0.92);
+  color: var(--text, #ece8ff);
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  translate: 6px -50%;
+  transition:
+    opacity 0.2s,
+    translate 0.2s;
+}
+
+:is(.fab__btn, .fab__links a):is(:hover, :focus-visible) .fab__tip {
+  opacity: 1;
+  translate: 0 -50%;
+}
+
+/* the menu's pages, fanned out in an arc to the left of the big circle */
+.fab__links {
+  position: absolute;
+  right: calc(var(--fab-main) / 2);
+  bottom: calc(var(--fab-main) / 2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+/* an invisible pad joining the circle to the fan, so the hover holds */
+.fab[data-open="true"] .fab__links::before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: calc(var(--fab-r) + 50px);
+  height: calc(var(--fab-r) + 50px);
+  border-top-left-radius: 100%;
+  pointer-events: auto;
+}
+
+.fab__links li {
+  /* spread from just left of the circle to up-and-left of it */
+  --a: calc(178deg + (252deg - 178deg) * var(--k) / (var(--n) - 1));
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  translate: 50% 50%;
+}
+
+.fab__links a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--fab-sat);
+  height: var(--fab-sat);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  background: rgba(14, 14, 40, 0.92);
+  color: var(--text, #ece8ff);
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transform: translate(0, 0) scale(0.3);
+  transition:
+    transform 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) calc((var(--n) - var(--k)) * 25ms),
+    opacity 0.25s calc((var(--n) - var(--k)) * 25ms),
+    border-color 0.2s,
+    background 0.2s;
+  pointer-events: none;
+}
+
+.fab[data-open="true"] .fab__links a {
+  opacity: 1;
+  transform: translate(calc(cos(var(--a)) * var(--fab-r)), calc(sin(var(--a)) * var(--fab-r))) scale(1);
+  transition-delay: calc(var(--k) * 35ms);
+  pointer-events: auto;
+}
+
+.fab__links a:hover,
+.fab__links a:focus-visible {
+  border-color: #ffb48c;
+  background: rgba(40, 24, 30, 0.95);
+  outline: none;
+}
+
+.fab__links a[aria-current="page"] {
+  border-color: rgba(255, 180, 140, 0.6);
+  color: #ffb48c;
+}
+
+.fab :focus-visible {
+  outline: 2px solid #ffb48c;
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .fab {
+    --fab-main: 52px;
+    --fab-small: 40px;
+    --fab-sat: 38px;
+    --fab-r: 118px;
+    right: 14px;
+    bottom: 14px;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab__ring,
+  .fab__btn--sound.is-playing {
+    animation: none;
+  }
+}
+
+@media print {
+  .fab {
+    display: none;
+  }
+}
+
+/* the code inspector keeps clear of the circles */
+.inspector {
+  right: 88px;
+}
+
+@media (max-width: 760px) {
+  .inspector {
+    right: 70px;
+  }
+}
+
+/* ── Secret: scratch ── */
+.fab__main.is-scratching {
+  cursor: grabbing;
+}
+
+.fab__main.is-scratching .fab__ring {
+  animation-play-state: paused;
+}
+
+/* ── Secret: studio mode ── */
+.studio {
+  position: absolute;
+  right: calc(100% + 14px);
+  bottom: 0;
+  width: 280px;
+  padding: 14px 16px 16px;
+  border: 1px solid rgba(255, 180, 140, 0.35);
+  border-radius: 16px;
+  background: rgba(10, 10, 30, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.85);
+  color: var(--text, #ece8ff);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(10px) scale(0.97);
+  transform-origin: right bottom;
+  transition:
+    opacity 0.25s,
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s 0.35s;
+}
+
+.studio-open .studio {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.25s,
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.studio__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.studio__head p {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+}
+
+.studio__head b {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.studio__head span {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  color: var(--muted, #8d88ad);
+}
+
+.studio__close {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: none;
+  color: var(--muted, #8d88ad);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.studio__meter {
+  display: block;
+  width: 100%;
+  height: 18px;
+  margin-bottom: 12px;
+}
+
+.studio__faders {
+  display: grid;
+  gap: 8px;
+}
+
+.studio__fader {
+  display: grid;
+  grid-template-columns: 62px 1fr 42px;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.studio__fader output {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-align: right;
+  color: var(--muted, #8d88ad);
+}
+
+.studio__fader input {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  accent-color: #ffb48c;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.studio__fader input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffb48c;
+  box-shadow: 0 0 10px rgba(255, 180, 140, 0.6);
+}
+
+.studio__fader input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffb48c;
+}
+
+.studio__reset {
+  width: 100%;
+  margin-top: 14px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  background: none;
+  color: var(--muted, #8d88ad);
+  font-size: 0.78rem;
+}
+
+.studio__reset:hover {
+  border-color: #ffb48c;
+  color: var(--text, #ece8ff);
+}
+
+/* ── A secret was found ── */
+.egg-toast {
+  position: fixed;
+  z-index: 41;
+  right: 20px;
+  top: calc(var(--nav-h, 60px) + 14px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px 10px 12px;
+  border: 1px solid rgba(255, 226, 196, 0.45);
+  border-radius: 14px;
+  background: rgba(14, 12, 34, 0.94);
+  box-shadow: 0 18px 50px -16px rgba(0, 0, 0, 0.85), 0 0 30px -10px rgba(255, 210, 160, 0.5);
+  color: var(--text, #ece8ff);
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  transition:
+    opacity 0.35s,
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s 0.5s;
+}
+
+.egg-toast.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.35s,
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.egg-toast__spark {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* a four-point star, turning */
+.egg-toast__spark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ffe2c4;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  filter: drop-shadow(0 0 6px #ffd2a0);
+  animation: egg-spark 2.4s ease-in-out infinite;
+}
+
+@keyframes egg-spark {
+  50% { transform: rotate(45deg) scale(0.8); }
+}
+
+.egg-toast__text {
+  display: grid;
+  gap: 1px;
+}
+
+.egg-toast small {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffd2a0;
+}
+
+.egg-toast b {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+@media (max-width: 760px) {
+  .egg-toast {
+    right: 12px;
+    left: 12px;
+  }
+  .studio {
+    width: min(280px, calc(100vw - 90px));
+  }
+}
+
+/* ben.aurora(): northern lights over the whole page for a little while */
+.aurora-veil {
+  position: fixed;
+  z-index: 5;
+  inset: 0 0 auto;
+  height: 70vh;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 3s ease;
+  -webkit-mask: linear-gradient(#000 30%, transparent);
+  mask: linear-gradient(#000 30%, transparent);
+}
+
+.aurora-veil.is-on {
+  opacity: 0.85;
+}
+
+.aurora-veil i {
+  position: absolute;
+  top: -10vh;
+  width: 70vw;
+  height: 46vh;
+  border-radius: 50%;
+  filter: blur(50px);
+  animation: aurora-drift 14s ease-in-out infinite alternate;
+}
+
+.aurora-veil i:nth-child(1) {
+  left: -10vw;
+  background: radial-gradient(closest-side, rgba(57, 255, 136, 0.55), transparent);
+}
+
+.aurora-veil i:nth-child(2) {
+  left: 25vw;
+  background: radial-gradient(closest-side, rgba(169, 155, 255, 0.5), transparent);
+  animation-duration: 18s;
+  animation-delay: -6s;
+}
+
+.aurora-veil i:nth-child(3) {
+  left: 55vw;
+  background: radial-gradient(closest-side, rgba(63, 224, 200, 0.45), transparent);
+  animation-duration: 16s;
+  animation-delay: -3s;
+}
+
+@keyframes aurora-drift {
+  from { transform: translateX(-6vw) scaleY(0.8) skewX(-10deg); }
+  to { transform: translateX(8vw) scaleY(1.15) skewX(12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-veil i {
+    animation: none;
+  }
+}

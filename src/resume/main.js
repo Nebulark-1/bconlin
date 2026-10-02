@@ -1,4 +1,10 @@
 import { PROFILE, LENSES, SUMMARY, ENTRIES, SKILLS, LANGUAGES_SPOKEN } from "./bank.js";
+import { mountFab } from "../site/fab.js";
+import { showHireDraft } from "./hire.js";
+
+mountFab({ current: "resume" });
+// ben.hire() from the console comes here with ?hire
+if (new URLSearchParams(location.search).has("hire")) showHireDraft();
 
 // The résumé generator. Pick a focus and the page re-ranks the bank:
 // the strongest lines for that kind of role rise, weaker ones drop out, and
@@ -127,7 +133,7 @@ function update(animate = true) {
   document.querySelectorAll("[data-lens]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lens === state.lens)));
   document.querySelectorAll("[data-length]").forEach((b) => b.setAttribute("aria-pressed", String((b.dataset.length === "full") === state.full)));
   document.querySelector("[data-healthcare]").setAttribute("aria-checked", String(state.healthcare));
-  document.querySelector(".tailor__count").textContent = `Showing ${next.shown} of the ${next.total} lines in the bank`;
+  document.querySelector(".tailor__count").textContent = `${next.shown} of ${next.total} lines`;
   const q = new URLSearchParams();
   if (state.lens !== "best") q.set("focus", state.lens);
   if (state.full) q.set("length", "full");
