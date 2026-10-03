@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SwarmSim — GPU Boids</title>
+<title>SwarmSim</title>
+<meta name="description" content="A flocking simulation on the GPU. Flocks of birds chase invisible targets and scatter from hawks.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,49 +14,58 @@
 
 <div id="hud"></div>
 
-<aside id="panel">
+<button id="panelToggle" class="fab" aria-controls="panel" aria-expanded="true" title="Show or hide controls (H)">Controls</button>
+
+<aside id="panel" aria-label="Simulation controls">
   <header>
     <h1>Swarm<span>Sim</span></h1>
-    <div id="gpu">initialising…</div>
+    <p class="lede">Each bird steers only by its neighbors. Flocks chase invisible targets
+      and scatter from hawks.</p>
+    <div id="gpu">Starting GPU…</div>
   </header>
 
   <div class="toolbar">
-    <select id="preset" title="Load a preset"><option value="">Preset…</option></select>
-    <select id="colorMode" title="Colour mode">
-      <option value="0">Colour: speed</option>
-      <option value="1">Colour: heading</option>
-      <option value="2">Colour: mono</option>
-    </select>
-  </div>
-
-  <div class="toolbar">
-    <button id="pause">Pause</button>
-    <button id="reset">Reset</button>
-    <button id="recenter">Recenter</button>
-    <button id="defaults">Defaults</button>
-  </div>
-
-  <div class="toolbar">
-    <label class="inline">Capacity
-      <select id="capacity" title="Allocated buffer size — changing this reseeds the swarm">
-        <option value="524288">512k</option>
-        <option value="1048576">1M</option>
-        <option value="2097152">2M</option>
-        <option value="4194304">4M</option>
+    <label class="field">Preset
+      <select id="preset"></select>
+    </label>
+    <label class="field">Colour
+      <select id="colorMode">
+        <option value="0">Speed</option>
+        <option value="1">Heading</option>
+        <option value="2">Mono</option>
       </select>
     </label>
-    <label class="inline"><input type="checkbox" id="follow"> Lures → cursor</label>
-    <label class="inline"><input type="checkbox" id="showField"> Show lures</label>
+  </div>
+
+  <div class="toolbar">
+    <button id="pause" title="Space">Pause</button>
+    <button id="reset" title="R">Respawn</button>
+    <button id="recenter" title="C">Recenter</button>
+  </div>
+
+  <div class="toggles">
+    <label><input type="checkbox" id="autoCam" checked> Auto camera</label>
+    <label><input type="checkbox" id="showField"> Show lures</label>
+    <label><input type="checkbox" id="follow"> Follow cursor</label>
   </div>
 
   <div id="controls"></div>
 
-  <footer>
-    <b>drag</b> pan · <b>wheel</b> zoom · <b>right-drag</b> attract
-    (<b>+shift</b> repel)<br>
-    <b>space</b> pause · <b>r</b> reset · <b>c</b> recenter · <b>f</b> fullscreen ·
-    <b>l</b> show lures · <b>h</b> hide panel
-  </footer>
+  <details class="group">
+    <summary>Performance</summary>
+    <div class="perf">
+      <label class="field">Buffer capacity
+        <select id="capacity" title="Boid slots to allocate. Changing this respawns the swarm.">
+          <option value="524288">512k</option>
+          <option value="1048576">1M</option>
+          <option value="2097152">2M</option>
+          <option value="4194304">4M</option>
+        </select>
+      </label>
+    </div>
+  </details>
+
+  <footer id="help"></footer>
 </aside>
 
 <div id="boot">

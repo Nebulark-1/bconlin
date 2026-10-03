@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// SwarmSim — WGSL shader sources
+// SwarmSim: WGSL shader sources
 //
 // Everything the simulation does lives here. The CPU never sees a boid; it only
 // writes a 336-byte parameter block each frame and issues dispatches.
@@ -82,8 +82,8 @@ fn cellOf(p: vec2f) -> vec2i {
 }
 
 // Spatial hash. Buckets collide, but a colliding boid sits far away in world
-// space and therefore fails the radius test below — collisions cost a few
-// wasted reads and never corrupt the flocking result.
+// space and fails the radius test below, so a collision costs a few wasted
+// reads and never changes the result.
 fn hashCell(c: vec2i) -> u32 {
   var h = (u32(c.x) * 73856093u) ^ (u32(c.y) * 19349663u);
   h ^= h >> 15u;
@@ -125,8 +125,8 @@ fn init(@builtin(global_invocation_id) gid: vec3u) {
 
   let p = P.center + dir * r;
   pos[i] = p;
-  // Launch along a smooth, low-frequency flow field: neighbours start roughly
-  // aligned (so flocks form at once) but the swarm has no shared rotation.
+  // Launch along a smooth flow field, so neighbours start roughly aligned
+  // but the swarm as a whole doesn't rotate.
   let h = sin(p.x * 0.0021 + 1.3) * 2.1 + cos(p.y * 0.0017 - 0.4) * 2.3
         + (rnd(s + 2u) - 0.5) * 0.6;
   vel[i] = vec2f(cos(h), sin(h)) * (0.6 + 0.4 * rnd(s + 2u)) * P.maxSpeed;
@@ -221,8 +221,8 @@ fn scanAdd(@builtin(global_invocation_id) gid: vec3u,
   if (g >= P.tableSize) { return; }
   let v = cellStart[g] + blockSums[wid.x];
   cellStart[g] = v;
-  // Seed the scatter cursor here too — saves a copyBufferToBuffer, which would
-  // otherwise force the compute work to split across two passes.
+  // Seed the scatter cursor here too. A copyBufferToBuffer would split the
+  // compute work across two passes.
   atomicStore(&cellCursor[g], v);
 }
 
@@ -245,7 +245,7 @@ fn scatter(@builtin(global_invocation_id) gid: vec3u) {
 
 // --- flocking --------------------------------------------------------------
 // Reads sorted*, writes pos/vel. Both arrays share indexing, so next frame's
-// countCells simply picks up where this left off — no ping-pong needed.
+// countCells reads them directly, with no ping-pong buffers.
 
 @compute @workgroup_size(256)
 fn flock(@builtin(global_invocation_id) gid: vec3u) {
@@ -295,9 +295,9 @@ fn flock(@builtin(global_invocation_id) gid: vec3u) {
             aliF += sortedVel[j] * w;
             n    += w;
             if (d2 < sr2) {
-              // Linear-falloff push, bounded per neighbour. Unlike 1/d^2 it is
-              // not dominated by the single nearest sample, so it stays a
-              // smooth estimate even when the cell is stride-sampled.
+              // Linear falloff, bounded per neighbour. With 1/d^2 the single
+              // nearest sample dominated, which made the push noisy when a
+              // cell is stride-sampled.
               let dl = sqrt(d2);
               sepF -= d * (w * (1.0 - dl / P.sepRadius) / dl);
             }
@@ -314,9 +314,9 @@ fn flock(@builtin(global_invocation_id) gid: vec3u) {
   let ms  = P.maxSpeed;
 
   if (n > 0.0) {
-    // Cohesion scales with how far off-centre the boid is, so a boid already
-    // inside its group is barely pulled. A full-strength pull toward a
-    // centroid one unit away is what used to crush flocks into balls.
+    // Cohesion scales with how far the boid is from its neighbours' centre.
+    // A full-strength pull, even when already centred, packed flocks into
+    // tight balls.
     let des = (cohF / n) - p;
     acc += limit(des * (2.0 * P.maxForce / P.percepRadius), P.maxForce) * P.cohWeight;
 
@@ -325,15 +325,15 @@ fn flock(@builtin(global_invocation_id) gid: vec3u) {
     if (l > 1e-6) { acc += limit(av * (ms / l) - v, P.maxForce) * P.aliWeight; }
   }
 
-  // Separation acts like pressure: the push grows with how crowded one side
-  // is, up to a cap. In a uniform crowd the pushes cancel; at a crushed edge
-  // they add up and the flock expands back out.
+  // Separation works like pressure. The push grows with crowding, up to a
+  // cap. In an even crowd the pushes cancel; at a packed edge they add up and
+  // the flock spreads back out.
   acc += limit(sepF * P.maxForce, P.maxForce * 4.0) * P.sepWeight;
 
   // Central gravity. The exponent is the interesting knob:
-  //   +1  spring-like — pull grows with distance, nothing ever escapes
+  //   +1  spring-like: pull grows with distance, nothing escapes
   //    0  constant pull regardless of distance
-  //   -2  Newtonian — weak far away, singular up close
+  //   -2  Newtonian: weak far away, singular up close
   let rel = P.center - p;
   let r   = max(length(rel), 1e-3);
   let dir = rel / r;
@@ -342,13 +342,11 @@ fn flock(@builtin(global_invocation_id) gid: vec3u) {
   // Tangential component; shares the radial falloff so orbits stay coherent.
   acc += vec2f(-dir.y, dir.x) * P.swirl * pow(r / P.gRefScale, P.gExponent);
 
-  // Lures: every boid steers for its nearest unseen target. Nearest, not all,
-  // so as the lures wander the Voronoi borders between them sweep through the
-  // swarm and tear it into flocks that split, swap and merge. Distance is
-  // divided by weight, so a fading lure's territory shrinks to nothing rather
-  // than vanishing at once. The pull is a capped steering force that only
-  // switches on outside a comfort radius, so it can never overpower the
-  // flocking rules the way raw gravity does.
+  // Lures: each boid steers toward its nearest lure. As the lures move, the
+  // borders between their territories cross the swarm and split it into
+  // flocks. Distance is divided by weight, so a fading lure's territory
+  // shrinks gradually. The pull is a capped steering force and is off inside
+  // the comfort radius, so it can't overpower the flocking rules.
   if (P.lureCount > 0u) {
     var best = 1e30;
     var tgt  = p;
@@ -367,8 +365,8 @@ fn flock(@builtin(global_invocation_id) gid: vec3u) {
     }
   }
 
-  // Hawks: flee at full speed, hardest up close. Only the boids near the hawk
-  // feel it; alignment carries the turn outward as a wave.
+  // Hawks: flee at full speed, hardest up close. Only nearby boids react, and
+  // alignment passes the turn on to their neighbors.
   for (var k = 0u; k < P.hawkCount; k = k + 1u) {
     let rel = p - P.hawks[k].xy;
     let d   = length(rel);
@@ -416,7 +414,7 @@ fn flock(@builtin(global_invocation_id) gid: vec3u) {
 // tonemapped. Additive blend is what makes density read as brightness.
 // ---------------------------------------------------------------------------
 
-// Shared uniform layout for both render modules (48 bytes).
+// Shared uniform layout for both render modules (64 bytes).
 const VIEW_STRUCT = /* wgsl */ `
 struct View {
   camCenter     : vec2f,
@@ -429,6 +427,10 @@ struct View {
   stretch       : f32,
   exposure      : f32,
   fade          : f32,
+  minSpeed      : f32,   // fraction of maxSpeed; the speed ramp starts here
+  _pad0         : f32,
+  _pad1         : f32,
+  _pad2         : f32,
 };
 `;
 
@@ -474,8 +476,8 @@ fn vsBoid(@builtin(vertex_index) vi: u32,
   if (sp > 1e-6) { dir = v / sp; }
   let perp = vec2f(-dir.y, dir.x);
 
-  // The dart is built in *pixel* space, not world space, so boids stay visible
-  // at any zoom level — this is what makes an infinite world legible.
+  // The dart is built in pixel space, not world space, so boids stay visible
+  // at any zoom level.
   let L = V.boidPx * (1.0 + V.stretch);
   let W = V.boidPx * 0.55;
   var off = dir * L;
@@ -490,7 +492,9 @@ fn vsBoid(@builtin(vertex_index) vi: u32,
 
   var c = vec3f(0.55, 0.80, 1.0);
   if (V.colorMode == 0u) {
-    c = ramp(sp / max(V.maxSpeed, 1e-4));
+    // Spread the ramp over the speeds birds actually fly at (min to max).
+    let lo = clamp(V.minSpeed, 0.0, 0.95);
+    c = ramp((sp / max(V.maxSpeed, 1e-4) - lo) / (1.0 - lo));
   } else if (V.colorMode == 1u) {
     c = hue(atan2(dir.y, dir.x) * 0.15915494 + 0.5);
   }
@@ -526,11 +530,20 @@ fn fsFade(@builtin(position) fc: vec4f) -> @location(0) vec4f {
   return vec4f(c.rgb * Vp.fade, 1.0);
 }
 
+// Log tonemap. With additive blending, brightness counts boids per pixel,
+// from 1 at a flock's edge to thousands in its core. A log curve keeps both
+// readable; a filmic curve turned anything past a few boids white. The
+// brightest channel is mapped and the others scaled with it to keep the hue.
 @fragment
 fn fsTone(@builtin(position) fc: vec4f) -> @location(0) vec4f {
-  var x = textureLoad(src, vec2i(fc.xy), 0).rgb * Vp.exposure;
-  x = (x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14);  // ACES approx
-  x = clamp(x, vec3f(0.0), vec3f(1.0));
-  return vec4f(pow(x, vec3f(1.0 / 2.2)), 1.0);
+  let x = textureLoad(src, vec2i(fc.xy), 0).rgb * Vp.exposure;
+  let m = max(max(x.r, x.g), x.b);
+  if (m < 1e-5) { return vec4f(0.0, 0.0, 0.0, 1.0); }
+  let K = 8.0;      // knee: how quickly a lone boid becomes visible
+  let R = 150.0;    // density that maps to full white
+  let y = clamp(log(1.0 + m * K) / log(1.0 + R * K), 0.0, 1.0);
+  let hue = pow(x / m, vec3f(1.0 / 2.2));
+  let c = mix(hue * y, vec3f(y), smoothstep(0.75, 1.0, y) * 0.6);
+  return vec4f(c, 1.0);
 }
 `;

@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------------------
-// SwarmSim — WebGPU engine
+// SwarmSim: WebGPU engine
 //
 // Owns the device, buffers, pipelines and the frame loop. The only per-frame
-// CPU work is writing two small uniform buffers (336 + 48 bytes) and recording
+// CPU work is writing two small uniform buffers (336 + 64 bytes) and recording
 // ~9 GPU commands. Boid data never leaves VRAM.
 // ---------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ const Engine = (() => {
   const pBuf = new ArrayBuffer(PARAMS_BYTES);
   const pF   = new Float32Array(pBuf);
   const pU   = new Uint32Array(pBuf);
-  const vBuf = new ArrayBuffer(48);
+  const vBuf = new ArrayBuffer(64);
   const vF   = new Float32Array(vBuf);
   const vU   = new Uint32Array(vBuf);
 
@@ -38,17 +38,17 @@ const Engine = (() => {
 
   async function init(canvasEl) {
     if (!navigator.gpu) {
-      throw new Error('WebGPU is not available in this browser. ' +
-        'Use Chrome or Edge 113+ (or enable it in Firefox Nightly).');
+      throw new Error("This browser doesn't support WebGPU. " +
+        'Try a recent Chrome, Edge, Safari or Firefox on a computer.');
     }
 
     const adapter = await navigator.gpu.requestAdapter({
       powerPreference: 'high-performance',
     });
-    if (!adapter) throw new Error('No suitable GPU adapter was found.');
+    if (!adapter) throw new Error('No compatible GPU was found.');
 
-    // Ask for as much headroom as the adapter will give us — the storage
-    // buffers scale with boid capacity.
+    // Ask for the largest buffers the adapter allows, since the storage
+    // buffers grow with boid capacity.
     const want = {};
     for (const k of ['maxStorageBufferBindingSize', 'maxBufferSize']) {
       if (adapter.limits[k]) want[k] = adapter.limits[k];
@@ -159,7 +159,7 @@ const Engine = (() => {
       size: PARAMS_BYTES, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
     buf.view = device.createBuffer({
-      size: 48, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+      size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
   }
 
@@ -301,6 +301,7 @@ const Engine = (() => {
     vF[9]  = P.stretch;
     vF[10] = P.exposure;
     vF[11] = P.fade;
+    vF[12] = P.minSpeed;
     device.queue.writeBuffer(buf.view, 0, vBuf);
   }
 

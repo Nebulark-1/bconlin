@@ -1,13 +1,11 @@
 // ---------------------------------------------------------------------------
-// SwarmSim — the unseen field
+// SwarmSim: lures and hawks
 //
-// Lures are invisible targets the flock chases; hawks are predators it flees.
-// Both live on the CPU (a handful of points) and are uploaded with the params
-// each frame. Lures fly like birds themselves: a fixed speed and a limited
-// turn rate toward a waypoint, so they trace arcs and loops rather than lines.
-// Now and then one jinks to a new waypoint far away, and each one eventually
-// fades out while a replacement fades in somewhere else. Those three things
-// are what keep the swarm turning, folding and splitting.
+// Lures are invisible targets the flocks chase. Hawks are predators they flee.
+// There are only a few of each, so they run on the CPU and are uploaded with
+// the params every frame. A lure flies at a fixed speed with a limited turn
+// rate, so it moves in arcs. Sometimes it switches to a far waypoint, and
+// after a while it fades out while a new one fades in elsewhere.
 // ---------------------------------------------------------------------------
 
 const Field = (() => {
@@ -92,7 +90,7 @@ const Field = (() => {
       l.weight = l.dying ? Math.max(0, l.weight - dt / FADE)
                          : Math.min(1, l.weight + dt / FADE);
 
-      // A sudden change of mind: the whole flock behind it has to fold back.
+      // Switch to a new waypoint when this one is reached, or at random.
       const near = Math.hypot(l.wx - l.x, l.wy - l.y) < 200;
       if (near || Math.random() < P.lureJink * dt) {
         const w = pointNear(P, P.roamRadius);
@@ -105,9 +103,9 @@ const Field = (() => {
     while (hawks.length > Math.min(P.hawkCount | 0, MAX_HAWKS)) hawks.pop();
     while (hawks.length < Math.min(P.hawkCount | 0, MAX_HAWKS)) hawks.push(makeHawk(P));
 
-    // Hawks make passes at a lure — where the birds are likely to be — aiming
-    // a little off so they cut through the flock rather than sit in it. They
-    // turn slowly, so each pass overshoots and swings around for another.
+    // Hawks aim near a random lure, since that's where the birds are, with an
+    // offset so they cut through the flock. They turn slowly, so each pass
+    // overshoots and loops back.
     for (const h of hawks) {
       h.retarget -= dt;
       if (h.retarget <= 0 && lures.length) {
@@ -132,20 +130,35 @@ const Field = (() => {
     return out;
   }
 
-  // Debug overlay. `toScreen` maps world to CSS pixels.
-  function draw(g, P, toScreen, wpp) {
-    g.lineWidth = 1;
+  // Where the action is: the weighted centre of the lures and how far they
+  // spread from it. The auto camera frames this.
+  function bounds() {
+    let sw = 0, x = 0, y = 0;
+    for (const l of lures) { sw += l.weight; x += l.x * l.weight; y += l.y * l.weight; }
+    if (sw < 1e-3) return null;
+    x /= sw; y /= sw;
+    let radius = 0;
+    for (const l of lures) {
+      if (l.weight > 0.3) radius = Math.max(radius, Math.hypot(l.x - x, l.y - y));
+    }
+    return { x, y, radius };
+  }
+
+  // Overlay showing the unseen field. `toScreen` maps world to device pixels.
+  function draw(g, P, toScreen, wpp, dpr = 1) {
+    const dot = 4 * dpr;
+    g.lineWidth = dpr;
     for (const l of lures) {
       const s = toScreen(l.x, l.y);
       const w = toScreen(l.wx, l.wy);
       g.globalAlpha = 0.25 + 0.75 * l.weight;
       g.strokeStyle = '#7fd4ff';
-      g.setLineDash([4, 6]);
+      g.setLineDash([4 * dpr, 6 * dpr]);
       g.beginPath(); g.arc(s.x, s.y, P.lureInner / wpp, 0, Math.PI * 2); g.stroke();
       g.beginPath(); g.moveTo(s.x, s.y); g.lineTo(w.x, w.y); g.stroke();
       g.setLineDash([]);
       g.fillStyle = '#7fd4ff';
-      g.beginPath(); g.arc(s.x, s.y, 5, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.arc(s.x, s.y, dot, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
     for (const h of hawks) {
@@ -153,9 +166,9 @@ const Field = (() => {
       g.strokeStyle = '#ff6a5a';
       g.beginPath(); g.arc(s.x, s.y, P.hawkRadius / wpp, 0, Math.PI * 2); g.stroke();
       g.fillStyle = '#ff6a5a';
-      g.beginPath(); g.arc(s.x, s.y, 5, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.arc(s.x, s.y, dot, 0, Math.PI * 2); g.fill();
     }
   }
 
-  return { reset, step, draw };
+  return { reset, step, bounds, draw };
 })();
