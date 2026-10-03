@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Traffic Simulator</title>
+    <script type="module" crossorigin src="./assets/index-ttpeLCKo.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Dx3gNM8v.css">
+  </head>
+  <body>
+    <canvas id="gl"></canvas>
+    <canvas id="ui"></canvas>
+
+    <div id="stats" class="panel">
+      <div class="stat"><span class="k">vehicles</span><b id="s-count">0</b></div>
+      <div class="stat"><span class="k">mean speed</span><b id="s-speed">0</b><i>km/h</i></div>
+      <div class="stat"><span class="k">queued</span><b id="s-stopped">0</b><i>%</i></div>
+      <div class="stat"><span class="k">throughput</span><b id="s-thru">0</b><i>veh/h</i></div>
+      <div class="stat sub"><span class="k">frame</span><b id="s-fps">0</b><i>fps</i></div>
+      <div class="stat sub"><span class="k">sim step</span><b id="s-ms">0</b><i>ms</i></div>
+    </div>
+
+    <div id="controls" class="panel">
+      <div class="row head">
+        <select id="preset" title="Load a road layout"></select>
+        <button id="fit" title="Fit the network in view">Fit</button>
+      </div>
+
+      <label class="slider">
+        <span>Traffic <b id="v-demand">1400</b></span>
+        <input id="demand" type="range" min="0" max="8000" step="50" value="1400" />
+      </label>
+      <label class="slider">
+        <span>Aggression <b id="v-aggr">0.50</b></span>
+        <input id="aggr" type="range" min="0" max="1" step="0.01" value="0.5" />
+      </label>
+      <label class="slider">
+        <span>Heavy vehicles <b id="v-truck">1.0</b><i>&times;</i></span>
+        <input id="truck" type="range" min="0" max="4" step="0.1" value="1" />
+      </label>
+      <label class="slider">
+        <span>Time <b id="v-time">1.0</b><i>&times;</i></span>
+        <input id="time" type="range" min="0" max="5" step="0.1" value="1" />
+      </label>
+
+      <div class="row toggles">
+        <label><input id="heat" type="checkbox" checked /> Speed map</label>
+        <label><input id="sig" type="checkbox" checked /> Signals</label>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="row tools">
+        <button class="tool active" data-tool="select">Select</button>
+        <button class="tool" data-tool="draw">Draw road</button>
+        <button class="tool" data-tool="erase">Erase</button>
+      </div>
+
+      <div id="inspector" class="inspector">
+        <div class="empty">Nothing selected</div>
+      </div>
+
+      <div class="row foot">
+        <button id="save">Save</button>
+        <button id="load">Load</button>
+        <button id="export">Export</button>
+        <button id="import">Import</button>
+      </div>
+    </div>
+
+    <div id="hint" class="hint"></div>
+
+  </body>
+</html>

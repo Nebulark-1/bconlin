@@ -220,15 +220,16 @@ export const nextChapter = {
  * scrub through the years. Years are fractional (2022.62 ≈ August 2022).
  */
 export const eras = [
-  { from: 2021.0, to: 2021.4, when: "Early 2021", text: "Coaching high school cross country runners as a volunteer", ids: [] },
+  { from: 2021.0, to: 2021.4, when: "Early 2021", text: "Graduated from high school in May, 2021", ids: [] },
   { from: 2021.4, to: 2021.65, when: "Summer 2021", text: "Legal assistant at Business Law Group in Colorado Springs", ids: ["law"] },
-  { from: 2021.65, to: 2022.4, when: "2021–22", text: "Running Division I cross country and track at BYU", ids: [] },
+  { from: 2021.65, to: 2022.0, when: "Late 2021", text: "Serving on a mission trip in Los Angeles", ids: [] },
+  { from: 2022.0, to: 2022.4, when: "Early 2022", text: "Running Division I cross country and track at BYU", ids: [] },
   { from: 2022.4, to: 2022.62, when: "Summer 2022", text: "Back at the law firm as a legal assistant", ids: ["law"] },
   { from: 2022.62, to: 2023.4, when: "2022–23", text: "Transferred to Michigan Tech for computer science and Division II cross country and track", ids: ["houghton"] },
   { from: 2023.4, to: 2023.65, when: "Summer 2023", text: "A third summer at the law firm", ids: ["law"] },
   { from: 2023.65, to: 2024.4, when: "2023–24", text: "Parliamentarian of student government, while studying and racing for Michigan Tech", ids: ["houghton"] },
   { from: 2024.4, to: 2024.65, when: "Summer 2024", text: "A fourth summer at the law firm", ids: ["law"] },
-  { from: 2024.65, to: 2025.38, when: "2024–25", text: "Student Body President for 8,000+ students, then a B.S. in computer science", ids: ["houghton"] },
+  { from: 2024.65, to: 2025.38, when: "2024–25", text: "Student Body President for 8,000+ students and a B.S. in computer science", ids: ["houghton"] },
   { from: 2025.38, to: 2026.0, when: "2025", text: "Joined the firm full time as a tax paralegal, then took over its IT and operations", ids: ["law"] },
   { from: 2026.0, to: 2026.35, when: "Early 2026", text: "Running the firm's operations while building Chaos Coaching", ids: ["law", "chaos"] },
   { from: 2026.35, to: 2026.8, when: "May 2026 to now", text: "Perioperative assistant at UCHealth, and founder of Chaos Coaching", ids: ["uchealth", "chaos"] },

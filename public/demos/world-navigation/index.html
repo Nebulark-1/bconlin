@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>World Navigation — Procedural World Generator</title>
+    <style>
+      :root {
+        --bg: #0a0c10;
+        --panel: rgba(16, 20, 27, 0.88);
+        --panel-solid: #10141b;
+        --border: rgba(255, 255, 255, 0.09);
+        --border-strong: rgba(255, 255, 255, 0.16);
+        --text: #dfe5ee;
+        --text-dim: #8794a6;
+        --text-faint: #5d6878;
+        --accent: #64b5d9;
+        --accent-dim: #3b7893;
+        --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: grab;
+        touch-action: none;
+      }
+      #canvas.dragging { cursor: grabbing; }
+
+      .panel {
+        position: fixed;
+        background: var(--panel);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      }
+
+      h1 {
+        font-size: 12px;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin: 0 0 10px;
+        font-weight: 600;
+      }
+
+      h2 {
+        font-size: 10px;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+        margin: 14px 0 6px;
+        font-weight: 600;
+      }
+      h2:first-of-type { margin-top: 0; }
+
+      /* ---- Controls (top-left) ---- */
+      #controls { top: 14px; left: 14px; width: 250px; }
+
+      .seed-row { display: flex; gap: 6px; }
+
+      input[type="text"] {
+        flex: 1;
+        min-width: 0;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid var(--border-strong);
+        border-radius: 6px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 6px 8px;
+      }
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--accent-dim);
+      }
+
+      button {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border-strong);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 12px;
+        padding: 6px 10px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.12s, border-color 0.12s;
+      }
+      button:hover { background: rgba(255, 255, 255, 0.12); }
+      button:active { background: rgba(255, 255, 255, 0.04); }
+
+      .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+      .modes button {
+        padding: 5px 6px;
+        font-size: 11px;
+        text-align: left;
+      }
+      .modes button.active {
+        background: var(--accent-dim);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .colony-row { display: flex; gap: 4px; }
+      .colony-row button { flex: 1; padding: 5px 4px; font-size: 11px; text-align: center; }
+      .colony-row button.armed { background: var(--accent-dim); border-color: var(--accent); color: #fff; }
+
+      .speed-row {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--text-faint);
+      }
+      .speed-row input[type="range"] { flex: 1; accent-color: var(--accent); min-width: 0; }
+      .speed-value { font-family: var(--mono); color: var(--text-dim); width: 30px; text-align: right; }
+
+      #colony-stats { top: 14px; right: 14px; width: 216px; }
+
+      .modes button .key {
+        color: var(--text-faint);
+        font-family: var(--mono);
+        margin-right: 5px;
+      }
+      .modes button.active .key { color: rgba(255, 255, 255, 0.65); }
+
+      .toggles { display: flex; flex-direction: column; gap: 5px; }
+      label.check {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        color: var(--text-dim);
+        cursor: pointer;
+        user-select: none;
+      }
+      label.check input { accent-color: var(--accent); margin: 0; }
+
+      /* ---- Inspector (bottom-left) ---- */
+      #inspector { bottom: 14px; left: 14px; width: 250px; }
+
+      dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 3px 10px;
+        font-size: 12px;
+      }
+      dt { color: var(--text-faint); white-space: nowrap; }
+      dd {
+        margin: 0;
+        font-family: var(--mono);
+        text-align: right;
+        color: var(--text);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      dd.biome { color: var(--accent); }
+
+      /* ---- Stats (top-right) ---- */
+      #stats { top: 308px; right: 14px; width: 216px; }
+      #stats dd { color: var(--text-dim); }
+      #stats dd.good { color: #7fc98d; }
+      #stats dd.warn { color: #d9b064; }
+
+      /* ---- Legend (bottom-right) ---- */
+      #legend {
+        bottom: 14px;
+        right: 14px;
+        width: 216px;
+        max-height: 44vh;
+        overflow-y: auto;
+      }
+      #legend::-webkit-scrollbar { width: 6px; }
+      #legend::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 3px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        padding: 1px 0;
+        color: var(--text-dim);
+      }
+      .swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        flex: none;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+      }
+      .legend-item.present { color: var(--text); }
+
+      /* ---- Scale bar ---- */
+      #scalebar {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+        pointer-events: none;
+      }
+      #scalebar .bar {
+        height: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        border-top: none;
+        background: rgba(0, 0, 0, 0.25);
+      }
+
+      /* ---- Help / overlays ---- */
+      #help {
+        position: fixed;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-34px);
+        font-size: 11px;
+        color: var(--text-faint);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      kbd {
+        font-family: var(--mono);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-strong);
+        border-radius: 3px;
+        padding: 0 4px;
+        color: var(--text-dim);
+      }
+
+      #banner {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        background: var(--bg);
+        color: var(--text-dim);
+        font-size: 13px;
+        z-index: 50;
+        transition: opacity 0.25s;
+      }
+      #banner.hidden { opacity: 0; pointer-events: none; }
+      #banner .err {
+        color: #e08c8c;
+        font-family: var(--mono);
+        font-size: 12px;
+        max-width: 640px;
+        text-align: center;
+        white-space: pre-wrap;
+        line-height: 1.6;
+      }
+
+      .hidden-ui { display: none !important; }
+    </style>
+    <script type="module" crossorigin src="./assets/index-DhL3WHDe.js"></script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <section class="panel" id="controls">
+      <h1>World Navigation</h1>
+
+      <h2>Seed</h2>
+      <div class="seed-row">
+        <input type="text" id="seed" spellcheck="false" autocomplete="off" />
+        <button id="randomize" title="New random seed (R)">New</button>
+      </div>
+
+      <h2>View</h2>
+      <div class="modes" id="modes"></div>
+
+      <h2>Colony</h2>
+      <div class="colony-row">
+        <button id="found" title="Found a colony at the view centre (F)">Found here</button>
+        <button id="playpause" title="Pause / resume (Space)">Pause</button>
+        <button id="clear-agents" title="Remove all agents">Clear</button>
+      </div>
+      <div class="speed-row">
+        <span class="speed-label">Speed</span>
+        <input type="range" id="speed" min="0" max="5" step="1" value="2" />
+        <span class="speed-value" id="speed-value">4x</span>
+      </div>
+
+      <h2>Options</h2>
+      <div class="toggles">
+        <label class="check">
+          <input type="checkbox" id="roads" checked />
+          Show roads
+        </label>
+        <label class="check">
+          <input type="checkbox" id="grid" />
+          Cell grid at high zoom
+        </label>
+        <label class="check">
+          <input type="checkbox" id="smooth" />
+          Smooth texture filtering
+        </label>
+        <label class="check">
+          <input type="checkbox" id="affinity" checked />
+          Worker region affinity
+        </label>
+      </div>
+    </section>
+
+    <section class="panel" id="inspector">
+      <h1>Inspector</h1>
+      <dl id="probe"></dl>
+    </section>
+
+    <section class="panel" id="colony-stats">
+      <h1>Colony</h1>
+      <dl id="colony-list"></dl>
+    </section>
+
+    <section class="panel" id="stats">
+      <h1>Performance</h1>
+      <dl id="stat-list"></dl>
+    </section>
+
+    <section class="panel" id="legend">
+      <h1>Biomes</h1>
+      <div id="legend-items"></div>
+    </section>
+
+    <div id="scalebar">
+      <span id="scale-label"></span>
+      <div class="bar" id="scale-bar"></div>
+    </div>
+
+    <div id="help">
+      <kbd>right-drag</kbd> pan · <kbd>wheel</kbd> zoom · <kbd>1-7</kbd> view ·
+      <kbd>F</kbd> found colony · <kbd>space</kbd> pause · <kbd>R</kbd> new seed · <kbd>H</kbd> hide UI
+    </div>
+
+    <div id="banner"><span id="banner-text">Compiling world-core…</span></div>
+
+  </body>
+</html>

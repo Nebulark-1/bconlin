@@ -607,3 +607,20 @@
     transition: none;
   }
 }
+
+/* brushing a sheet with the cursor: it lifts and settles, like real paper */
+.scene--blg .sheet.is-rustle {
+  animation: rustle 0.55s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+@keyframes rustle {
+  0% { translate: 0 0; rotate: 0deg; }
+  25% { translate: 1px -3px; rotate: -1.4deg; }
+  55% { translate: -1px 1px; rotate: 0.8deg; }
+  80% { translate: 0 -1px; rotate: -0.3deg; }
+  100% { translate: 0 0; rotate: 0deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene--blg .sheet.is-rustle { animation: none; }
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SwarmSim — GPU Boids</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas id="view"></canvas>
+<canvas id="overlay"></canvas>
+
+<div id="hud"></div>
+
+<aside id="panel">
+  <header>
+    <h1>Swarm<span>Sim</span></h1>
+    <div id="gpu">initialising…</div>
+  </header>
+
+  <div class="toolbar">
+    <select id="preset" title="Load a preset"><option value="">Preset…</option></select>
+    <select id="colorMode" title="Colour mode">
+      <option value="0">Colour: speed</option>
+      <option value="1">Colour: heading</option>
+      <option value="2">Colour: mono</option>
+    </select>
+  </div>
+
+  <div class="toolbar">
+    <button id="pause">Pause</button>
+    <button id="reset">Reset</button>
+    <button id="recenter">Recenter</button>
+    <button id="defaults">Defaults</button>
+  </div>
+
+  <div class="toolbar">
+    <label class="inline">Capacity
+      <select id="capacity" title="Allocated buffer size — changing this reseeds the swarm">
+        <option value="524288">512k</option>
+        <option value="1048576">1M</option>
+        <option value="2097152">2M</option>
+        <option value="4194304">4M</option>
+      </select>
+    </label>
+    <label class="inline"><input type="checkbox" id="follow"> Lures → cursor</label>
+    <label class="inline"><input type="checkbox" id="showField"> Show lures</label>
+  </div>
+
+  <div id="controls"></div>
+
+  <footer>
+    <b>drag</b> pan · <b>wheel</b> zoom · <b>right-drag</b> attract
+    (<b>+shift</b> repel)<br>
+    <b>space</b> pause · <b>r</b> reset · <b>c</b> recenter · <b>f</b> fullscreen ·
+    <b>l</b> show lures · <b>h</b> hide panel
+  </footer>
+</aside>
+
+<div id="boot">
+  <div class="spin"></div>
+  <p>Starting GPU…</p>
+</div>
+
+<script src="js/shaders.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/field.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

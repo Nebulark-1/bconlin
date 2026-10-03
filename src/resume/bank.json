@@ -1,0 +1,974 @@
+{
+  "profile": {
+    "name": "Ben Conlin",
+    "location": "Fort Collins, CO (willing to relocate)",
+    "email": "benaconlin@gmail.com",
+    "linkedin": "linkedin.com/in/benconlin",
+    "site": "bconlin.com"
+  },
+  "lenses": [
+    { "id": "best", "label": "Best overall", "blurb": "My strongest single page" },
+    { "id": "swe", "label": "Software engineering", "blurb": "Systems I designed, built, and shipped" },
+    { "id": "data", "label": "Data & analytics", "blurb": "Pipelines, warehouses, and decisions" },
+    { "id": "it", "label": "IT & systems", "blurb": "Infrastructure, reliability, and support" },
+    { "id": "ops", "label": "Operations & leadership", "blurb": "Running teams, budgets, and process" }
+  ],
+  "summary": {
+    "best": "Computer science graduate who turns messy real-world processes into software. Built automation, data pipelines, and full-stack platforms that cut hundreds of hours of manual work and served tens of thousands of users.",
+    "swe": "CS graduate who ships production software: an AI-coached training platform, a document classification pipeline, and a community platform that served 30,000+ users.",
+    "data": "Builds the pipelines, warehouses, and reports that leadership acts on: firm margins that reshaped compensation and billing, and a tax audit cut from a projected 200 hours to 50.",
+    "it": "Systems generalist who keeps environments reliable and cheap to run: in-house IT for 20+ staff at 82% lower cost, automated provisioning and backups, and self-hosted platforms at scale.",
+    "ops": "Operator who builds the systems behind the work. Promoted twice in twelve months to run a law firm's operations, with tooling that saved hundreds of hours and decisions grounded in data."
+  },
+  "entries": [
+    {
+      "id": "blg",
+      "section": "experience",
+      "org": "Business Law Group",
+      "role": "Operations Manager · IT Manager · Tax Paralegal",
+      "where": "Colorado Springs, CO",
+      "when": "Jan 2025–Jan 2026 · Summers 2021–2024",
+      "max": 5,
+      "bullets": [
+        {
+          "id": "audit",
+          "text": "Cut a six-year tax audit from a projected 200+ attorney hours ($80,000) to about 50 by building a transaction-extraction pipeline that produced a cross-validated ledger matching every expense to its receipt",
+          "score": { "best": 10, "swe": 9, "data": 10, "it": 6, "ops": 8 },
+          "tags": [
+            "python",
+            "data extraction",
+            "etl",
+            "reconciliation",
+            "financial analysis",
+            "tax",
+            "automation",
+            "data validation",
+            "cost savings"
+          ],
+          "wordings": [
+            {
+              "text": "Cut a six-year tax audit from a projected 200+ attorney hours ($80,000) to about 50 by building a transaction-extraction pipeline that produced a cross-validated ledger matching every expense to its receipt",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "docs",
+          "text": "Eliminated hundreds of hours of manual filing a year with a Python and SQLite pipeline that ingests tens of thousands of documents: OCR, in-house Whisper transcription, rule-based routing, and a trained classifier with human review",
+          "score": { "best": 10, "swe": 10, "data": 8, "it": 7, "ops": 6 },
+          "tags": [
+            "python",
+            "sqlite",
+            "ocr",
+            "speech to text",
+            "document automation",
+            "machine learning",
+            "classification",
+            "data pipeline",
+            "human in the loop",
+            "records management"
+          ],
+          "wordings": [
+            {
+              "text": "Eliminated hundreds of hours of manual filing a year with a Python and SQLite pipeline that ingests tens of thousands of documents: OCR, in-house Whisper transcription, rule-based routing, and a trained classifier with human review",
+              "source": "bank"
+            },
+            {
+              "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal.",
+              "source": "résumé"
+            }
+          ]
+        },
+        {
+          "id": "margins",
+          "text": "Exposed per-attorney and per-matter margins by consolidating decades of records and tens of millions in case income into a SQL warehouse; the results drove compensation, staffing, and the move to flat-rate billing",
+          "score": { "best": 9, "swe": 7, "data": 10, "it": 4, "ops": 9 },
+          "tags": [
+            "sql",
+            "data warehouse",
+            "etl",
+            "financial analysis",
+            "profitability analysis",
+            "business intelligence",
+            "data modeling",
+            "decision support"
+          ],
+          "wordings": [
+            {
+              "text": "Exposed per-attorney and per-matter margins by consolidating decades of records and tens of millions in case income into a SQL warehouse; the results drove compensation, staffing, and the move to flat-rate billing",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "promoted",
+          "text": "Promoted twice in twelve months and given ownership of “Optimize the Work,” one of the firm's strategic pillars",
+          "score": { "best": 9, "swe": 4, "data": 5, "it": 6, "ops": 10 },
+          "tags": ["promotion", "process improvement", "operations", "automation", "leadership", "strategic planning"],
+          "wordings": [
+            {
+              "text": "Promoted twice in twelve months and given ownership of “Optimize the Work,” one of the firm's strategic pillars",
+              "source": "bank"
+            },
+            {
+              "text": "Promoted twice in twelve months as internally-built automation scaled across the firm, eliminating hundreds of hours of annual manual work.",
+              "source": "résumé"
+            }
+          ]
+        },
+        {
+          "id": "intranet",
+          "text": "Led the design and build of a firm intranet for time tracking, PTO, intake, IT requests, and benefits, saving 50+ staff hours a week",
+          "score": { "best": 8, "swe": 8, "data": 4, "it": 7, "ops": 9 },
+          "tags": [
+            "full stack",
+            "web development",
+            "wordpress",
+            "react",
+            "internal tools",
+            "workflow automation",
+            "hr systems",
+            "time tracking",
+            "project leadership"
+          ],
+          "wordings": [
+            {
+              "text": "Led the design and build of a firm intranet for time tracking, PTO, intake, IT requests, and benefits, saving 50+ staff hours a week",
+              "source": "bank"
+            },
+            {
+              "text": "Designed and developed a centralized full-stack intranet supporting SOPs, onboarding and training, HR resources, employee benefits, and internal communications. Later converted to React to improve frontend flexibility.",
+              "source": "résumé"
+            },
+            {
+              "text": "Developed the firm intranet, leveraging WordPress, plugins, and custom code to automate daily administrative overhead, training, and SOPs.",
+              "source": "résumé"
+            },
+            {
+              "text": "Designed the architecture and led a team in developing a firmwide intranet platform automating time tracking, PTO, intake, IT requests, and benefits administration; 200+ hours/week saved at full adoption.",
+              "source": "résumé"
+            },
+            {
+              "text": "Building firm intranet automating time tracking, PTO, intake, IT, and benefits; projected 200+ hours/week saved at full adoption; 50+ hours/week saved to date.",
+              "source": "résumé"
+            }
+          ]
+        },
+        {
+          "id": "itcost",
+          "text": "Cut IT costs 82% by bringing IT in-house for 20+ staff, from $135 to $25 an hour",
+          "score": { "best": 8, "swe": 3, "data": 3, "it": 10, "ops": 8 },
+          "tags": ["it management", "cost reduction", "vendor management", "it support", "budgeting", "operations"],
+          "wordings": [
+            {
+              "text": "Cut IT costs 82% by bringing IT in-house for 20+ staff, from $135 to $25 an hour",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "dashboards",
+          "text": "Replaced manual reporting for 20+ staff with automated dashboards for case performance, workloads, and deadlines, and presented monthly reviews to firm leadership",
+          "score": { "best": 6, "swe": 5, "data": 9, "it": 5, "ops": 8 },
+          "tags": [
+            "dashboards",
+            "reporting",
+            "data visualization",
+            "kpis",
+            "business intelligence",
+            "stakeholder communication",
+            "performance management"
+          ],
+          "wordings": [
+            {
+              "text": "Replaced manual reporting for 20+ staff with automated dashboards for case performance, workloads, and deadlines, and presented monthly reviews to firm leadership",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "reconcile",
+          "text": "Reverse-engineered leadership's profitability calculations until the warehouse reconciled to their exact figures",
+          "score": { "best": 5, "swe": 6, "data": 9, "it": 3, "ops": 6 },
+          "tags": [
+            "data validation",
+            "reconciliation",
+            "financial modeling",
+            "sql",
+            "analysis",
+            "stakeholder communication"
+          ],
+          "wordings": [
+            {
+              "text": "Reverse-engineered leadership's profitability calculations until the warehouse reconciled to their exact figures",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "provision",
+          "text": "Automated provisioning, imaging, patching, and backups across a 20+ user environment and replaced ad hoc permissions with role-based access",
+          "score": { "best": 5, "swe": 5, "data": 2, "it": 10, "ops": 5 },
+          "tags": [
+            "it administration",
+            "system administration",
+            "provisioning",
+            "patch management",
+            "backups",
+            "access control",
+            "rbac",
+            "security"
+          ],
+          "wordings": [
+            {
+              "text": "Automated provisioning, imaging, patching, and backups across a 20+ user environment and replaced ad hoc permissions with role-based access",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "manual",
+          "text": "Wrote the firm's operations manual and led staff trainings, cutting leadership interruptions by about half",
+          "score": { "best": 6, "swe": 2, "data": 2, "it": 6, "ops": 10 },
+          "tags": [
+            "documentation",
+            "sops",
+            "training",
+            "process improvement",
+            "knowledge management",
+            "change management"
+          ],
+          "wordings": [
+            {
+              "text": "Wrote the firm's operations manual and led staff trainings, cutting leadership interruptions by about half",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "licenses",
+          "text": "Managed Microsoft 365 and Adobe contracts to right-size seats and secure accounts",
+          "score": { "best": 2, "swe": 1, "data": 2, "it": 8, "ops": 5 },
+          "tags": [
+            "microsoft 365",
+            "adobe",
+            "license management",
+            "vendor management",
+            "it administration",
+            "security"
+          ],
+          "wordings": [
+            {
+              "text": "Managed Microsoft 365 and Adobe contracts to right-size seats and secure accounts",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "tax",
+          "text": "Managed 100+ active IRS cases a year: transcripts, notices, powers of attorney, and filings",
+          "score": { "best": 3, "swe": 1, "data": 3, "it": 2, "ops": 6 },
+          "tags": ["tax", "irs", "case management", "legal operations", "compliance", "client service"],
+          "wordings": [
+            {
+              "text": "Managed 100+ active IRS cases a year: transcripts, notices, powers of attorney, and filings",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "deals",
+          "text": "Organized purchase agreements for $3M and $20M acquisitions and worked directly with clients and opposing counsel",
+          "score": { "best": 4, "swe": 1, "data": 2, "it": 1, "ops": 7 },
+          "tags": [
+            "mergers and acquisitions",
+            "contracts",
+            "legal operations",
+            "client communication",
+            "due diligence"
+          ],
+          "wordings": [
+            {
+              "text": "Organized purchase agreements for $3M and $20M acquisitions and worked directly with clients and opposing counsel",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "highvolumedrafting",
+          "text": "Own high-volume drafting and prep work, freeing EAs for strategy and negotiations; primary daily liaison to clients.",
+          "score": { "best": 3, "swe": 1, "data": 2, "it": 1, "ops": 6 },
+          "tags": [
+            "legal drafting",
+            "document preparation",
+            "client communication",
+            "legal operations",
+            "client service"
+          ],
+          "wordings": [
+            {
+              "text": "Own high-volume drafting and prep work, freeing EAs for strategy and negotiations; primary daily liaison to clients.",
+              "source": "résumé"
+            },
+            {
+              "text": "Own high-volume drafting and prep work, freeing EAs for strategy; primary daily liaison to clients.",
+              "source": "résumé"
+            },
+            {
+              "text": "Owned high-volume drafting and prep work; primary daily liaison to clients.",
+              "source": "résumé"
+            },
+            {
+              "text": "Own high-volume drafting and prep work; primary daily liaison to clients.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "docsingest",
+          "text": "Built an end-to-end pipeline ingesting DOCX, PDF, TXT, HTML, and audio (transcribed in-house by chaining a Whisper pipeline I created), then stripping, reformatting, and tokenizing the text.",
+          "score": { "best": 7, "swe": 9, "data": 8, "it": 4, "ops": 3 },
+          "tags": [
+            "python",
+            "etl",
+            "data ingestion",
+            "speech to text",
+            "nlp",
+            "text processing",
+            "data pipeline",
+            "document processing"
+          ],
+          "wordings": [
+            {
+              "text": "Built an end-to-end pipeline ingesting DOCX, PDF, TXT, HTML, and audio (transcribed in-house by chaining a Whisper pipeline I created), then stripping, reformatting, and tokenizing the text.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "docsnaming",
+          "text": "Trained a neural network to generate name candidates based on those tokens, combining learned classification, deterministic conventions, and automated folder creation and routing to ingest tens of thousands of documents.",
+          "score": { "best": 7, "swe": 9, "data": 8, "it": 3, "ops": 2 },
+          "tags": [
+            "machine learning",
+            "neural networks",
+            "classification",
+            "nlp",
+            "document automation",
+            "workflow automation",
+            "python"
+          ],
+          "wordings": [
+            {
+              "text": "Trained a neural network to generate name candidates based on those tokens, combining learned classification, deterministic conventions, and automated folder creation and routing to ingest tens of thousands of documents.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "docsfeedback",
+          "text": "Implemented a human-in-the-loop preference-ranking loop: the model proposed ranked name candidates, and analyst rankings plus corrected ground truth fed back as training signal across thousands of documents.",
+          "score": { "best": 7, "swe": 9, "data": 8, "it": 3, "ops": 3 },
+          "tags": ["machine learning", "human in the loop", "ranking", "model training", "data labeling", "ml ops"],
+          "wordings": [
+            {
+              "text": "Implemented a human-in-the-loop preference-ranking loop: the model proposed ranked name candidates, and analyst rankings plus corrected ground truth fed back as training signal across thousands of documents.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "parsers",
+          "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating financial analysis for IRS matters.",
+          "score": { "best": 5, "swe": 7, "data": 7, "it": 3, "ops": 3 },
+          "tags": ["python", "pdf parsing", "data extraction", "automation", "financial analysis", "tax"],
+          "wordings": [
+            {
+              "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating financial analysis for IRS matters.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "interim",
+          "text": "Ran daily staff ops (7 reports: 3 legal assistants, 3 paralegals, 1 receptionist) improving coordination, accountability.",
+          "score": { "best": 6, "swe": 2, "data": 3, "it": 3, "ops": 9 },
+          "tags": [
+            "people management",
+            "team leadership",
+            "operations management",
+            "direct reports",
+            "office management"
+          ],
+          "wordings": [
+            {
+              "text": "Ran daily staff ops (7 reports: 3 legal assistants, 3 paralegals, 1 receptionist) improving coordination, accountability.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "legalwork",
+          "text": "Authored cease and desist letters, organized LLC formations, and filed court documents",
+          "score": { "best": 2, "swe": 1, "data": 1, "it": 1, "ops": 5 },
+          "tags": ["legal drafting", "entity formation", "litigation support", "legal operations", "filings"],
+          "wordings": [
+            {
+              "text": "Authored cease and desist letters, organized LLC formations, and filed court documents",
+              "source": "résumé"
+            },
+            {
+              "text": "Supported entity formations, acquisitions, real-estate sales, and litigation prep; owned filings, deadlines, and comms.",
+              "source": "résumé"
+            },
+            {
+              "text": "Assorted Projects: Wrote cease and desist letters, organized LLCs, filed court documents, took consultation notes, facilitated client communication",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        }
+      ]
+    },
+    {
+      "id": "uch",
+      "section": "experience",
+      "org": "UCHealth Medical Center of the Rockies",
+      "role": "Perioperative Assistant",
+      "when": "May 2026–Present",
+      "max": 2,
+      "optional": "healthcare",
+      "bullets": [
+        {
+          "id": "flow",
+          "text": "Coordinate patient flow through 20+ pre- and post-op bays supporting 12 ORs at a Level I trauma center",
+          "score": { "best": 7, "swe": 4, "data": 4, "it": 5, "ops": 8 },
+          "tags": [
+            "healthcare",
+            "patient flow",
+            "operations",
+            "coordination",
+            "time-critical environment",
+            "hospital"
+          ],
+          "wordings": [
+            {
+              "text": "Coordinate patient flow through 20+ pre- and post-op bays supporting 12 ORs at a Level I trauma center",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "team",
+          "text": "Support patients before and after anesthesia alongside nurses, anesthesia providers, and surgeons",
+          "score": { "best": 5, "swe": 3, "data": 3, "it": 3, "ops": 6 },
+          "tags": ["healthcare", "patient care", "teamwork", "communication", "clinical support"],
+          "wordings": [
+            {
+              "text": "Support patients before and after anesthesia alongside nurses, anesthesia providers, and surgeons",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "epic",
+          "text": "Use Epic daily in a HIPAA-regulated, mission-critical environment",
+          "score": { "best": 3, "swe": 4, "data": 4, "it": 6, "ops": 4 },
+          "tags": ["epic", "ehr", "hipaa", "healthcare it", "compliance"],
+          "wordings": [{ "text": "Use Epic daily in a HIPAA-regulated, mission-critical environment", "source": "bank" }]
+        }
+      ]
+    },
+    {
+      "id": "chaos",
+      "section": "projects",
+      "org": "Chaos Coaching",
+      "role": "Founder and developer · chaoscoaching.co",
+      "when": "2026–Present",
+      "max": 3,
+      "bullets": [
+        {
+          "id": "platform",
+          "text": "Designed, built, and deployed an AI-coached platform that designs each week from training, notes, and goals",
+          "score": { "best": 10, "swe": 10, "data": 7, "it": 6, "ops": 6 },
+          "tags": ["saas", "full stack", "product development", "ai", "llm", "cloud", "apis", "founder", "deployment"],
+          "wordings": [
+            {
+              "text": "Designed, built, and deployed an AI-coached platform that designs each week from training, notes, and goals",
+              "source": "bank"
+            },
+            {
+              "text": "Built and deployed a cloud-hosted SaaS platform integrating third-party APIs (Strava, Claude) with relational databases served to users worldwide under sound concurrency controls; analyzes longitudinal physiological data to identify trends and generate actionable insights.",
+              "source": "résumé"
+            }
+          ]
+        },
+        {
+          "id": "stack",
+          "text": "Integrated Strava webhooks, the Claude API, and Stripe; about 24,000 lines of Node, Express, and SQLite with 298 automated tests, deployed with Docker",
+          "score": { "best": 9, "swe": 10, "data": 5, "it": 7, "ops": 3 },
+          "tags": [
+            "node.js",
+            "express",
+            "sqlite",
+            "rest apis",
+            "webhooks",
+            "stripe",
+            "claude api",
+            "docker",
+            "automated testing",
+            "javascript"
+          ],
+          "wordings": [
+            {
+              "text": "Integrated Strava webhooks, the Claude API, and Stripe; about 24,000 lines of Node, Express, and SQLite with 298 automated tests, deployed with Docker",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "guardrails",
+          "text": "Enforced injury-prevention rules in code so the plan can't skip them, stress-tested against 13 simulated athletes",
+          "score": { "best": 7, "swe": 9, "data": 6, "it": 4, "ops": 4 },
+          "tags": ["ai safety", "llm", "validation", "rules engine", "testing", "simulation", "reliability"],
+          "wordings": [
+            {
+              "text": "Enforced injury-prevention rules in code so the plan can't skip them, stress-tested against 13 simulated athletes",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "trends",
+          "text": "Analyzes longitudinal training and physiological data to surface trends and adjust each plan",
+          "score": { "best": 4, "swe": 5, "data": 9, "it": 2, "ops": 3 },
+          "tags": ["data analysis", "time series", "analytics", "personalization", "health data"],
+          "wordings": [
+            {
+              "text": "Analyzes longitudinal training and physiological data to surface trends and adjust each plan",
+              "source": "bank"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wiki",
+      "section": "projects",
+      "org": "Community Gaming Wiki",
+      "role": "Founder · Python, full stack",
+      "when": "Personal",
+      "max": 1,
+      "bullets": [
+        {
+          "id": "wiki",
+          "text": "Founded, scaled, and sold a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end",
+          "score": { "best": 9, "swe": 9, "data": 7, "it": 9, "ops": 6 },
+          "tags": [
+            "python",
+            "full stack",
+            "web hosting",
+            "database performance",
+            "scalability",
+            "analytics",
+            "founder",
+            "servers"
+          ],
+          "wordings": [
+            {
+              "text": "Founded, scaled, and sold a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end",
+              "source": "bank"
+            },
+            {
+              "text": "Founded and built a wiki/tool platform for a 30,000-member community, serving 10k+ daily visitors and powered by custom Python tools running on a dedicated server.",
+              "source": "résumé"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compiler",
+      "section": "projects",
+      "org": "Pascal-like Compiler",
+      "role": "C · Flex · Yacc",
+      "when": "Michigan Tech",
+      "max": 1,
+      "bullets": [
+        {
+          "id": "compiler",
+          "text": "Built a compiler for a Pascal-like language covering lexical analysis, parsing, semantic analysis, and code generation",
+          "score": { "best": 6, "swe": 9, "data": 3, "it": 3, "ops": 1 },
+          "tags": ["c", "compilers", "flex", "yacc", "parsing", "programming languages", "computer science"],
+          "wordings": [
+            {
+              "text": "Built a compiler for a Pascal-like language covering lexical analysis, parsing, semantic analysis, and code generation",
+              "source": "bank"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml",
+      "section": "projects",
+      "org": "Evolutionary ML Framework",
+      "role": "Python",
+      "when": "Personal",
+      "max": 1,
+      "bullets": [
+        {
+          "id": "ml",
+          "text": "Built an evolutionary framework for time-series prediction that ingests live market data and iteratively refines its model architectures",
+          "score": { "best": 4, "swe": 7, "data": 9, "it": 2, "ops": 1 },
+          "tags": [
+            "python",
+            "machine learning",
+            "evolutionary algorithms",
+            "time series",
+            "forecasting",
+            "data ingestion"
+          ],
+          "wordings": [
+            {
+              "text": "Built an evolutionary framework for time-series prediction that ingests live market data and iteratively refines its model architectures",
+              "source": "bank"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mtu",
+      "section": "education",
+      "org": "Michigan Technological University",
+      "role": "B.S. Computer Science · GPA 3.50",
+      "where": "Houghton, MI",
+      "when": "Spring 2025",
+      "max": 3,
+      "bullets": [
+        {
+          "id": "president",
+          "text": "Student Body President: represented 8,000+ students to university leadership, led 30+ representatives, and grew student involvement 37%",
+          "score": { "best": 9, "swe": 6, "data": 6, "it": 6, "ops": 10 },
+          "tags": [
+            "leadership",
+            "public speaking",
+            "stakeholder management",
+            "team leadership",
+            "advocacy",
+            "governance"
+          ],
+          "wordings": [
+            {
+              "text": "Student Body President: represented 8,000+ students to university leadership, led 30+ representatives, and grew student involvement 37%",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "budget",
+          "text": "Managed a $1M+ budget across 200+ student organizations",
+          "score": { "best": 6, "swe": 3, "data": 6, "it": 3, "ops": 9 },
+          "tags": ["budgeting", "financial management", "budget allocation", "stakeholder management"],
+          "wordings": [{ "text": "Managed a $1M+ budget across 200+ student organizations", "source": "bank" }]
+        },
+        {
+          "id": "aipolicy",
+          "text": "Drafted the university's AI policy as the only student on its AI Working Group, then trained faculty to apply it",
+          "score": { "best": 7, "swe": 6, "data": 5, "it": 6, "ops": 8 },
+          "tags": ["ai policy", "ai governance", "policy writing", "training", "higher education"],
+          "wordings": [
+            {
+              "text": "Drafted the university's AI policy as the only student on its AI Working Group, then trained faculty to apply it",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "teams",
+          "text": "Led 7-, 6-, and 5-person student software teams that shipped a game, a health analytics platform, and an e-commerce system",
+          "score": { "best": 5, "swe": 8, "data": 4, "it": 3, "ops": 7 },
+          "tags": [
+            "team leadership",
+            "software development",
+            "agile",
+            "project management",
+            "full stack",
+            "game development"
+          ],
+          "wordings": [
+            {
+              "text": "Led 7-, 6-, and 5-person student software teams that shipped a game, a health analytics platform, and an e-commerce system",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "athlete",
+          "text": "NCAA Division I (BYU) and Division II (Michigan Tech) distance runner; Ironman finisher",
+          "score": { "best": 6, "swe": 5, "data": 5, "it": 5, "ops": 6 },
+          "tags": ["athletics", "discipline", "time management", "endurance"],
+          "wordings": [
+            {
+              "text": "NCAA Division I (BYU) and Division II (Michigan Tech) distance runner; Ironman finisher",
+              "source": "bank"
+            }
+          ]
+        },
+        {
+          "id": "freespeech",
+          "text": "Planned free speech initiatives, contributing to MTU’s #1 national ranking on FIRE’s Free Speech Index",
+          "score": { "best": 6, "swe": 2, "data": 2, "it": 1, "ops": 7 },
+          "tags": ["policy", "civic engagement", "event planning", "advocacy", "higher education"],
+          "wordings": [
+            {
+              "text": "Planned free speech initiatives, contributing to MTU’s #1 national ranking on FIRE’s Free Speech Index",
+              "source": "résumé"
+            },
+            {
+              "text": "Planned MTU Free Speech initiatives, maintaining MTU’s #1 national ranking on FIRE’s Free Speech Index",
+              "source": "résumé"
+            },
+            {
+              "text": "Planned free speech initiatives leading to MTU’s #1 national FIRE ranking; organized week-long constitutional convention; led voter engagement that earned MTU \"Voter Friendly Campus\" certification.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "council",
+          "text": "Partnered with the Dean of Students to revise academic support policies and improve retention initiatives.",
+          "score": { "best": 4, "swe": 1, "data": 2, "it": 1, "ops": 6 },
+          "tags": ["policy", "higher education", "student success", "collaboration", "retention"],
+          "wordings": [
+            {
+              "text": "Partnered with the Dean of Students to revise academic support policies and improve retention initiatives.",
+              "source": "résumé"
+            },
+            {
+              "text": "Partnered with the Dean of Students to implement university policy changes.",
+              "source": "résumé"
+            },
+            { "text": "Worked with the Dean of Students to Create MTU policy changes", "source": "résumé" }
+          ],
+          "draft": true
+        },
+        {
+          "id": "specialbudget",
+          "text": "Allocated $300,000+ to MTU’s 17 Special Budget Groups",
+          "score": { "best": 4, "swe": 1, "data": 4, "it": 1, "ops": 7 },
+          "tags": ["budgeting", "budget allocation", "financial management"],
+          "wordings": [{ "text": "Allocated $300,000+ to MTU’s 17 Special Budget Groups", "source": "résumé" }],
+          "draft": true
+        }
+      ]
+    },
+    {
+      "id": "mission",
+      "section": "volunteer",
+      "org": "Volunteer Missionary",
+      "role": "Gardenia, CA",
+      "when": "",
+      "max": 2,
+      "bullets": [
+        {
+          "id": "volunteermissionary",
+          "text": "Volunteer Missionary: Served for 3-months in Gardenia, CA",
+          "score": { "best": 1, "swe": 0, "data": 0, "it": 0, "ops": 2 },
+          "tags": ["volunteering", "service", "community"],
+          "wordings": [{ "text": "Volunteer Missionary: Served for 3-months in Gardenia, CA", "source": "résumé" }],
+          "draft": true
+        }
+      ]
+    },
+    {
+      "id": "campaign",
+      "section": "experience",
+      "org": "Houghton City Council campaign",
+      "role": "Campaign Manager",
+      "when": "Aug–Nov 2024",
+      "max": 2,
+      "bullets": [
+        {
+          "id": "campaign",
+          "text": "Built and executed fundraising, field, and comms plan; managed social, mailers, door-to-door, and media outreach.",
+          "score": { "best": 4, "swe": 1, "data": 2, "it": 1, "ops": 7 },
+          "tags": ["campaign management", "fundraising", "marketing", "social media", "outreach", "communications"],
+          "wordings": [
+            {
+              "text": "Built and executed fundraising, field, and comms plan; managed social, mailers, door-to-door, and media outreach.",
+              "source": "résumé"
+            },
+            {
+              "text": "Built and executed fundraising plan; managed social media, mailers, door-knock campaigns, and outreach.",
+              "source": "résumé"
+            },
+            {
+              "text": "Developed a comprehensive fundraising and campaigning strategy deployed during the Fall election season",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        }
+      ]
+    },
+    {
+      "id": "xc",
+      "section": "volunteer",
+      "org": "Rampart High School",
+      "role": "Volunteer Cross Country Coach",
+      "when": "2020–2022",
+      "max": 2,
+      "bullets": [
+        {
+          "id": "coached",
+          "text": "Coached 50+ athletes, resulting in a 100% personal best rate year over year",
+          "score": { "best": 5, "swe": 1, "data": 2, "it": 1, "ops": 7 },
+          "tags": ["coaching", "mentoring", "training plans", "volunteering", "leadership"],
+          "wordings": [
+            {
+              "text": "Coached 50+ athletes, resulting in a 100% personal best rate year over year",
+              "source": "résumé"
+            },
+            {
+              "text": "Coached 50+ athletes; focused on goals and resilience; all achieved PRs.",
+              "source": "résumé"
+            },
+            {
+              "text": "Coached 50+ students, all of whom ran faster than previous years and learned how and why training plans work to enable future replication and independence",
+              "source": "résumé"
+            },
+            {
+              "text": "Designed training plans, provided individualized instruction, and supported athlete development for 50+ students.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        }
+      ]
+    },
+    {
+      "id": "tutor",
+      "section": "volunteer",
+      "org": "Rampart High School",
+      "role": "Volunteer Math Tutor",
+      "when": "2020–2022",
+      "max": 2,
+      "bullets": [
+        {
+          "id": "tutored",
+          "text": "Tutored failing HS/AP math students bringing all students to passing grades.",
+          "score": { "best": 2, "swe": 1, "data": 1, "it": 1, "ops": 4 },
+          "tags": ["tutoring", "teaching", "mathematics", "mentoring", "volunteering"],
+          "wordings": [
+            {
+              "text": "Tutored failing HS/AP math students bringing all students to passing grades.",
+              "source": "résumé"
+            },
+            { "text": "Tutored students from Rampart High School in Calculus AB and BC", "source": "résumé" },
+            {
+              "text": "Developed personalized learning strategies to help struggling students reach academic success.",
+              "source": "résumé"
+            }
+          ],
+          "draft": true
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "row": "Programming",
+      "items": [
+        ["Python", { "best": 10, "swe": 10, "data": 10, "it": 8, "ops": 7 }],
+        ["SQL", { "best": 9, "swe": 8, "data": 10, "it": 7, "ops": 7 }],
+        ["JavaScript", { "best": 8, "swe": 9, "data": 5, "it": 5, "ops": 4 }],
+        ["Java", { "best": 6, "swe": 8, "data": 4, "it": 3, "ops": 2 }],
+        ["C", { "best": 4, "swe": 7, "data": 2, "it": 3, "ops": 1 }],
+        ["Rust", { "best": 4, "swe": 6, "data": 2, "it": 2, "ops": 1 }],
+        ["VBA", { "best": 3, "swe": 2, "data": 7, "it": 5, "ops": 6 }]
+      ]
+    },
+    {
+      "row": "Systems",
+      "items": [
+        ["Node and Express", { "best": 8, "swe": 10, "data": 4, "it": 5, "ops": 3 }],
+        ["REST APIs and webhooks", { "best": 8, "swe": 9, "data": 7, "it": 6, "ops": 3 }],
+        ["Relational schema design", { "best": 8, "swe": 8, "data": 10, "it": 5, "ops": 4 }],
+        ["ETL and reconciliation", { "best": 6, "swe": 5, "data": 10, "it": 4, "ops": 6 }],
+        ["LLM and NLP pipelines", { "best": 8, "swe": 9, "data": 8, "it": 4, "ops": 4 }],
+        ["React", { "best": 5, "swe": 7, "data": 3, "it": 3, "ops": 2 }],
+        ["Docker", { "best": 5, "swe": 7, "data": 3, "it": 8, "ops": 2 }],
+        ["Provisioning, backups, and RBAC", { "best": 4, "swe": 3, "data": 2, "it": 10, "ops": 5 }],
+        ["Microsoft 365 administration", { "best": 2, "swe": 1, "data": 2, "it": 9, "ops": 5 }]
+      ]
+    },
+    {
+      "row": "Tools",
+      "items": [
+        ["Git", { "best": 8, "swe": 9, "data": 6, "it": 6, "ops": 4 }],
+        ["Excel (advanced)", { "best": 4, "swe": 2, "data": 9, "it": 5, "ops": 8 }],
+        ["Jira", { "best": 5, "swe": 6, "data": 5, "it": 6, "ops": 7 }],
+        ["Agile and Scrum", { "best": 5, "swe": 6, "data": 4, "it": 4, "ops": 8 }],
+        ["Epic", { "best": 2, "swe": 1, "data": 2, "it": 5, "ops": 4 }]
+      ]
+    }
+  ],
+  "spoken": "French (C1)",
+  "vocabulary": [
+    { "term": "Python" },
+    { "term": "SQL", "synonyms": ["SQLite", "MySQL"] },
+    { "term": "SQLite" },
+    { "term": "JavaScript", "synonyms": ["JS"] },
+    { "term": "Node", "synonyms": ["Node.js"] },
+    { "term": "Express" },
+    { "term": "React" },
+    { "term": "WordPress" },
+    { "term": "Java" },
+    { "term": "C" },
+    { "term": "Rust" },
+    { "term": "VBA" },
+    { "term": "Excel" },
+    { "term": "Docker" },
+    { "term": "Git" },
+    { "term": "Jira" },
+    { "term": "Agile", "synonyms": ["Scrum"] },
+    { "term": "REST APIs", "synonyms": ["REST", "APIs", "API", "webhooks"] },
+    { "term": "Stripe" },
+    { "term": "Strava" },
+    { "term": "Claude API", "synonyms": ["Claude"] },
+    { "term": "OCR" },
+    { "term": "Whisper", "synonyms": ["transcription"] },
+    { "term": "machine learning", "synonyms": ["ML", "neural network", "classifier", "model"] },
+    { "term": "LLM", "synonyms": ["AI"] },
+    { "term": "NLP" },
+    { "term": "ETL", "synonyms": ["pipeline", "pipelines", "data extraction"] },
+    { "term": "data warehouse", "synonyms": ["warehouse", "database"] },
+    { "term": "dashboards", "synonyms": ["reporting", "reports"] },
+    { "term": "automation", "synonyms": ["automated", "automating"] },
+    { "term": "testing", "synonyms": ["tests"] },
+    { "term": "deployment", "synonyms": ["deployed"] },
+    { "term": "SaaS" },
+    { "term": "cloud", "synonyms": ["cloud-hosted"] },
+    { "term": "Microsoft 365" },
+    { "term": "Adobe" },
+    { "term": "role-based access", "synonyms": ["RBAC", "access controls"] },
+    { "term": "backups", "synonyms": ["patching", "provisioning", "imaging"] },
+    { "term": "Epic" },
+    { "term": "HIPAA" },
+    { "term": "budget", "synonyms": ["budgets"] },
+    { "term": "leadership", "synonyms": ["led", "managed", "directed"] },
+    { "term": "training", "synonyms": ["trainings", "staff training", "trained faculty", "trained staff"] },
+    { "term": "compliance" },
+    { "term": "IRS", "synonyms": ["tax"] },
+    { "term": "acquisitions", "synonyms": ["purchase agreements"] }
+  ]
+}

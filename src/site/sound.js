@@ -10,17 +10,23 @@
 const KEY = "bc-sound";
 
 // Chords for each part of the site (Hz), all diatonic to A major.
+// `cutoff` is how bright the pad sounds (lower is warmer and more muffled);
+// `level` scales how loud it is.
 export const CHORDS = {
-  A: { pad: [110, 164.81, 246.94, 277.18], strings: [110, 164.81, 220, 277.18] }, // A add9
-  Fsm: { pad: [92.5, 138.59, 164.81, 220], strings: [92.5, 138.59, 220, 277.18] }, // F#m7
-  D: { pad: [73.42, 146.83, 220, 277.18], strings: [146.83, 220, 293.66, 369.99] }, // Dmaj7
-  Ahigh: { pad: [110, 220, 329.63, 493.88], strings: [220, 277.18, 329.63, 493.88] }, // A add9, open
+  A: { pad: [110, 164.81, 246.94, 277.18], strings: [110, 164.81, 220, 277.18], cutoff: 560 }, // A add9
+  Fsm: { pad: [92.5, 138.59, 164.81, 220], strings: [92.5, 138.59, 220, 277.18], cutoff: 600 }, // F#m7
+  D: { pad: [73.42, 146.83, 220, 277.18], strings: [146.83, 220, 293.66, 369.99], cutoff: 420 }, // Dmaj7, warm
+  Ahigh: { pad: [110, 220, 329.63, 493.88], strings: [220, 277.18, 329.63, 493.88], cutoff: 700 }, // A add9, open
+  Acold: { pad: [110, 329.63, 493.88, 659.25], strings: [220, 329.63, 493.88, 659.25], cutoff: 900, level: 0.45 }, // A, high and glassy, quiet
+  E: { pad: [82.41, 164.81, 246.94, 369.99], strings: [164.81, 246.94, 329.63, 415.3], cutoff: 820 }, // E add9, bright
 };
 // A major pentatonic, for chimes and music-box notes.
 export const PENTATONIC = [440, 493.88, 554.37, 659.25, 739.99, 880, 987.77, 1108.73];
 
 let ctx = null;
 let master;
+let tone;
+let fxVerb;
 let meter;
 let dry;
 const mix = {};
@@ -78,8 +84,13 @@ function build() {
   mix.master = ctx.createGain();
   meter = ctx.createAnalyser();
   meter.fftSize = 512;
-  master.connect(mix.master).connect(meter).connect(ctx.destination);
-  for (const layer of ["pad", "strings", "chimes", "wind", "air"]) mix[layer] = ctx.createGain();
+  // a tone control on everything (Behind the scenes softens it), then the meter
+  tone = ctx.createBiquadFilter();
+  tone.type = "lowpass";
+  tone.frequency.value = toneTarget();
+  tone.Q.value = 0.5;
+  master.connect(mix.master).connect(tone).connect(meter).connect(ctx.destination);
+  for (const layer of ["pad", "strings", "chimes", "wind", "air", "fx"]) mix[layer] = ctx.createGain();
   applyMix();
 
   dry = ctx.createGain();
@@ -118,6 +129,15 @@ function build() {
   mix.wind.connect(master);
   mix.wind.connect(reverbIn);
   mix.air.connect(master);
+  // sound effects (the career page's textures): mostly dry, some room, and
+  // a separate send for things that should sit far back in the reverb
+  mix.fx.connect(dry);
+  const fxSend = ctx.createGain();
+  fxSend.gain.value = 0.4;
+  mix.fx.connect(fxSend).connect(reverbIn);
+  fxVerb = ctx.createGain();
+  fxVerb.connect(reverbIn);
+  applyMix();
 
   air();
   wind();
@@ -171,7 +191,9 @@ function air() {
   swellDepth.gain.value = 0.025;
   swell.connect(swellDepth).connect(g.gain);
   swell.start();
-  src.connect(band).connect(g).connect(mix.air);
+  airAmb = ctx.createGain();
+  airAmb.gain.value = amb.air;
+  src.connect(band).connect(g).connect(airAmb).connect(mix.air);
   src.start();
 }
 
@@ -251,7 +273,7 @@ setInterval(() => {
   gustiness += (0.7 + Math.random() * 0.6 - gustiness) * 0.05;
   windStats.level = energy;
   if (!on || !windGain) return;
-  const target = Math.min(0.22, Math.max(energy ** 0.8, breezeLevel, gustLevel) * gustiness * 0.26);
+  const target = Math.min(0.13, Math.max(energy ** 0.8 * amb.wind, breezeLevel, gustLevel) * gustiness * 0.15);
   const rising = target > windGain.gain.value;
   windGain.gain.setTargetAtTime(target, ctx.currentTime, rising ? 0.9 : 2.6);
 }, 100);
@@ -278,6 +300,8 @@ export function setChord(name) {
   soundStats.chord = name;
   if (!on) return;
   const now = ctx.currentTime;
+  // each chord has its own brightness
+  padFilter.frequency.setTargetAtTime(CHORDS[name].cutoff ?? 560, now, 1.2);
   for (const v of voices) {
     v.env.gain.cancelScheduledValues(now);
     v.env.gain.setValueAtTime(v.env.gain.value, now);
@@ -287,7 +311,7 @@ export function setChord(name) {
   voices = CHORDS[name].pad.map((f, k) => {
     const env = ctx.createGain();
     env.gain.value = 0;
-    env.gain.linearRampToValueAtTime(k === 0 ? 0.022 : 0.015, now + 3);
+    env.gain.linearRampToValueAtTime((k === 0 ? 0.022 : 0.015) * (CHORDS[name].level ?? 1), now + 3);
     // each voice breathes on its own: between a fifth and all of its level
     const breath = ctx.createGain();
     breath.gain.value = 0.6;
@@ -349,15 +373,15 @@ function phrase() {
   phraseTimer = setTimeout(rest, 25000 + Math.random() * 20000);
 }
 
-/** A plucked string. Returns its buffer (the inspector draws it). */
-export function pluck(freq, strength = 0.5, pan = 0) {
+/** A plucked string. boost lifts one above the rest (the Chaos melody). Returns its buffer (the inspector draws it). */
+export function pluck(freq, strength = 0.5, pan = 0, boost = 1) {
   if (!on) return null;
   const key = `s${freq}`;
   if (!buffers.has(key)) buffers.set(key, pluckBuffer(ctx, freq));
   const src = ctx.createBufferSource();
   src.buffer = buffers.get(key);
   const gain = ctx.createGain();
-  gain.gain.value = 0.12 + 0.6 * Math.min(1, strength);
+  gain.gain.value = (0.018 + 0.082 * Math.min(1, strength)) * boost; // very quiet: a texture under the wind and the pad
   src.connect(gain);
   panned(gain, pan).connect(mix.strings);
   src.start();
@@ -398,7 +422,7 @@ export function chime(freq, gain = 0.05, pan = 0, decay = 2.6) {
 function sparkle() {
   clearTimeout(sparkleTimer);
   sparkleTimer = setTimeout(sparkle, 5000 + Math.random() * 7000);
-  if (!on || document.hidden) return;
+  if (!on || document.hidden || !amb.sparkle) return;
   const count = 1 + Math.floor(Math.random() * 3);
   let at = 0;
   for (let k = 0; k < count; k++) {
@@ -439,9 +463,10 @@ export const LAYERS = [
   { id: "chimes", label: "Chimes" },
   { id: "wind", label: "Wind" },
   { id: "air", label: "Air" },
+  { id: "fx", label: "Effects" },
   { id: "master", label: "Master" },
 ];
-let levels = { pad: 1, strings: 1, chimes: 1, wind: 1, air: 1, master: 1 };
+let levels = { pad: 1, strings: 1, chimes: 1, wind: 1, air: 1, fx: 1, master: 1 };
 try {
   levels = { ...levels, ...JSON.parse(localStorage.getItem(MIX_KEY) || "{}") };
 } catch {
@@ -451,6 +476,7 @@ try {
 function applyMix() {
   if (!ctx) return;
   for (const [id, node] of Object.entries(mix)) node.gain.setTargetAtTime(levels[id] ?? 1, ctx.currentTime, 0.05);
+  fxVerb?.gain.setTargetAtTime(levels.fx ?? 1, ctx.currentTime, 0.05);
 }
 
 export const getMix = (id) => levels[id] ?? 1;
@@ -509,6 +535,40 @@ export function toggleSound(force) {
 }
 
 export const isSoundOn = () => on;
+
+/**
+ * For pages that make their own sounds (the career page's textures): the
+ * audio context, the effects bus, and a deep reverb send. Null until
+ * sound is on and playing.
+ */
+export function engine() {
+  if (!on || !ctx || ctx.state !== "running") return null;
+  return { ctx, fx: mix.fx, verb: fxVerb };
+}
+
+/** Behind the scenes: everything a little softer, as if behind glass. */
+let behindGlass = false;
+export function setTone(blueprint) {
+  behindGlass = blueprint;
+  if (tone) tone.frequency.setTargetAtTime(toneTarget(), ctx.currentTime, 0.4);
+}
+const toneTarget = () => Math.min(behindGlass ? 1100 : 18000, amb.hush);
+
+/**
+ * A page's atmosphere, for wherever you are on it: how much of the air
+ * there is, how much wind scrolling stirs up, whether the music-box notes
+ * play, and how muffled everything is (hush: a low-pass, in Hz). The
+ * career page sets one per chapter.
+ */
+const amb = { air: 1, wind: 1, sparkle: true, hush: 18000 };
+let airAmb = null;
+export function ambience({ air = 1, wind = 1, sparkle = true, hush = 18000 } = {}) {
+  Object.assign(amb, { air, wind, sparkle, hush });
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  airAmb?.gain.setTargetAtTime(air, now, 1.2);
+  tone?.frequency.setTargetAtTime(toneTarget(), now, 1.2);
+}
 /** On, and actually reaching the speakers. */
 export const isSoundPlaying = () => on && ctx?.state === "running";
 /** What the browser's audio engine is doing: none, suspended, running or closed. */

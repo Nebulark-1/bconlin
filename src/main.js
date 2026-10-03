@@ -8,6 +8,8 @@ import { createTimeline } from "./timeline.js";
 import { chapters, nextChapter } from "./content.js";
 import { createBlueprint } from "./blueprint.js";
 import { mountFab } from "./site/fab.js";
+import { createSoundscape } from "./career/soundscape.js";
+import { setTone, onSound } from "./site/sound.js";
 
 const director = createDirector();
 const fab = mountFab({ current: "career", blueprint: true });
@@ -112,6 +114,53 @@ const timeline = createTimeline(
   },
 );
 director.onFrame(timeline.update);
+
+// ── Sound ────────────────────────────────────────────────────
+// Each chapter has its own sounds (see career/soundscape.js): whichever
+// section fills the middle of the screen is the one playing.
+const soundscape = createSoundscape(document.body);
+onSound(() => soundscape.refresh());
+const sections = [
+  { id: "intro", el: intro },
+  ...scenes.map((s) => ({ id: s.id, el: s.el, s })),
+  { id: "outro", el: outro },
+];
+const lastCard = new Map();
+director.onFrame(() => {
+  const mid = window.innerHeight / 2;
+  const here = sections.find(({ el }) => {
+    const r = el.getBoundingClientRect();
+    return r.top <= mid && r.bottom > mid;
+  });
+  if (here) soundscape.setChapter(here.id);
+  // a new résumé card gets a small sound in its chapter's voice
+  for (const { id, s } of sections) {
+    if (!s) continue;
+    const card = s.ctl.card;
+    if (card >= 0 && lastCard.has(id) && lastCard.get(id) !== card) soundscape.card(id);
+    lastCard.set(id, card);
+  }
+  soundscape.frame(performance.now());
+});
+
+// the rail: hovering a stop plucks its string, jumping plays a rising run
+let hovered = null;
+$(".rail__stops").addEventListener("pointerover", (e) => {
+  const stop = e.target.closest(".stop");
+  if (!stop || stop === hovered) return;
+  hovered = stop;
+  const chapters = [...document.querySelectorAll(".rail .stop:not(.stop--sub)")];
+  const all = [...document.querySelectorAll(".rail .stop")];
+  const sub = stop.classList.contains("stop--sub");
+  // a beat belongs to the chapter above it
+  const owner = sub ? all.slice(0, all.indexOf(stop)).reverse().find((b) => !b.classList.contains("stop--sub")) : stop;
+  soundscape.stop(chapters.indexOf(owner), sub);
+});
+$(".rail__stops").addEventListener("pointerleave", () => (hovered = null));
+$(".rail__stops").addEventListener("click", (e) => e.target.closest(".stop:not(:disabled)") && soundscape.glide());
+
+// Behind the scenes: the whole page sounds a little softer, as if behind glass
+blueprint.subscribe((on) => setTone(on));
 
 director.start();
 
