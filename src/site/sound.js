@@ -311,14 +311,14 @@ export function setChord(name) {
   voices = CHORDS[name].pad.map((f, k) => {
     const env = ctx.createGain();
     env.gain.value = 0;
-    env.gain.linearRampToValueAtTime((k === 0 ? 0.022 : 0.015) * (CHORDS[name].level ?? 1), now + 3);
-    // each voice breathes on its own: between a fifth and all of its level
+    env.gain.linearRampToValueAtTime((k === 0 ? 0.033 : 0.023) * (CHORDS[name].level ?? 1), now + 3);
+    // each voice breathes on its own: between about half and all of its level
     const breath = ctx.createGain();
-    breath.gain.value = 0.6;
+    breath.gain.value = 0.725;
     const lfo = ctx.createOscillator();
     lfo.frequency.value = 0.02 + Math.random() * 0.045;
     const depth = ctx.createGain();
-    depth.gain.value = 0.4;
+    depth.gain.value = 0.275;
     lfo.connect(depth).connect(breath.gain);
     const a = ctx.createOscillator();
     a.type = "sine";
@@ -346,7 +346,7 @@ export function setChord(name) {
 
 /**
  * The pad comes and goes in phrases. After a chord arrives it plays for
- * half a minute or so, then fades almost to nothing and rests for a while
+ * half a minute or so, then fades to about a third and rests for a while
  * before returning. Scrolling to a new section brings it straight back.
  */
 let phraseTimer = 0;
@@ -358,7 +358,7 @@ function phrase() {
     padBus.gain.linearRampToValueAtTime(to, now + seconds);
   };
   const rest = () => {
-    swell(0.1, 9);
+    swell(0.35, 9);
     soundStats.phrase = "resting";
     phraseTimer = setTimeout(back, 9000 + 15000 + Math.random() * 20000);
   };
