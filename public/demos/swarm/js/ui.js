@@ -52,7 +52,7 @@ const CONTROLS = [
 
   { group: 'Swarm', items: [
     { key: 'count',       label: 'Boids',        min: 1024, max: 2097152, step: 1, log: true, int: true },
-    { key: 'maxPerCell',  label: 'Neighbour cap', min: 4,   max: 128, step: 1, int: true,
+    { key: 'maxPerCell',  label: 'Neighbor cap', min: 4,   max: 128, step: 1, int: true,
       hint: 'Neighbors sampled per grid cell. Lower is faster in dense flocks.' },
     { key: 'timeScale',   label: 'Time scale',   min: 0,    max: 3,   step: 0.01 },
     { key: 'substeps',    label: 'Substeps',     min: 1,    max: 4,   step: 1, int: true },
