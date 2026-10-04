@@ -38,13 +38,28 @@
     </header>
 
     <main class="projects">
-      <header class="projects__intro wrap">
-        <p class="kicker">Projects</p>
-        <h1>Things I've built</h1>
-        <p class="projects__lede">Ranked by how ready each one is to show. The ones marked live demo run right here in your browser.</p>
-        <ol class="projects__index" aria-label="All projects"></ol>
+      <header class="pj-head">
+        <div class="pj-head__intro">
+          <p class="kicker">Projects</p>
+          <h1>Things I've built</h1>
+          <p class="pj-head__lede">What I build outside of work.</p>
+          <div class="roles">
+            <p class="pj-head__label"><span>Hiring for</span></p>
+            <div class="roles__list"></div>
+          </div>
+        </div>
+        <div class="pj-head__grid">
+          <p class="pj-head__label"><span>Filter by skill</span><span class="pj-key"><i class="is-proof"></i>in a bullet <i></i>in the tools</span></p>
+          <div class="mx-wrap"><table class="mx" aria-label="Skills shown by each project"></table></div>
+        </div>
       </header>
-      <div class="projects__list"></div>
+
+      <div class="bar" role="toolbar" aria-label="Filters and sort">
+        <div class="bar__filters"></div>
+        <div class="bar__sort" role="group" aria-label="Sort by"></div>
+      </div>
+
+      <div class="pj-list"></div>
     </main>
 
     <script type="module" src="/src/projects/main.js"></script>
