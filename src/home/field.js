@@ -46,6 +46,10 @@ export function createField(canvas, structures, { onPluck, onScatter, onActive }
   const stats = { active: null, scores: [], fps: 60, energy: 0, plucks: 0, travelling: 0 };
   const glow = [0, 0, 0, 0];
   const lastPluck = [0, 0, 0, 0];
+  // Which side of each string the cursor is on (-1, 1, or 0 for unknown),
+  // and whether the string can sound again. See touch().
+  const side = [0, 0, 0, 0];
+  const armed = [true, true, true, true];
   const pointer = { x: 0, y: 0, t: 0, inside: false };
   let rects = [];
   let active = -1;
@@ -171,6 +175,68 @@ export function createField(canvas, structures, { onPluck, onScatter, onActive }
   }
 
   // ── The cursor plucks strings and scatters dots ──
+  const REARM = 10; // px the cursor must move off a string before it can sound again
+
+  /**
+   * Where (x, y) sits relative to string s at rest: the signed distance to
+   * the nearest segment of its target line, that segment's unit normal, and
+   * whether the point is beside the string rather than past either end.
+   * Rest positions, not live ones, so a string's own wobble can't move the
+   * line back under the cursor.
+   */
+  function besideString(s, x, y) {
+    let best = { dist: Infinity, d: 0, nx: 0, ny: 0, inside: false };
+    for (let k = 0; k < PER - 1; k++) {
+      const a = pts[s * PER + k];
+      const b = pts[s * PER + k + 1];
+      const ex = b.tx - a.tx;
+      const ey = b.ty - a.ty;
+      const len = Math.hypot(ex, ey) || 1;
+      const raw = ((x - a.tx) * ex + (y - a.ty) * ey) / (len * len);
+      const t = clamp(raw);
+      const dist = Math.hypot(a.tx + ex * t - x, a.ty + ey * t - y);
+      if (dist < best.dist) {
+        const inside = !(k === 0 && raw < 0) && !(k === PER - 2 && raw > 1);
+        best = { dist, d: (ex * (y - a.ty) - ey * (x - a.tx)) / len, nx: -ey / len, ny: ex / len, inside };
+      }
+    }
+    return best;
+  }
+
+  /**
+   * A string sounds when the cursor crosses it, like a pick: its side of
+   * the string flips. After that it's quiet until the cursor moves REARM
+   * pixels away, so tracing along a string, or the string springing back
+   * under a still cursor, plays one note rather than many.
+   */
+  function crossings(x, y, vx, vy, speed, now) {
+    const pan = (x / W) * 2 - 1;
+    for (let s = 0; s < 4; s++) {
+      if (pts[s * PER + (PER >> 1)].dot >= 0.5) {
+        side[s] = 0;
+        armed[s] = true;
+        continue;
+      }
+      const b = besideString(s, x, y);
+      if (!b.inside) {
+        side[s] = 0;
+        continue;
+      }
+      if (Math.abs(b.d) > REARM) armed[s] = true;
+      const nowSide = Math.abs(b.d) < 0.5 ? side[s] : Math.sign(b.d);
+      const crossed = side[s] !== 0 && nowSide !== side[s];
+      side[s] = nowSide;
+      if (!crossed || !armed[s] || speed < 60 || now - lastPluck[s] < 90) continue;
+      armed[s] = false;
+      lastPluck[s] = now;
+      glow[s] = 1;
+      stats.plucks++;
+      // loudness from the speed across the string, not along it
+      const across = Math.abs(vx * b.nx + vy * b.ny);
+      onPluck?.(s, clamp(across / 2200), pan);
+    }
+  }
+
   function touch(x, y, now) {
     const dt = Math.max(1, now - pointer.t) / 1000;
     const x0 = pointer.inside ? pointer.x : x;
@@ -179,8 +245,11 @@ export function createField(canvas, structures, { onPluck, onScatter, onActive }
     const vy = (y - y0) / dt;
     Object.assign(pointer, { x, y, t: now, inside: true });
     const speed = Math.hypot(vx, vy);
-    if (reducedMotion || speed < 60) return;
-    const hit = [0, 0, 0, 0];
+    if (reducedMotion) return;
+    // Track sides on every move, even slow ones, so a slow crossing
+    // doesn't sound later when the cursor speeds up.
+    crossings(x, y, vx, vy, speed, now);
+    if (speed < 60) return;
     let scattered = 0;
     const lx = x - x0;
     const ly = y - y0;
@@ -200,7 +269,6 @@ export function createField(canvas, structures, { onPluck, onScatter, onActive }
           p.vy += clamp(vy, -2500, 2500) * k;
           const sp = Math.hypot(p.vx, p.vy);
           if (sp > 1600) (p.vx *= 1600 / sp), (p.vy *= 1600 / sp);
-          hit[p.string] = Math.max(hit[p.string], 1 - d / 14);
         }
       } else if (d < 60 && d > 0.01 && p.a > 0.05) {
         const push = (60 - d) * 0.7;
@@ -210,13 +278,6 @@ export function createField(canvas, structures, { onPluck, onScatter, onActive }
       }
     }
     const pan = (x / W) * 2 - 1;
-    hit.forEach((h, i) => {
-      if (!h || now - lastPluck[i] < 90) return;
-      lastPluck[i] = now;
-      glow[i] = 1;
-      stats.plucks++;
-      onPluck?.(i, clamp(speed / 2200) * h, pan);
-    });
     if (scattered > 3 && now - lastScatter > 140) {
       lastScatter = now;
       onScatter?.(clamp(scattered / 40), pan);
@@ -224,7 +285,11 @@ export function createField(canvas, structures, { onPluck, onScatter, onActive }
   }
   window.addEventListener("pointermove", (e) => touch(e.clientX, e.clientY, performance.now()), { passive: true });
   window.addEventListener("touchmove", (e) => touch(e.touches[0].clientX, e.touches[0].clientY, performance.now()), { passive: true });
-  document.addEventListener("pointerleave", () => (pointer.inside = false));
+  document.addEventListener("pointerleave", () => {
+    pointer.inside = false;
+    side.fill(0);
+    armed.fill(true);
+  });
 
   // ── Drawing ──
   function at(s, f) {
