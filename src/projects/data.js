@@ -161,7 +161,8 @@ const PROJECT_LIST = [
     short: "WorldSim",
     name: "WorldSim",
     tagline: "A voxel world of people who are born, pair off, build, and die",
-    url: "",
+    url: "https://bconlin.com/demos/worldsim/",
+    demo: "demos/worldsim/index.html",
     when: "2026",
     status: "polish",
     scores: { scale: 5, depth: 8, polish: 4 },
@@ -179,7 +180,7 @@ const PROJECT_LIST = [
     ],
     skills: { rust: [], agents: [0], sim: [1, 2] },
     tools: ["Rust", "Bevy"],
-    shot: { src: null, alt: "" },
+    shot: { src: "projects/worldsim.jpg", alt: "A voxel village of clay houses and a stone monument, seen from above" },
   },
   {
     id: "everything",
