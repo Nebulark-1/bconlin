@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ben Conlin - Projects</title>
+    <title>Ben Conlin - About</title>
+    <meta name="description" content="About Ben Conlin: running, triathlon, freediving, fish tanks, origami, and the rest." />
     <link rel="icon" href="data:," />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,9 +15,9 @@
     <link rel="stylesheet" href="/src/styles/base.css" />
     <link rel="stylesheet" href="/src/styles/blueprint.css" />
     <link rel="stylesheet" href="/src/styles/fab.css" />
-    <link rel="stylesheet" href="/src/styles/projects.css" />
+    <link rel="stylesheet" href="/src/styles/about.css" />
   </head>
-  <body class="page-projects">
+  <body class="page-about">
     <header class="site-head">
       <a class="site-head__brand" href="./">
         <span class="site-head__mark">BC</span>
@@ -26,8 +27,8 @@
         <a href="./">Home</a>
         <a href="career.html">Career</a>
         <a href="resume.html">Résumé</a>
-        <a href="projects.html" aria-current="page">Projects</a>
-        <a href="about.html">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="about.html" aria-current="page">About</a>
       </nav>
       <div class="site-head__cta">
         <a class="site-head__resume" href="resume/Ben-Conlin-Resume.pdf" download>
@@ -37,31 +38,29 @@
       </div>
     </header>
 
-    <main class="projects">
-      <header class="pj-head">
-        <div class="pj-head__intro">
-          <p class="kicker">Projects</p>
-          <h1>Things I've built</h1>
-          <p class="pj-head__lede">What I build outside of work.</p>
-          <div class="roles">
-            <p class="pj-head__label"><span>Hiring for</span></p>
-            <div class="roles__list"></div>
+    <main class="about">
+      <article class="bio">
+        <header class="bio__head">
+          <img class="bio__photo" src="photos/portrait-summer-hat.png" alt="Ben Conlin" width="1600" height="1600" />
+          <div>
+            <p class="kicker">About</p>
+            <h1>About me</h1>
           </div>
-        </div>
-        <div class="pj-head__grid">
-          <p class="pj-head__label"><span>Filter by skill</span><span class="pj-key"><i class="is-proof"></i>in a bullet <i></i>in the tools</span></p>
-          <div class="mx-wrap"><table class="mx" aria-label="Skills shown by each project"></table></div>
-        </div>
-      </header>
-
-      <div class="bar" role="toolbar" aria-label="Filters and sort">
-        <div class="bar__filters"></div>
-        <div class="bar__sort" role="group" aria-label="Sort by"></div>
-      </div>
-
-      <div class="pj-list"></div>
+        </header>
+        <div class="bio__text"></div>
+        <footer class="bio__foot">
+          <a class="next__btn next__btn--primary" data-email>Email me</a>
+          <a class="next__btn" data-linkedin target="_blank" rel="noopener">LinkedIn</a>
+        </footer>
+      </article>
+      <a class="secrets-link" href="eggs.html"><i aria-hidden="true"></i><span>Secrets</span></a>
     </main>
 
-    <script type="module" src="/src/projects/main.js"></script>
+    <!-- behind the scenes: readout and code inspector -->
+    <div class="bp-host">
+      <pre class="bp-hud" aria-hidden="true"></pre>
+    </div>
+
+    <script type="module" src="/src/about/main.js"></script>
   </body>
 </html>

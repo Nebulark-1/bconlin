@@ -15,6 +15,7 @@ const ICONS = {
   career: '<path d="M6 3c5 3-3 5 2 8s-4 4 0 6"/><circle cx="6" cy="3" r="1.6"/><circle cx="8" cy="11" r="1.6"/><circle cx="8" cy="17" r="1.6"/>',
   resume: '<path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5z M8 8h5 M8 11h5 M8 14h3"/>',
   pdf: '<path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 16h12"/>',
+  about: '<circle cx="10" cy="7" r="3.2"/><path d="M4 17c.6-3.6 3-5.4 6-5.4s5.4 1.8 6 5.4"/>',
   projects: '<rect x="3" y="3" width="14" height="14" rx="1.5"/><rect x="5" y="7.5" width="7" height="7" rx="1"/><rect x="6" y="10" width="3" height="3"/>',
   email: '<rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="m3.5 6 6.5 5 6.5-5"/>',
   code: '<path d="M7 6 3 10l4 4M13 6l4 4-4 4"/>',
@@ -23,7 +24,7 @@ const ICONS = {
 const svg = (name) => `<svg viewBox="0 0 20 20" aria-hidden="true">${ICONS[name]}</svg>`;
 
 /**
- * current:   "home" | "career" | "resume" - marks this page in the menu
+ * current:   "home" | "career" | "resume" | "projects" | "about" - marks this page in the menu
  * blueprint: whether this page has a behind-the-scenes view
  * Returns { blueprintButton } for the page's createBlueprint().
  */
@@ -33,6 +34,7 @@ export function mountFab({ current, blueprint = false }) {
     { id: "career", label: "Career", href: "career.html", icon: "career" },
     { id: "resume", label: "Résumé", href: "resume.html", icon: "resume" },
     { id: "projects", label: "Projects", href: "projects.html", icon: "projects" },
+    { id: "about", label: "About", href: "about.html", icon: "about" },
     { id: "pdf", label: "Download my résumé", href: "resume/Ben-Conlin-Resume.pdf", icon: "pdf", download: true },
     { id: "email", label: "Email me", href: `mailto:${nextChapter.email}`, icon: "email" },
   ];

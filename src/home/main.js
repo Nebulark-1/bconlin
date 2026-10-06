@@ -255,9 +255,6 @@ for (const t of ["pointermove", "pointerdown", "keydown", "scroll", "touchstart"
 consoleApi({ field, rain, encore, secret });
 // the playhead can run on past now, once that secret is allowed
 const lastYear = () => (isOn("future") ? YEARS[1] - 0.02 : NOW);
-// the way to the secrets page, with your count
-const secretsLink = $(".secrets-link");
-onEggs(() => (secretsLink.querySelector("span").textContent = `${foundCount()} / ${EGGS.length} secrets`));
 
 // ── Timeline: what was happening at the playhead ────────────
 window.addEventListener(
