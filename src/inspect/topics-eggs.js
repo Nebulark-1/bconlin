@@ -48,6 +48,10 @@ const SOURCES = {
   dive: [
     { file: "src/secrets/lake.js", src: lakeSrc, name: "start" },
   ],
+  yooper: [
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "lakebed" },
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "drawStone" },
+  ],
   breath: [
     { file: "src/secrets/lake.js", src: lakeSrc, name: "diveStep" },
   ],

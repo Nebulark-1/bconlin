@@ -106,7 +106,16 @@ export const EGGS = [
     difficulty: 2,
     hint: "Michigan Tech sits on a canal that runs out to Lake Superior. Have you tried getting in the water?",
     how: "In the Michigan Tech chapter, press and hold on the canal's water.",
-    what: "You go under: the water closes over the picture and you sink as long as you hold, down to a rock on the bottom at 80 feet. I really did chase a rock to 80 feet in Lake Superior. It was just a rock.",
+    what: "You go under. A diver follows your pointer and sinks as long as you hold, past the line's 10-foot tags, down to a bottom scattered with stones at 80 feet. Steer onto one to pick it up. I really did chase a rock to 80 feet in Lake Superior. It was just a rock.",
+  },
+  {
+    id: "yooper",
+    name: "Yooperlite",
+    page: "Career",
+    difficulty: 3,
+    hint: "Found the dive? Some rocks on the bottom of Lake Superior glow. Keep picking them up.",
+    how: "In the dive, bring up the one stone that glows once it's in your hand. It's a different stone every dive, and it looks like all the others until you hold it.",
+    what: "A Yooperlite: a Lake Superior rock that glows orange under UV light. Unlit, it looks like any other rock.",
   },
   {
     id: "breath",

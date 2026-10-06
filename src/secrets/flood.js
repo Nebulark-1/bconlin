@@ -15,6 +15,8 @@ const LOOKS = {
   puffer: `<circle r="6" fill="#d9e86a"/><circle cx="3" cy="-2" r="1.3" fill="#04040c"/><path d="M-6 0l-4-3v6z" fill="#d9e86a"/>`,
 };
 const CAST = [...Array(8).fill("cherry"), ...Array(6).fill("blue"), "betta", "puffer"];
+// how fast each one goes, px a second: shrimp amble, the puffer potters, the betta glides
+const SPEED = { cherry: 9, blue: 9, puffer: 16, betta: 24 };
 const IDLE_MS = 60000;
 
 export function mountFlood() {
@@ -58,7 +60,7 @@ function fill(done) {
     g.innerHTML = LOOKS[kind];
     $(".flood__life").appendChild(g);
     const shrimp = kind === "cherry" || kind === "blue";
-    return { g, kind, shrimp, x: Math.random() * W, y: H - 14, tx: Math.random() * W, ty: H - 14, wait: Math.random() * 2, face: 1 };
+    return { g, kind, shrimp, x: Math.random() * W, y: H - 14, tx: Math.random() * W, ty: H - 14, wait: Math.random() * 2, face: 1, phase: Math.random() * 6.28 };
   });
   const bubbles = [];
 
@@ -95,18 +97,28 @@ function fill(done) {
       p.setAttribute("d", `M${x} ${H - 8}Q${x + sway} ${(H + top) / 2} ${x + sway * 1.5} ${top}`);
     });
     for (const c of life) {
-      if ((c.wait -= dt) <= 0) {
-        [c.tx, c.ty] = pick(c, surface);
-        c.wait = c.shrimp ? 1 + Math.random() * 3 : 2 + Math.random() * 3;
-      }
-      const k = 1 - Math.exp(-dt * (c.shrimp ? 2.5 : 0.7));
-      const dx = (c.tx - c.x) * k;
-      if (Math.abs(dx) > 0.05) c.face = dx > 0 ? 1 : -1;
-      c.x += dx;
       // nobody swims above the water
-      c.y += (Math.max(surface + 14, c.ty) - c.y) * k;
+      const ty = Math.max(surface + 14, c.ty);
+      const dx = c.tx - c.x;
+      const dy = ty - c.y;
+      const far = Math.hypot(dx, dy);
+      if (far < 1) {
+        // there: pause a while, then pick somewhere new
+        if ((c.wait -= dt) <= 0) {
+          [c.tx, c.ty] = pick(c, surface);
+          c.wait = c.shrimp ? 2 + Math.random() * 4 : 1 + Math.random() * 3;
+        }
+      } else {
+        // a steady pace toward it, easing off at the end
+        const step = Math.min(far, SPEED[c.kind] * (calm() ? 0 : dt) * Math.min(1, far / 12 + 0.3));
+        c.x += (dx / far) * step;
+        c.y += (dy / far) * step;
+        if (Math.abs(dx) > 2) c.face = dx > 0 ? 1 : -1;
+      }
       const onGlass = c.shrimp && (c.x < 10 || c.x > W - 10);
-      c.g.setAttribute("transform", `translate(${c.x.toFixed(1)} ${(c.y + (c.shrimp ? 0 : Math.sin(t * 2 + c.x) * 2)).toFixed(1)}) rotate(${onGlass ? (c.x < 10 ? -90 : 90) : 0}) scale(${c.face} 1)`);
+      // fish drift up and down a little, each on its own slow beat
+      const bob = c.shrimp ? 0 : Math.sin(t * 1.3 + c.phase) * 2;
+      c.g.setAttribute("transform", `translate(${c.x.toFixed(1)} ${(c.y + bob).toFixed(1)}) rotate(${onGlass ? (c.x < 10 ? -90 : 90) : 0}) scale(${c.face} 1)`);
       c.g.style.opacity = c.y > surface + 4 ? 1 : 0;
     }
     if (!calm() && level > 0.3 && Math.random() < dt * 3) {
