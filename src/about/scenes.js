@@ -275,8 +275,7 @@ function horizon() {
      <rect y="100" width="320" height="50" fill="#06101f"/>
      <g class="glint" stroke="${C.accent}" stroke-width="1.5">${[0, 1, 2, 3, 4].map((k) => `<path d="M${206 - k * 2} ${106 + k * 8}h${16 + k * 4}"/>`).join("")}</g>
      <path d="M0 100H320" stroke="${C.ink}" stroke-width="1"/>
-     <path d="M0 150V128Q50 132 112 150Z" fill="#1c1a2c"/>
-     <g fill="${C.ink}"><circle cx="40" cy="126" r="3"/><path d="M36 136q4-8 8 0z"/><circle cx="52" cy="127" r="3"/><path d="M48 137q4-8 8 0z"/></g>`,
+     <path d="M0 150V128Q50 132 112 150Z" fill="#1c1a2c"/>`,
   );
   const [top, low] = [$(el, ".top"), $(el, ".low")];
   const sun = $(el, ".sun");
@@ -297,7 +296,7 @@ function horizon() {
 }
 
 // ── Freediving: hold to go down ────────────────────────────
-function dive() {
+function dive(point, hooks = {}) {
   const ft = (d) => 28 + d * 2.875;
   const el = svg(
     "dive",
@@ -327,7 +326,7 @@ function dive() {
   const rock = $(el, ".rock");
   const surface = $(el, ".surface");
   const bubbleG = $(el, ".bubbles");
-  const s = { depth: 0, breath: 1, holding: false, carrying: false, rockThere: true, rocks: 0, gasp: false, said: 0 };
+  const s = { depth: 0, breath: 1, holding: false, carrying: false, rockThere: true, rocks: 0, gasp: false, said: 0, under: 0 };
   const bubbles = [];
 
   const hold = (on) => {
@@ -355,7 +354,15 @@ function dive() {
     stop: () => hold(false),
     frame(t, dt) {
       const down = s.holding && !s.gasp;
+      const was = s.depth;
       s.depth = clamp(s.depth + (down ? 22 : -30) * dt, 0, 80);
+      if (s.depth > 0) s.under += dt;
+      // back up: a hold that ends with almost no air left, but some, is the
+      // longest you can safely go
+      if (was > 0 && s.depth === 0) {
+        if (!s.gasp && s.breath < 0.1) hooks.breath?.(s.under);
+        s.under = 0;
+      }
       if (s.depth > 0) s.breath = Math.max(0, s.breath - dt / 11);
       else s.breath = Math.min(1, s.breath + dt * 0.6);
       if (s.breath === 0) s.gasp = true;
@@ -395,7 +402,7 @@ function dive() {
         } else attr(b.c, { cx: b.x.toFixed(1), cy: b.y.toFixed(1), r: b.r });
       }
       label.textContent =
-        t - s.said < 2.2 && s.rocks ? "Just a rock." : s.depth > 0.5 ? `${Math.round(s.depth)} ft${s.gasp ? ", out of air" : ""}` : "Hold to dive";
+        t - s.said < 2.2 && s.rocks ? "Just a rock." : s.depth > 0.5 ? `${Math.round(s.depth)} ft${s.gasp ? ", out of air" : ""}` : hooks.best?.() ? `Hold to dive · longest breath ${hooks.best().toFixed(1)} s` : "Hold to dive";
     },
   };
 }
@@ -587,7 +594,7 @@ function jump() {
 // ── Folding a crane ────────────────────────────────────────
 const N = 72;
 const SHAPES = STEPS.map((s) => resample(s.outline, N));
-function fold() {
+function fold(point, hooks = {}) {
   const lines = CREASES.map(({ l, valley }) => {
     const [[x1, y1], [x2, y2]] = l.map(onPaper);
     return `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${valley ? "#7a2f12" : "#2a1408"}" stroke-width="${valley ? 1.1 : 1.3}" ${valley ? 'stroke-dasharray="4 3"' : ""}/>`;
@@ -614,8 +621,14 @@ function fold() {
   let shown = SHAPES[0];
   const name = () => el.setAttribute("aria-label", `Fold the crane: ${STEPS[s.step].name}. Next: ${STEPS[(s.step + 1) % 4].name}`);
   const mark = () => [...steps.children].forEach((li, k) => li.classList.toggle("is-on", k === s.step));
+  // once the secret's found, the cranes you've folded are counted here
+  const tally = () => {
+    const n = hooks.mine?.() || 0;
+    steps.dataset.tally = n ? `${n.toLocaleString("en-US")} folded` : "";
+  };
   name();
   mark();
+  tally();
   el.addEventListener("click", () => {
     s.from = shown;
     s.prev = s.step;
@@ -626,6 +639,10 @@ function fold() {
     mark();
     // a papery pluck, higher with each fold
     pluck(220 * [1, 1.25, 1.5, 2][s.step], 0.5);
+    if (s.step === 3) {
+      hooks.folded?.();
+      tally();
+    }
   });
   return {
     el,
@@ -650,7 +667,7 @@ function fold() {
 }
 
 // ── A thousand cranes ──────────────────────────────────────
-function thousand() {
+function thousand(point, hooks = {}) {
   const el = document.createElement("div");
   el.className = "scene scene--thousand";
   el.innerHTML = `<canvas aria-hidden="true"></canvas><p class="scene__label mono">0</p>`;
@@ -673,7 +690,8 @@ function thousand() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       const n = Math.min(1000, Math.floor(t * t * 60 + t * 40));
-      label.textContent = n.toLocaleString("en-US");
+      const mine = Math.min(1000, hooks.mine?.() || 0);
+      label.textContent = n.toLocaleString("en-US") + (mine ? ` · ${mine.toLocaleString("en-US")} of them yours` : "");
       const strands = 25;
       const gap = (w - 20) / strands;
       const step = (h - 14) / 40;
@@ -684,7 +702,7 @@ function thousand() {
         const d = Math.floor(k / strands);
         const x = 10 + gap * (s + 0.5) + Math.sin(t * 0.9 + s) * d * 0.05;
         const y = 10 + d * step;
-        ctx.fillStyle = COLORS[(s + d) % COLORS.length];
+        ctx.fillStyle = k < mine ? "#ffe2c4" : COLORS[(s + d) % COLORS.length];
         ctx.beginPath();
         ctx.moveTo(x - 2.6, y);
         ctx.lineTo(x, y - 1.6);
@@ -859,9 +877,10 @@ function pages() {
 
 const SCENES = { map, race, tri, long, photo, shelter, horizon, dive, tanks, school, jump, fold, thousand, voices, plan, stamps, record, pages };
 
-export function makeScene(id, dive) {
-  const make = SCENES[dive.scene];
-  const scene = make ? make(dive) : { el: document.createElement("div") };
-  scene.kind = dive.scene;
+/** point: from content.js. hooks: what the secrets listen for (see main.js). */
+export function makeScene(point, hooks) {
+  const make = SCENES[point.scene];
+  const scene = make ? make(point, hooks) : { el: document.createElement("div") };
+  scene.kind = point.scene;
   return scene;
 }

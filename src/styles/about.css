@@ -1,10 +1,10 @@
-/* The About page: a plain bio in one reading column. Phrases open gaps
-   between its lines (see src/about/leading.js). */
+/* The About page: a short bio, then a map of the things I love, tied
+   together by threads (see src/about/threads.js). */
 
 .page-about {
   --col: 680px;
+  --wide: 1180px;
   --pad: 16px;
-  --ink-line: rgba(255, 180, 140, 0.45);
   background:
     radial-gradient(60% 40% at 50% 0%, rgba(169, 155, 255, 0.07), transparent 70%),
     var(--bg);
@@ -24,6 +24,7 @@
   margin: 0 0 8px;
   font-family: var(--font-mono);
   font-size: 0.7rem;
+  font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--accent);
@@ -58,52 +59,8 @@
   line-height: 1.8;
 }
 
-.para {
-  margin: 0 0 1.25em;
-}
-
-.bio__foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  margin-top: 40px;
-}
-
-.bio__foot .next__btn {
-  width: auto;
-  padding: 11px 22px;
-  font-size: 0.95rem;
-}
-
-/* ── The phrases that open ─────────────────────────────── */
-.opens {
-  color: inherit;
-  text-decoration: underline dotted var(--ink-line);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 5px;
-  cursor: pointer;
-  border-radius: 3px;
-  transition:
-    color 0.2s,
-    text-decoration-color 0.2s;
-}
-
-.opens:hover,
-.opens:focus-visible {
-  text-decoration-style: solid;
-  text-decoration-color: var(--accent);
-}
-
-.opens:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.opens[aria-expanded="true"] {
-  color: var(--accent);
-  text-decoration-style: solid;
-  text-decoration-color: var(--accent);
+.bio__text p {
+  margin: 0 0 1.2em;
 }
 
 .lnk {
@@ -119,158 +76,282 @@ mark.todo {
   font-size: 0.78em;
 }
 
-/* ── The gap ───────────────────────────────────────────── */
-.gap {
-  --gap-bg: color-mix(in srgb, var(--bg), #3a3f8a calc(var(--depth, 1) * 9%));
-  position: relative;
-  display: block;
-  overflow: hidden;
-  margin: 0.55em calc(var(--pad) * -1);
-  background: var(--gap-bg);
-  font-size: 0.94rem;
-  line-height: 1.7;
-  container-type: inline-size;
+/* ── The map of things ─────────────────────────────────── */
+.weave {
+  max-width: var(--wide);
+  margin: clamp(48px, 8vh, 88px) auto 0;
 }
 
-/* the slit: two rules that run out from under the phrase to both margins */
-.gap::before,
-.gap::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--accent);
-  transform-origin: var(--x, 50%) 0;
-  animation: slit 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+.weave .kicker {
+  max-width: var(--col);
+  margin: 0 auto 14px;
 }
 
-.gap::before {
-  top: 0;
+.weave__threads {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
-.gap::after {
-  bottom: 0;
-}
-
-@keyframes slit {
-  from {
-    transform: scaleX(0);
-  }
-}
-
-.gap.is-closing::before,
-.gap.is-closing::after {
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-/* the hover hint: the lines part a few pixels */
-.gap--peek {
-  height: 0;
-  margin: 0;
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  border-radius: 999px;
   background: transparent;
+  color: var(--text);
+  font: 500 0.88rem var(--font-body);
+  cursor: pointer;
   transition:
-    height 0.2s,
-    margin 0.2s;
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
 }
 
-.gap--peek.is-on {
-  height: 10px;
-  margin: 0.2em calc(var(--pad) * -1);
-}
-
-.gap--peek::before,
-.gap--peek::after {
-  opacity: 0.4;
-}
-
-/* the scene sits to the left and the words wrap around and under it, so
-   a gap opened further down still gets the full width */
-.gap__inner {
-  display: flow-root;
-  padding: 24px var(--pad);
-}
-
-.gap__scene {
-  float: left;
-  width: 250px;
-  margin: 4px 24px 12px 0;
-}
-
-.gap__text .gap {
-  clear: left;
-}
-
-/* the dream tank is wide: it gets the whole row */
-.gap__scene:has(.scene--school) {
-  float: none;
-  width: auto;
-  max-width: none;
-  margin-right: 0;
-}
-
-@container (max-width: 560px) {
-  .gap__scene {
-    float: none;
-    width: auto;
-    max-width: 340px;
-    margin: 0 0 16px;
-  }
-  /* square scenes would fill a phone screen */
-  .scene--fold svg,
-  .scene--record svg,
-  .scene--voices svg {
-    max-width: 210px;
-  }
-}
-
-.gap__text .para {
-  margin-bottom: 0.9em;
-}
-
-.gap__text .para:last-child {
-  margin-bottom: 0;
-}
-
-.gap__text > .para {
-  padding-right: 22px;
-}
-
-/* nested gaps reach out to the edges of their own column */
-.gap .gap {
-  --pad: 12px;
-}
-
-.gap__close {
-  position: absolute;
-  z-index: 2;
-  top: 10px;
-  right: 10px;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+.chip i {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: transparent;
-  color: var(--muted);
+  background: var(--c);
+}
+
+.chip:hover,
+.chip:focus-visible {
+  border-color: var(--c);
+  outline: none;
+}
+
+.chip:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--c);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--c);
+  background: var(--c);
+  color: #0a0612;
+}
+
+.chip[aria-pressed="true"] i {
+  background: #0a0612;
+}
+
+.weave__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+
+.map {
+  position: relative;
+  aspect-ratio: 10 / 7;
+  border-radius: 12px;
+  background: radial-gradient(70% 70% at 50% 50%, rgba(169, 155, 255, 0.05), transparent 75%);
+}
+
+.map.is-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+/* the points that step aside keep their dots but lose their names, and on
+   a phone only the picked thread's points are named */
+.map.has-thread .pt:not(.is-member) span,
+.map.is-portrait:not(.has-thread) .pt span {
+  opacity: 0;
+}
+
+.map .pt:hover span,
+.map .pt:focus-visible span {
+  opacity: 1;
+}
+
+.map__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.map__line {
+  fill: none;
+  stroke: var(--c);
+  stroke-width: 1.2;
+  stroke-dasharray: 1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.32;
+  transition:
+    opacity 0.4s,
+    stroke-width 0.4s;
+}
+
+.map__hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 16;
+  vector-effect: non-scaling-stroke;
+  pointer-events: stroke;
   cursor: pointer;
 }
 
-.gap__close:hover,
-.gap__close:focus-visible {
-  border-color: var(--accent);
-  color: var(--text);
+.map.has-thread .map__line {
+  opacity: 0.07;
 }
 
-.gap__close svg {
-  width: 10px;
-  height: 10px;
-  stroke: currentColor;
-  stroke-width: 1.6;
+.map .is-on .map__line {
+  opacity: 1;
+  stroke-width: 2.6;
+}
+
+/* a point: a dot (one ring of color per thread it's on) and its name */
+.pt {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: 500 0.86rem var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+  transform: translate(-11px, -50%);
+}
+
+.pt.is-flip {
+  flex-direction: row-reverse;
+  transform: translate(calc(-100% + 11px), -50%);
+}
+
+.pt i {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* one ring per thread, nested inside each other */
+.pt b {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.pt b:nth-child(2) {
+  inset: 3px;
+  box-shadow: 0 0 0 1.5px var(--bg);
+}
+
+.pt b:nth-child(3) {
+  inset: 5.5px;
+  box-shadow: 0 0 0 1.5px var(--bg);
+}
+
+.pt span {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(4, 4, 12, 0.72);
+  transition:
+    color 0.2s,
+    opacity 0.3s;
+}
+
+.pt:hover span,
+.pt:focus-visible span {
+  color: var(--c);
+}
+
+.pt:focus-visible {
+  outline: 2px solid var(--c);
+  outline-offset: 2px;
+}
+
+.pt.is-member span {
+  font-weight: 600;
+}
+
+.pt.is-picked i {
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px var(--c);
+}
+
+.pt.is-picked span {
+  color: var(--c);
+}
+
+/* ── The story beside the map ──────────────────────────── */
+.story {
+  min-height: 200px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.story.is-new {
+  animation: story-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes story-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.story p {
+  margin: 0 0 0.9em;
+}
+
+.story__lede {
+  color: var(--muted);
+}
+
+.story__title,
+.story__name {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.story__title {
+  font-size: 1.6rem;
+  color: var(--c);
+}
+
+.story__name {
+  font-size: 1.35rem;
+}
+
+.story__members,
+.story__threads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story .chip {
+  padding: 5px 11px;
+  font-size: 0.8rem;
+}
+
+.story__scene {
+  max-width: 340px;
+  margin-bottom: 18px;
+}
+
+.story__scene:has(.scene--school) {
+  max-width: none;
 }
 
 /* ── Scenes ────────────────────────────────────────────── */
@@ -279,6 +360,7 @@ mark.todo {
   width: 100%;
   margin: 0;
   color: inherit;
+  --gap-bg: var(--bg);
 }
 
 .scene svg {
@@ -311,11 +393,14 @@ button.scene:focus-visible {
 }
 
 .scene--dive {
+  max-width: 230px;
   touch-action: none;
 }
 
-.scene--dive svg {
-  max-height: 300px;
+.scene--fold,
+.scene--record,
+.scene--voices {
+  max-width: 250px;
 }
 
 .scene__label,
@@ -339,6 +424,12 @@ button.scene:focus-visible {
   color: var(--accent);
 }
 
+/* the crane tally, once that secret is found */
+.scene__steps[data-tally]:not([data-tally=""])::after {
+  content: "· " attr(data-tally);
+  color: #ffe2c4;
+}
+
 .scene--school {
   position: relative;
 }
@@ -346,7 +437,7 @@ button.scene:focus-visible {
 .scene--school canvas {
   display: block;
   width: 100%;
-  height: 150px;
+  height: 170px;
   border: 1px solid rgba(236, 232, 255, 0.5);
   border-radius: 4px;
   background: rgba(94, 200, 255, 0.06);
@@ -371,6 +462,7 @@ button.scene:focus-visible {
 .scene--photo img {
   display: block;
   width: 100%;
+  max-width: 280px;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   border-radius: 6px;
@@ -382,11 +474,21 @@ button.scene:focus-visible {
   color: var(--muted);
 }
 
-.scene--record svg {
-  max-width: 200px;
+/* ── Contact, then secrets at the very bottom ──────────── */
+.bio__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 72px;
 }
 
-/* ── Secrets, at the very bottom ───────────────────────── */
+.bio__foot .next__btn {
+  width: auto;
+  padding: 11px 22px;
+  font-size: 0.95rem;
+}
+
 .secrets-link {
   display: flex;
   width: max-content;
@@ -439,26 +541,29 @@ button.scene:focus-visible {
   background-attachment: fixed;
 }
 
-/* every word's box, and the gaps' outlines */
-[data-blueprint="on"] .bio .w {
-  outline: 1px solid rgba(159, 227, 255, 0.14);
-  outline-offset: -1px;
+[data-blueprint="on"] .map {
+  outline: 1px dashed rgba(159, 227, 255, 0.5);
 }
 
-[data-blueprint="on"] .gap {
-  outline: 1px dashed rgba(159, 227, 255, 0.6);
-  outline-offset: -1px;
+[data-blueprint="on"] .map__line {
+  opacity: 0.6;
 }
 
-[data-blueprint="on"] .gap::before,
-[data-blueprint="on"] .gap::after {
-  background: #9fe3ff;
+[data-blueprint="on"] .pt span {
+  outline: 1px solid rgba(159, 227, 255, 0.3);
+}
+
+/* ── Narrow screens: the story goes under the map ──────── */
+@media (max-width: 1100px) {
+  .weave__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .story {
+    max-width: var(--col);
+  }
 }
 
 @media (max-width: 760px) {
-  .page-about {
-    --pad: 16px;
-  }
   .bio__text {
     font-size: 1.06rem;
   }
@@ -469,11 +574,17 @@ button.scene:focus-visible {
     width: 72px;
     height: 72px;
   }
+  .pt {
+    font-size: 0.78rem;
+    gap: 5px;
+  }
+  .weave__threads {
+    justify-content: flex-start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gap::before,
-  .gap::after {
+  .story.is-new {
     animation: none;
   }
 }

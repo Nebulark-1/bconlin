@@ -90,6 +90,24 @@ export const EGGS = [
     how: "Open the console in your developer tools and type ben.help().",
     what: "A little console API full of toys. Try ben.doabarrelroll().",
   },
+  {
+    id: "cranes",
+    name: "A thousand cranes",
+    page: "About",
+    difficulty: 1,
+    hint: "The origami crane on the About page can be folded. All the way.",
+    how: "On the About page, open Origami and fold the crane through to its last step.",
+    what: "Every crane you fold is counted, and yours hang in gold at the front of the thousand.",
+  },
+  {
+    id: "breath",
+    name: "One breath",
+    page: "About",
+    difficulty: 2,
+    hint: "How long can you hold your breath? Stay down until you're nearly out, but not out.",
+    how: "In the freediving dive on the About page, come back up with less than a tenth of your breath left, without running out.",
+    what: "Your longest breath hold is timed and remembered under the dive.",
+  },
 ];
 
 const KEY = "bc-eggs";

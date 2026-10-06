@@ -6,6 +6,8 @@ import rainSrc from "../site/rain.js?raw";
 import soundSrc from "../site/sound.js?raw";
 import fabSrc from "../site/fab.js?raw";
 import consoleSrc from "../site/console.js?raw";
+import scenesSrc from "../about/scenes.js?raw";
+import aboutSrc from "../about/main.js?raw";
 import { egg, EGGS, isFound, foundCount } from "../site/eggs.js";
 
 const C = { text: "#bfe6ff", dim: "rgba(160,200,240,.45)", gold: "#ffe2c4" };
@@ -34,6 +36,14 @@ const SOURCES = {
   console: [
     { file: "src/site/console.js", src: consoleSrc, name: "addCommands" },
     { file: "src/site/console.js", src: consoleSrc, name: "barrelRoll" },
+  ],
+  cranes: [
+    { file: "src/about/main.js", src: aboutSrc, name: "HOOKS" },
+    { file: "src/about/scenes.js", src: scenesSrc, name: "thousand" },
+  ],
+  breath: [
+    { file: "src/about/main.js", src: aboutSrc, name: "HOOKS" },
+    { file: "src/about/scenes.js", src: scenesSrc, name: "dive" },
   ],
 };
 

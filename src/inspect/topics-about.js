@@ -1,12 +1,14 @@
 // Inspector topics for the About page. Everything shown is this site's own
 // code, imported verbatim.
 
-import leadingSrc from "../about/leading.js?raw";
+import threadsSrc from "../about/threads.js?raw";
 import foldSrc from "../about/fold.js?raw";
 import schoolSrc from "../about/school.js?raw";
 import scenesSrc from "../about/scenes.js?raw";
 import { STEPS, resample, between } from "../about/fold.js";
 import { RULES } from "../about/school.js";
+import { layout } from "../about/threads.js";
+import { POINTS } from "../about/content.js";
 
 const C = { text: "#bfe6ff", dim: "rgba(160,200,240,.45)", line: "rgba(120,210,255,.3)", hot: "#9fe3ff", accent: "#ffb48c" };
 
@@ -17,49 +19,50 @@ function label(ctx, text, x, y, color = C.text, size = 10, align = "left") {
   ctx.fillText(text, x, y);
   ctx.textAlign = "left";
 }
-const gapOf = (S, kind) => S.gaps.find((g) => g.scene.kind === kind)?.scene.stats;
+const gapOf = (S, kind) => (S.scene?.kind === kind ? S.scene.stats : null);
 
-// ── Leading ─────────────────────────────────────────────────
-const leadingTopic = {
-  id: "leading",
-  chip: "Leading",
-  kicker: "Between the lines",
+// ── Threads ─────────────────────────────────────────────
+const threadsTopic = {
+  id: "threads",
+  chip: "Threads",
+  kicker: "The map",
   provenance: "site",
   vizHeight: 150,
-  title: "Splitting a paragraph without moving a word",
+  title: "Pulling one thread out of the tangle",
   summary:
-    "Leading is the typesetter's word for the space between lines. Every word of the bio is its own element, so the page can ask the browser where each one landed. A gap goes in right before the first word on the next line. A block in the middle of text ends the line it follows, so the lines above wrap exactly as before and the rest starts a fresh line in the same place. Resize the window and every open gap finds its new spot.",
+    "Every point has a home spot, and every thread is a smooth curve through its points in order from top to bottom. Pick a thread and its points get new spots spread evenly down a gentle S, in that same order, so no two cross on the way. Everything else moves out to the nearer edge. Each point springs a little closer to its spot every frame, and the curve is redrawn through wherever the points are, so the thread straightens as they travel.",
   sources: [
-    { file: "src/about/leading.js", src: leadingSrc, name: "splitPoint" },
-    { file: "src/about/leading.js", src: leadingSrc, name: "place" },
+    { file: "src/about/threads.js", src: threadsSrc, name: "layout" },
+    { file: "src/about/threads.js", src: threadsSrc, name: "smooth" },
   ],
   viz(ctx, w, h, t, S) {
-    // four lines of "text", parting after the second
-    const open = (Math.sin(t * 1.4) + 1) / 2;
-    const widths = [0.92, 0.86, 0.95, 0.6];
-    let y = 22;
-    widths.forEach((f, k) => {
-      ctx.fillStyle = k === 1 ? C.hot : C.dim;
-      for (let x = 14; x < 14 + (w - 28) * f; x += 34) ctx.fillRect(x, y, 28, 6);
-      if (k === 1) {
-        ctx.strokeStyle = C.accent;
-        ctx.setLineDash([3, 3]);
-        ctx.strokeRect(14 + (w - 28) * f - 6, y - 4, 1, 14);
-        ctx.setLineDash([]);
-        label(ctx, "split here", 14 + (w - 28) * f - 10, y - 6, C.accent, 9, "right");
-        y += 18 + open * 50;
-        ctx.strokeStyle = C.line;
-        ctx.strokeRect(14, y - 14 - open * 50, w - 28, open * 50);
-      } else y += 18;
+    // the picked thread's points: where they sit now, and where they're going
+    const { state, nodes } = S.map;
+    const goal = layout(POINTS, state.thread);
+    const sx = (x) => 10 + (x / 1000) * (w - 20);
+    const sy = (y) => 8 + (y / 700) * (h - 16);
+    nodes.forEach((n, k) => {
+      const on = !state.thread || n.p.threads.includes(state.thread);
+      ctx.strokeStyle = on ? C.line : "rgba(120,210,255,.08)";
+      ctx.beginPath();
+      ctx.moveTo(sx(n.x), sy(n.y));
+      ctx.lineTo(sx(goal[k].x), sy(goal[k].y));
+      ctx.stroke();
+      ctx.fillStyle = on ? C.hot : C.dim;
+      ctx.beginPath();
+      ctx.arc(sx(n.x), sy(n.y), on ? 3 : 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = on ? C.accent : "transparent";
+      ctx.strokeRect(sx(goal[k].x) - 2.5, sy(goal[k].y) - 2.5, 5, 5);
     });
   },
   live(S) {
-    const s = S.leading;
+    const s = S.map.state;
     return [
-      `open gaps   ${s.open}  (deepest ${s.deepest})`,
-      `added       ${Math.round(s.added)}px`,
-      `splits      ${s.splits}`,
-      `last        ${s.last ? `"${s.last.word}" | "${s.last.before}"` : "-"}`,
+      `thread   ${s.thread || "none"}`,
+      `point    ${s.point || "-"}`,
+      `moving   ${s.moving} / ${POINTS.length}`,
+      `layout   ${s.portrait ? "on its side" : "across"}`,
     ];
   },
 };
@@ -92,7 +95,7 @@ const foldTopic = {
   },
   live(S) {
     const f = gapOf(S, "fold");
-    return f ? [`step   ${STEPS[f.step].name}`, `folds  ${f.folds}`] : ["open “fold paper” to fold one"];
+    return f ? [`step   ${STEPS[f.step].name}`, `folds  ${f.folds}`] : ["open Origami to fold one"];
   },
 };
 
@@ -122,7 +125,7 @@ const diveTopic = {
   },
   live(S) {
     const d = gapOf(S, "dive");
-    return d ? [`depth   ${d.depth.toFixed(1)} ft`, `breath  ${Math.round(d.breath * 100)}%`, `rocks   ${d.rocks}`] : ["open “freediving” to dive"];
+    return d ? [`depth   ${d.depth.toFixed(1)} ft`, `breath  ${Math.round(d.breath * 100)}%`, `rocks   ${d.rocks}`] : ["open Freediving to dive"];
   },
 };
 
@@ -157,8 +160,8 @@ const schoolTopic = {
   },
   live(S) {
     const s = gapOf(S, "school");
-    return s ? [`fish     ${s.fish}`, `fleeing  ${s.fleeing}`] : ["open “a 75 gallon” to see it"];
+    return s ? [`fish     ${s.fish}`, `fleeing  ${s.fleeing}`] : ["open the 75 gallon to see it"];
   },
 };
 
-export const aboutTopics = [leadingTopic, foldTopic, diveTopic, schoolTopic];
+export const aboutTopics = [threadsTopic, foldTopic, diveTopic, schoolTopic];
