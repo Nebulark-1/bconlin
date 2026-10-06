@@ -1,5 +1,6 @@
 // The career page, Michigan Tech: press and hold on the canal and you go
-// under. A diver follows your pointer. Hold and they sink, head first;
+// under. A diver follows your pointer left and right, steady in the middle
+// of the picture. Hold and they sink, head first;
 // let go and they rise. A descent line with a tag every 10 feet, bits of
 // drifting silt and a few lake trout slide past to show how deep and how
 // fast. At 80 feet the bottom comes up, scattered with stones: steer onto
@@ -106,8 +107,9 @@ function start(panel, e, done) {
   const touch = e.pointerType !== "mouse";
 
   const s = { depth: 0, breath: 1, holding: true, gasp: false, under: 0, held: null };
-  const aim = { x: e.clientX - box.left, y: e.clientY - box.top };
-  const diver = { x: aim.x, y: aim.y, angle: Math.PI / 2, kick: 0 };
+  // the diver stays at the middle height; only left and right follow you
+  const aim = { x: e.clientX - box.left, y: H * 0.45 };
+  const diver = { x: aim.x, y: e.clientY - box.top, angle: Math.PI / 2, kick: 0 };
   let started = performance.now();
   let last = started;
   let under = false;
@@ -116,7 +118,6 @@ function start(panel, e, done) {
 
   const move = (ev) => {
     aim.x = Math.max(20, Math.min(W - 20, ev.clientX - box.left));
-    aim.y = Math.max(40, Math.min(H - 30, ev.clientY - box.top));
   };
   const up = () => (s.holding = false);
   addEventListener("pointermove", move);
@@ -288,7 +289,7 @@ function start(panel, e, done) {
       ctx.strokeStyle = `rgba(159, 227, 255, ${1 - u})`;
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(aim.x, aim.y, 6 + u * 30, 0, Math.PI * 2);
+      ctx.arc(diver.x, diver.y, 6 + u * 30, 0, Math.PI * 2);
       ctx.stroke();
     }
   }

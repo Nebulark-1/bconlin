@@ -1,7 +1,8 @@
 // Sit still on any page but home and the bottom of the screen slowly fills
 // with water, like my tanks: cherry shrimp and blue dreams picking along
-// the bottom and climbing the glass, a betta, a pea puffer, plants, and
-// bubbles. Move and it drains.
+// the bottom and climbing the glass, a betta, a pea puffer, a school of
+// ember tetras, plants, driftwood, a moss ball, and bubbles. Move and it
+// drains.
 
 import { discover, isOn } from "../site/eggs.js";
 import { chime, PENTATONIC } from "../site/sound.js";
@@ -18,6 +19,7 @@ const CAST = [...Array(8).fill("cherry"), ...Array(6).fill("blue"), "betta", "pu
 // how fast each one goes, px a second: shrimp amble, the puffer potters, the betta glides
 const SPEED = { cherry: 9, blue: 9, puffer: 16, betta: 24 };
 const IDLE_MS = 60000;
+const TETRA = `<ellipse rx="4.5" ry="1.9" fill="#ff5a2a"/><path d="M-4 0l-4-2.5v5z" fill="#ff5a2a" opacity=".85"/><path d="M-1 -1.6l2 -2.4 1.5 2.2z" fill="#ff8a5a" opacity=".7"/>`;
 
 export function mountFlood() {
   let timer = 0;
@@ -34,6 +36,23 @@ export function mountFlood() {
   wake();
 }
 
+/** What's set into the gravel: driftwood, a pile of stones, a moss ball. */
+function decor(W, H) {
+  const x1 = W * (0.15 + Math.random() * 0.2);
+  const x2 = W * (0.55 + Math.random() * 0.25);
+  const x3 = W * (0.4 + Math.random() * 0.1);
+  return `
+    <g class="flood__wood" transform="translate(${x1.toFixed(0)} ${H - 10})">
+      <path d="M-70 0C-40 -6 -10 -22 20 -48M-20 -12C-6 -30 0 -52 -8 -70M8 -30C24 -38 40 -40 56 -36"/>
+    </g>
+    <g class="flood__stones" transform="translate(${x2.toFixed(0)} ${H - 10})">
+      <ellipse cx="-16" cy="-8" rx="20" ry="11"/><ellipse cx="12" cy="-6" rx="15" ry="9"/><ellipse cx="-2" cy="-20" rx="12" ry="8"/>
+    </g>
+    <g class="flood__moss" transform="translate(${x3.toFixed(0)} ${H - 20})">
+      <circle r="11"/><circle cx="-4" cy="-3" r="2" class="tuft"/><circle cx="4" cy="2" r="2.2" class="tuft"/><circle cx="1" cy="-6" r="1.6" class="tuft"/>
+    </g>`;
+}
+
 /** The water, rising. Returns { drain }. */
 function fill(done) {
   const W = innerWidth;
@@ -47,7 +66,8 @@ function fill(done) {
     <path class="flood__water"/>
     <path class="flood__surface"/>
     <rect class="flood__gravel" x="0" y="${H - 10}" width="${W}" height="10"/>
-    <g class="flood__plants"></g><g class="flood__life"></g><g class="flood__bubbles"></g>`;
+    <g class="flood__decor">${decor(W, H)}</g>
+    <g class="flood__plants"></g><g class="flood__life"></g><g class="flood__school"></g><g class="flood__bubbles"></g>`;
   document.body.appendChild(svg);
   const $ = (s) => svg.querySelector(s);
   const plants = Array.from({ length: Math.round(W / 110) }, (_, k) => {
@@ -60,7 +80,19 @@ function fill(done) {
     g.innerHTML = LOOKS[kind];
     $(".flood__life").appendChild(g);
     const shrimp = kind === "cherry" || kind === "blue";
-    return { g, kind, shrimp, x: Math.random() * W, y: H - 14, tx: Math.random() * W, ty: H - 14, wait: Math.random() * 2, face: 1, phase: Math.random() * 6.28 };
+    // fish start out in open water, not on the gravel
+    const y = shrimp ? H - 14 : H - 30 - Math.random() * DEPTH * 0.6;
+    return { g, kind, shrimp, x: Math.random() * W, y, tx: Math.random() * W, ty: y, wait: shrimp ? Math.random() * 2 : 0, face: 1, phase: Math.random() * 6.28 };
+  });
+  // the tetras: each keeps its own place in a loose school around a leader
+  // that wanders the open water
+  const lead = { x: W * 0.5, y: H - DEPTH * 0.5, tx: W * 0.3, ty: H - DEPTH * 0.5, face: 1 };
+  const school = Array.from({ length: 11 }, (_, k) => {
+    const g = document.createElementNS(NS, "g");
+    g.innerHTML = TETRA;
+    $(".flood__school").appendChild(g);
+    const spot = { dx: (Math.random() - 0.5) * 70, dy: (Math.random() - 0.5) * 34 };
+    return { g, ...spot, x: lead.x + spot.dx, y: lead.y + spot.dy, face: 1, phase: Math.random() * 6.28, drift: Math.random() * 6.28 };
   });
   const bubbles = [];
 
@@ -69,7 +101,8 @@ function fill(done) {
   let last = performance.now();
   let raf = 0;
   const pick = (c, surface) => {
-    if (!c.shrimp) return [20 + Math.random() * (W - 40), surface + 24 + Math.random() * Math.max(10, H - 30 - surface - 24)];
+    // fish pick anywhere in the full depth (the water's rise catches them up)
+    if (!c.shrimp) return [20 + Math.random() * (W - 40), H - 26 - Math.random() * (DEPTH - 50)];
     // shrimp pick along the bottom, and now and then climb the glass
     if (Math.random() < 0.18) {
       const side = Math.random() < 0.5 ? 6 : W - 6;
@@ -120,6 +153,35 @@ function fill(done) {
       const bob = c.shrimp ? 0 : Math.sin(t * 1.3 + c.phase) * 2;
       c.g.setAttribute("transform", `translate(${c.x.toFixed(1)} ${(c.y + bob).toFixed(1)}) rotate(${onGlass ? (c.x < 10 ? -90 : 90) : 0}) scale(${c.face} 1)`);
       c.g.style.opacity = c.y > surface + 4 ? 1 : 0;
+    }
+    // the school: the leader cruises between spots; each tetra steers for its place
+    {
+      const dx = lead.tx - lead.x;
+      const dy = lead.ty - lead.y;
+      const far = Math.hypot(dx, dy);
+      if (far < 8) [lead.tx, lead.ty] = [40 + Math.random() * (W - 80), H - 40 - Math.random() * (DEPTH - 70)];
+      else {
+        lead.x += (dx / far) * 34 * dt;
+        lead.y += (dy / far) * 34 * dt;
+        lead.face = dx > 0 ? 1 : -1;
+      }
+      for (const f of school) {
+        // the formation turns with the school, with a little wobble of its own
+        const gx = lead.x + f.dx * lead.face + Math.sin(t * 0.8 + f.drift) * 6;
+        const gy = Math.max(surface + 12, lead.y + f.dy + Math.cos(t * 0.7 + f.drift) * 4);
+        const ex = gx - f.x;
+        const ey = gy - f.y;
+        const d = Math.hypot(ex, ey);
+        if (d > 0.5 && !calm()) {
+          const step = Math.min(d, 50 * dt * Math.min(1, d / 20 + 0.2));
+          f.x += (ex / d) * step;
+          f.y += (ey / d) * step;
+        }
+        if (Math.abs(ex) > 1.5) f.face = ex > 0 ? 1 : -1;
+        else f.face = lead.face;
+        f.g.setAttribute("transform", `translate(${f.x.toFixed(1)} ${f.y.toFixed(1)}) scale(${f.face} 1)`);
+        f.g.style.opacity = f.y > surface + 4 ? 1 : 0;
+      }
     }
     if (!calm() && level > 0.3 && Math.random() < dt * 3) {
       const b = document.createElementNS(NS, "circle");

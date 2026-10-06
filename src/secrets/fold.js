@@ -13,7 +13,12 @@
 
 const R = Math.SQRT2; // center to corner
 const H = Math.SQRT2 - 1; // the bird base's hinge: where the side corners land
-const X = Math.tan(Math.PI / 16); // half-width of a narrowed leg at the hinge
+// Narrowing: the crease runs from the bottom point at 11.25° all the way up
+// to the wing's edge, so the shoulder folds in too and rises to a clean
+// point instead of sticking out.
+const T = Math.tan(Math.PI / 16);
+const SHOULDER_Y = (R * T + H * H - H) / (T + H); // where the crease meets the wing's edge
+const SHOULDER = [T * (R - SHOULDER_Y), SHOULDER_Y];
 const deg = (d) => (d * Math.PI) / 180;
 
 /** Which side of the line (through p, at angle a) q is on. */
@@ -65,16 +70,16 @@ export const FOLDS = [
   { line: through([0, R], [H, H]), moves: [R / 2, R / 2] },
   { line: through([0, R], [-H, H]), moves: [-R / 2, R / 2] },
   { line: at([0, H], 0), moves: [0, 1], keep: true },
-  // 3. narrow the legs
-  { line: through([0, R], [X, H]), moves: [H, 0.9], region: [at([0, H], 0), 1] },
-  { line: through([0, R], [-X, H]), moves: [-H, 0.9], region: [at([0, H], 0), 1] },
+  // 3. narrow the legs (and with them, the shoulders)
+  { line: through([0, R], SHOULDER), moves: [H, H] },
+  { line: through([0, R], [-SHOULDER[0], SHOULDER[1]]), moves: [-H, H] },
   // 4. reverse-fold the neck (right) and tail (left) up between the wings
   { line: at([0.04, 0.48], 12), moves: [0.05, 1.3], region: [at([0, 0], 90), -1], tag: "leg" },
   { line: at([-0.04, 0.48], 168), moves: [-0.05, 1.3], region: [at([0, 0], 90), 1], tag: "leg" },
   // 5. the head: the last fifth of the neck, turned down and forward
   { line: at([0.307, -0.217], -20.5), moves: [0.383, -0.39], region: [at([0, 0], 90), -1], only: "leg", tag: "leg" },
 ];
-// clicks → folds: square base, bird base, narrow, neck and tail, head
+// the stages, for naming them
 export const STEPS = [
   { name: "square base", folds: [0, 1, 2] },
   { name: "bird base", folds: [3, 4, 5] },
@@ -83,7 +88,7 @@ export const STEPS = [
   { name: "head", folds: [10] },
 ];
 // the wings, folding down at the shoulders: how a finished crane flaps
-export const WINGS = { line: at([0, H], 0), moves: [0, -1], except: "leg" };
+export const WINGS = { line: at([0, SHOULDER_Y], 0), moves: [0, -1], except: "leg" };
 
 export const SHEET = [{ pts: [[0, -R], [R, 0], [0, R], [-R, 0]], back: false, tag: "" }];
 

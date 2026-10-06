@@ -1,8 +1,8 @@
-// The secrets page: a square of paper. Each click folds the next stage of
-// a crane (see fold.js): square base, bird base, narrowed legs, neck and
-// tail, head. Finished, it flaps and flies off the screen the way it's
-// facing, rising a little on each down-stroke. A fresh sheet takes its
-// place, and every crane is counted.
+// The secrets page: a square of paper. Click it and it folds itself into
+// a crane, one crease at a time (see fold.js): square base, bird base,
+// narrowed legs, neck and tail, head. Finished, it flaps and flies off the
+// screen the way it's facing, rising a little on each down-stroke. A
+// fresh sheet takes its place, and every crane is counted.
 
 import { discover, isFound, isOn } from "../site/eggs.js";
 import { chime, pluck, PENTATONIC } from "../site/sound.js";
@@ -10,7 +10,7 @@ import { FOLDS, STEPS, WINGS, SHEET, CREASES, fold, folded } from "./fold.js";
 import { remember, keep } from "./store.js";
 
 const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-const FOLD_MS = 420;
+const FOLD_MS = 380;
 const FRONT = "#ffb48c"; // the colored side
 const BACK = "#fff1e4"; // the white side
 const INK = "#2a1408";
@@ -129,14 +129,12 @@ export function mountCrane() {
     paper.innerHTML = "";
   };
 
+  // one click, one whole crane
   button.addEventListener("click", () => {
-    if (busy || queue.length) return;
-    const step = STEPS.find((s) => s.folds[0] === done);
-    if (!step) return;
-    queue = [...step.folds];
+    if (busy || done) return;
+    busy = true;
+    queue = FOLDS.map((_, k) => k);
     foldStart = performance.now();
-    if (done + queue.length === FOLDS.length) busy = true; // the last one: it'll fly
-    name();
     requestAnimationFrame(draw);
   });
 }
