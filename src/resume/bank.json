@@ -712,12 +712,12 @@
         },
         {
           "id": "athlete",
-          "text": "NCAA Division I (BYU) and Division II (Michigan Tech) distance runner; Ironman finisher",
+          "text": "NCAA Division I (BYU) and Division II (Michigan Tech) distance runner; Ironman 70.3 finisher",
           "score": { "best": 6, "swe": 5, "data": 5, "it": 5, "ops": 6 },
           "tags": ["athletics", "discipline", "time management", "endurance"],
           "wordings": [
             {
-              "text": "NCAA Division I (BYU) and Division II (Michigan Tech) distance runner; Ironman finisher",
+              "text": "NCAA Division I (BYU) and Division II (Michigan Tech) distance runner; Ironman 70.3 finisher",
               "source": "bank"
             }
           ]
