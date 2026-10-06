@@ -3,9 +3,12 @@
 // scale, from Fort Collins to the Moon, so each band of the sky gets room:
 // my one skydive, Pikes Peak, the clouds, the edge of space, the space
 // station, the GPS satellites, and the Moon. An altimeter keeps count.
+// The sound thins out with the air: the wind and the breath of the room
+// fade on the way up and are gone at the edge of space, where the chord
+// turns high and glassy.
 
 import { discover, isFound, isOn } from "../site/eggs.js";
-import { chime, gust, PENTATONIC } from "../site/sound.js";
+import { chime, gust, setChord, ambience, PENTATONIC } from "../site/sound.js";
 
 const GROUND = 1525; // Fort Collins, 5,003 ft, in meters
 const MOON = 3.844e8;
@@ -57,7 +60,8 @@ function build() {
     <div class="space__clouds" style="top:${top(11000)}" aria-hidden="true"><i></i><i></i><i></i></div>
     <span class="space__label space__label--clouds" style="top:${top(11000)}">${mark("clouds").label}</span>
     <svg class="space__range" viewBox="0 0 1000 100" preserveAspectRatio="none" style="height:${(placeOf(4302) * 100).toFixed(2)}%" aria-hidden="true">
-      <path d="M0 100V70L80 52 150 64 230 38 300 56 380 30 450 50 560 0 640 40 720 26 800 48 880 34 1000 58V100Z"/>
+      <path class="land" d="M0 100V70L80 52 150 64 230 38 300 56 380 30 450 50 560 0 640 40 720 26 800 48 880 34 1000 58V100Z"/>
+      <path class="ridge" d="M0 70L80 52 150 64 230 38 300 56 380 30 450 50 560 0 640 40 720 26 800 48 880 34 1000 58"/>
     </svg>
     <span class="space__label space__label--peak" style="top:${top(4302)}">${mark("peak").label}</span>
     <div class="space__jump" style="top:${top(JUMP)}">
@@ -69,7 +73,6 @@ function build() {
           <circle r="4.5"/><path class="body" d="M0 4v10"/>
         </g>
       </svg>
-      <p>My one skydive: a static line jump south of Colorado Springs. Letting go of the plane was awe and sheer terror at once.</p>
     </div>
     <p class="space__alt" aria-hidden="true"><small>Altitude</small><b></b></p>`;
   return sky;
@@ -207,11 +210,25 @@ export function mountSpace() {
     const fly = flight(flightSvg);
     const started = performance.now();
     let high = 0; // the highest place reached, for the chimes
+    const edge = placeOf(1e5);
+    let heard = null; // the last atmosphere set, so it's only sent when it changes
+    const hear = (u) => {
+      // 1 on the ground, 0 at the edge of space and above
+      const air = u == null ? 1 : Math.max(0, 1 - u / edge);
+      const key = u == null ? "ground" : air > 0 ? (air * 20).toFixed(0) : "space";
+      if (key === heard) return;
+      const was = heard;
+      heard = key;
+      ambience({ air, wind: air, sparkle: true, hush: 2500 + air * 15500 });
+      if (key === "space") setChord("Acold");
+      else if (was === "space" || key === "ground") setChord("A");
+    };
     const rings = [placeOf(1e5), placeOf(4.08e5), placeOf(2.02e7), placeOf(MOON)];
     const tick = (now) => {
       const r = sky.getBoundingClientRect();
       const inView = r.bottom > innerHeight * 0.5;
       alt.classList.toggle("is-on", inView);
+      if (!inView) hear(null);
       if (inView) {
         // the middle of the window, as a height
         const u = Math.min(1, Math.max(0, (r.bottom - innerHeight / 2) / r.height));
@@ -221,6 +238,7 @@ export function mountSpace() {
           if (u >= ring && high < ring) chime(PENTATONIC[3 + k], 0.04, 0, 3);
         });
         high = Math.max(high, u);
+        hear(u);
         const fr = flightSvg.getBoundingClientRect();
         if (fr.bottom > 0 && fr.top < innerHeight) fly(calm() ? 3.6 : (now - started) / 1000);
       }

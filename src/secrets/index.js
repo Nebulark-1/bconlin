@@ -1,56 +1,23 @@
 import "../styles/secrets.css";
-import { discover, isFound, isOn } from "../site/eggs.js";
-import { addCommands } from "../site/console.js";
-import { konami, isGolden, isElevenEleven, isNight } from "./patterns.js";
+import { discover, isOn } from "../site/eggs.js";
+import { konami, isGolden, isElevenEleven } from "./patterns.js";
 import { goldenWindow, eightBit, shootingStar } from "./effects.js";
-import { openTale } from "./tale.js";
 import { mountSpace } from "./space.js";
+import { mountLake } from "./lake.js";
+import { mountFlood } from "./flood.js";
+import { mountCrane } from "./crane.js";
+import { mountCampfire } from "./campfire.js";
 
 // The secrets that live everywhere, plus a few that belong to one page.
 // Every page mounts these through mountFab(). No secret here is typed:
-// they're clicks, gestures, holds, idling, the time of day, the window's
-// shape, the console, and one famous button combo.
-
-// Numbers some secrets keep, in this visitor's browser.
-const remember = (key) => {
-  try {
-    return Number(localStorage.getItem(key)) || 0;
-  } catch {
-    return 0;
-  }
-};
-const keep = (key, value) => {
-  try {
-    localStorage.setItem(key, String(value));
-  } catch {
-    // not remembered; fine
-  }
-};
+// they're clicks, holds, scrolling, idling, the time of day, the window's
+// shape, and one famous button combo.
 
 /** Found it: count it, and (unless it's switched off) do its thing. */
 const found = (id, effect) => {
   discover(id);
   if (isOn(id)) effect?.();
 };
-
-// What the dive and the crane listen for.
-const HOOKS = {
-  // every crane folded to the last step counts; the first finds the secret
-  folded() {
-    keep("bc-cranes", remember("bc-cranes") + 1);
-    discover("cranes");
-  },
-  mine: () => (isFound("cranes") && isOn("cranes") ? remember("bc-cranes") : 0),
-  // surfacing with almost no air left, but some
-  breath(seconds) {
-    if (seconds > remember("bc-breath")) keep("bc-breath", seconds.toFixed(1));
-    discover("breath");
-  },
-  best: () => (isFound("breath") && isOn("breath") ? remember("bc-breath") : 0),
-};
-
-// Holds only count on the picture itself, not on anything you can use.
-const busy = (el) => el.closest?.("a, button, input, textarea, select, label, summary, [role=button], [contenteditable], .fab, .tale, .inspector, .bp-chips, .lanes, .harp, .card");
 
 // ── ↑ ↑ ↓ ↓ ← → ← → B A ────────────────────────────────────
 function listenKonami() {
@@ -88,103 +55,6 @@ function listenClock() {
   setInterval(check, 10000);
 }
 
-// ── Sit still for a minute (anywhere but home, which hums) ─
-function listenIdle(page) {
-  if (page === "home") return;
-  let timer = 0;
-  let shown = false;
-  const wake = () => {
-    clearTimeout(timer);
-    if (!shown) timer = setTimeout(() => ((shown = true), found("tanks", () => openTale("tanks"))), 60000);
-  };
-  for (const t of ["pointermove", "pointerdown", "keydown", "scroll", "wheel", "touchstart"]) addEventListener(t, wake, { passive: true });
-  wake();
-}
-
-// ── Page by page ───────────────────────────────────────────
-// Career: hold on the water in the Michigan Tech chapter, and dive.
-function listenLake() {
-  const scene = document.querySelector('[data-scene="houghton"]');
-  if (!scene) return;
-  let hold = 0;
-  let ring = null;
-  // inside the picture's visible frame, and on the canal's water
-  const inWater = (e) => {
-    const frame = scene.querySelector(".panel")?.getBoundingClientRect();
-    if (!frame || e.clientX < frame.left || e.clientX > frame.right || e.clientY < frame.top || e.clientY > frame.bottom) return false;
-    const water = scene.querySelector('path[fill="url(#h-water)"]');
-    const m = water?.getScreenCTM();
-    if (!m) return false;
-    return water.isPointInFill(new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()));
-  };
-  const stop = () => {
-    clearTimeout(hold);
-    ring?.remove();
-    ring = null;
-  };
-  scene.addEventListener("pointerdown", (e) => {
-    if (busy(e.target) || !inWater(e)) return;
-    // a ripple grows where you're holding
-    ring = document.createElement("i");
-    ring.className = "lake-ripple";
-    ring.style.left = `${e.clientX}px`;
-    ring.style.top = `${e.clientY}px`;
-    document.body.appendChild(ring);
-    hold = setTimeout(() => {
-      stop();
-      found("dive", () => openTale("dive", HOOKS));
-    }, 1100);
-  });
-  for (const t of ["pointerup", "pointercancel", "pointerleave"]) scene.addEventListener(t, stop);
-  addEventListener("scroll", stop, { passive: true });
-}
-
-// Home, after dark: a campfire by the strings.
-function campfire() {
-  if (!isNight(new Date())) return;
-  const link = document.querySelector(".secrets-link");
-  if (!link) return;
-  const fire = document.createElement("button");
-  fire.type = "button";
-  fire.className = "campfire";
-  fire.setAttribute("aria-label", "A campfire");
-  fire.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="campfire__flame" d="M12 3c2 4 5 6 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/><path class="campfire__logs" d="M4 21l16-3M4 18l16 3"/></svg>`;
-  fire.addEventListener("click", () => found("herman", () => openTale("herman")));
-  link.before(fire);
-}
-
-// Secrets page: a square of paper to fold.
-function paper() {
-  const host = document.querySelector(".sky__text");
-  if (!host) return;
-  const sheet = document.createElement("button");
-  sheet.type = "button";
-  sheet.className = "paper-square";
-  sheet.setAttribute("aria-label", "A square of paper");
-  sheet.addEventListener("click", () => {
-    let tale = null;
-    tale = openTale("cranes", {
-      ...HOOKS,
-      // once it's a crane, it joins the thousand
-      folded() {
-        HOOKS.folded();
-        setTimeout(() => tale?.swap("thousand"), 1600);
-      },
-    });
-  });
-  host.appendChild(sheet);
-}
-
-// The console: a command that isn't in ben.help().
-function redbull() {
-  addCommands([
-    ["redbull", "", () => {
-      found("redbull", () => openTale("redbull"));
-      return "Red Bull, call me. (Ultra-endurance, not anything scary.)";
-    }, { hidden: true }],
-  ]);
-}
-
 let mounted = false;
 /** page: the same name mountFab() gets ("home", "career", "eggs"...). */
 export function mountSecrets(page) {
@@ -193,15 +63,15 @@ export function mountSecrets(page) {
   listenKonami();
   listenGolden();
   listenClock();
-  listenIdle(page);
-  redbull();
+  // sit still anywhere but home (which hums) and the water rises
+  if (page !== "home") mountFlood();
   // page elements may still be building; wait a beat
   queueMicrotask(() => {
-    if (page === "career") listenLake();
+    if (page === "career") mountLake();
     if (page === "home") {
-      campfire();
+      mountCampfire();
       mountSpace();
     }
-    if (page === "eggs") paper();
+    if (page === "eggs") mountCrane();
   });
 }

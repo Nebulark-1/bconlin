@@ -6,8 +6,10 @@ import rainSrc from "../site/rain.js?raw";
 import soundSrc from "../site/sound.js?raw";
 import fabSrc from "../site/fab.js?raw";
 import consoleSrc from "../site/console.js?raw";
-import scenesSrc from "../secrets/scenes.js?raw";
-import secretsIndexSrc from "../secrets/index.js?raw";
+import lakeSrc from "../secrets/lake.js?raw";
+import floodSrc from "../secrets/flood.js?raw";
+import craneSrc from "../secrets/crane.js?raw";
+import campfireSrc from "../secrets/campfire.js?raw";
 import patternsSrc from "../secrets/patterns.js?raw";
 import effectsSrc from "../secrets/effects.js?raw";
 import spaceSrc from "../secrets/space.js?raw";
@@ -44,31 +46,24 @@ const SOURCES = {
     { file: "src/site/fab.js", src: fabSrc, name: "secretsInNav" },
   ],
   dive: [
-    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "listenLake" },
-    { file: "src/secrets/scenes.js", src: scenesSrc, name: "dive" },
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "start" },
   ],
   breath: [
-    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "HOOKS" },
-    { file: "src/secrets/scenes.js", src: scenesSrc, name: "dive" },
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "diveStep" },
   ],
   cranes: [
-    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "HOOKS" },
-    { file: "src/secrets/scenes.js", src: scenesSrc, name: "thousand" },
+    { file: "src/secrets/crane.js", src: craneSrc, name: "mountCrane" },
+    { file: "src/secrets/crane.js", src: craneSrc, name: "fly" },
   ],
   herman: [
-    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "campfire" },
-    { file: "src/secrets/patterns.js", src: patternsSrc, name: "isNight" },
+    { file: "src/secrets/campfire.js", src: campfireSrc, name: "snowfall" },
   ],
   tanks: [
-    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "listenIdle" },
-    { file: "src/secrets/scenes.js", src: scenesSrc, name: "tanks" },
+    { file: "src/secrets/flood.js", src: floodSrc, name: "fill" },
   ],
   space: [
     { file: "src/secrets/space.js", src: spaceSrc, name: "placeOf" },
     { file: "src/secrets/space.js", src: spaceSrc, name: "mountSpace" },
-  ],
-  redbull: [
-    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "redbull" },
   ],
   konami: [
     { file: "src/secrets/patterns.js", src: patternsSrc, name: "konami" },
