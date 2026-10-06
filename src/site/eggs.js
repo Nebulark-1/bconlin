@@ -132,8 +132,8 @@ export const EGGS = [
     page: "Secrets",
     difficulty: 1,
     hint: "There's a square of paper on the secrets page. What could it be?",
-    how: "Click the square of paper on the secrets page, one fold per click, until it's a crane.",
-    what: "It folds into a crane right where it sits, then flies off into your stars. Every crane is counted. I once folded a thousand.",
+    how: "Click the square of paper on the secrets page.",
+    what: "It folds itself into a crane, crease by crease, then flaps and flies off the screen. Every crane is counted. I once folded a thousand.",
   },
   {
     id: "herman",
