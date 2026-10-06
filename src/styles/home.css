@@ -658,6 +658,36 @@
   color: var(--muted);
 }
 
+/* the way to the secrets page, quiet at the very bottom */
+.secrets-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 56px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: rgba(236, 232, 255, 0.4);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition:
+    color 0.3s,
+    background 0.3s;
+}
+
+.secrets-link:hover {
+  color: #ffe2c4;
+  background: rgba(255, 226, 196, 0.06);
+}
+
+.secrets-link i {
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
 /* the portrait swaps with a quick fade (a secret) */
 .hero__rings {
   cursor: pointer;

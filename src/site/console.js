@@ -7,12 +7,15 @@ import { setChord, CHORDS, chime, PENTATONIC, gust, setMix, getMix, isSoundOn } 
 
 let commands = new Map(); // name → { call, help, fn }
 
-/** Add commands: [[name, help, fn], ...]. A name can show its inputs, like "pluck(n)". */
+/**
+ * Add commands: [[name, help, fn, { hidden }], ...]. A name can show its
+ * inputs, like "pluck(n)". Hidden ones work but aren't in ben.help().
+ */
 export function addCommands(list, first = false) {
   const added = new Map(
-    list.map(([name, help, fn]) => {
+    list.map(([name, help, fn, { hidden = false } = {}]) => {
       const key = name.split("(")[0];
-      return [key, { call: `ben.${name.includes("(") ? name : `${name}()`}`, help, fn }];
+      return [key, { call: `ben.${name.includes("(") ? name : `${name}()`}`, help, fn, hidden }];
     }),
   );
   commands = first ? new Map([...added, ...commands]) : new Map([...commands, ...added]);
@@ -71,7 +74,7 @@ function barrelRoll() {
 const BASE = [
   ["help", "everything you can do here", () => {
     // printed as a message, so the lines break (a returned string shows "\n")
-    const rows = [...commands.values()].map(({ call, help }) => [call, help]);
+    const rows = [...commands.values()].filter((c) => !c.hidden).map(({ call, help }) => [call, help]);
     const width = Math.max(...rows.map(([c]) => c.length)) + 3;
     console.log(rows.map(([c, h]) => c.padEnd(width) + h).join("\n"));
   }],

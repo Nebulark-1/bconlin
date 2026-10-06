@@ -6,8 +6,10 @@ import rainSrc from "../site/rain.js?raw";
 import soundSrc from "../site/sound.js?raw";
 import fabSrc from "../site/fab.js?raw";
 import consoleSrc from "../site/console.js?raw";
-import scenesSrc from "../about/scenes.js?raw";
-import aboutSrc from "../about/main.js?raw";
+import scenesSrc from "../secrets/scenes.js?raw";
+import secretsIndexSrc from "../secrets/index.js?raw";
+import patternsSrc from "../secrets/patterns.js?raw";
+import effectsSrc from "../secrets/effects.js?raw";
 import { egg, EGGS, isFound, foundCount } from "../site/eggs.js";
 
 const C = { text: "#bfe6ff", dim: "rgba(160,200,240,.45)", gold: "#ffe2c4" };
@@ -37,13 +39,55 @@ const SOURCES = {
     { file: "src/site/console.js", src: consoleSrc, name: "addCommands" },
     { file: "src/site/console.js", src: consoleSrc, name: "barrelRoll" },
   ],
-  cranes: [
-    { file: "src/about/main.js", src: aboutSrc, name: "HOOKS" },
-    { file: "src/about/scenes.js", src: scenesSrc, name: "thousand" },
+  door: [
+    { file: "src/site/fab.js", src: fabSrc, name: "secretsInNav" },
+  ],
+  dive: [
+    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "listenLake" },
+    { file: "src/secrets/scenes.js", src: scenesSrc, name: "dive" },
   ],
   breath: [
-    { file: "src/about/main.js", src: aboutSrc, name: "HOOKS" },
-    { file: "src/about/scenes.js", src: scenesSrc, name: "dive" },
+    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "HOOKS" },
+    { file: "src/secrets/scenes.js", src: scenesSrc, name: "dive" },
+  ],
+  cranes: [
+    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "HOOKS" },
+    { file: "src/secrets/scenes.js", src: scenesSrc, name: "thousand" },
+  ],
+  herman: [
+    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "campfire" },
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "isNight" },
+  ],
+  tanks: [
+    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "listenIdle" },
+    { file: "src/secrets/scenes.js", src: scenesSrc, name: "tanks" },
+  ],
+  jump: [
+    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "listenJump" },
+    { file: "src/secrets/scenes.js", src: scenesSrc, name: "jump" },
+  ],
+  redbull: [
+    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "redbull" },
+  ],
+  konami: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "konami" },
+    { file: "src/secrets/effects.js", src: effectsSrc, name: "eightBit" },
+  ],
+  pi: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "circleFrom" },
+    { file: "src/secrets/effects.js", src: effectsSrc, name: "unrollPi" },
+  ],
+  fibonacci: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "fibonacciRhythm" },
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "fibonacciSquares" },
+  ],
+  golden: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "isGolden" },
+    { file: "src/secrets/effects.js", src: effectsSrc, name: "goldenWindow" },
+  ],
+  wish: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "isElevenEleven" },
+    { file: "src/secrets/effects.js", src: effectsSrc, name: "shootingStar" },
   ],
 };
 

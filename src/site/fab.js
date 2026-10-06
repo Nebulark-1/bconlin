@@ -1,7 +1,8 @@
 import { nextChapter } from "../content.js";
 import { toggleSound, onSound, isSoundPlaying, soundWanted, chime, PENTATONIC, LAYERS, getMix, setMix, resetMix, level, bend } from "./sound.js";
-import { isOn, discover } from "./eggs.js";
+import { isOn, isFound, discover, onEggs } from "./eggs.js";
 import { installConsole } from "./console.js";
+import { mountSecrets } from "../secrets/index.js";
 
 // Three circles that follow you round the site, bottom right:
 //   - the big one is the site menu; hover (or tap) and the pages fan out
@@ -15,7 +16,7 @@ const ICONS = {
   career: '<path d="M6 3c5 3-3 5 2 8s-4 4 0 6"/><circle cx="6" cy="3" r="1.6"/><circle cx="8" cy="11" r="1.6"/><circle cx="8" cy="17" r="1.6"/>',
   resume: '<path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5z M8 8h5 M8 11h5 M8 14h3"/>',
   pdf: '<path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 16h12"/>',
-  about: '<circle cx="10" cy="7" r="3.2"/><path d="M4 17c.6-3.6 3-5.4 6-5.4s5.4 1.8 6 5.4"/>',
+  secrets: '<path d="M10 2.5 11.6 8.4 17.5 10l-5.9 1.6L10 17.5l-1.6-5.9L2.5 10l5.9-1.6z"/>',
   projects: '<rect x="3" y="3" width="14" height="14" rx="1.5"/><rect x="5" y="7.5" width="7" height="7" rx="1"/><rect x="6" y="10" width="3" height="3"/>',
   email: '<rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="m3.5 6 6.5 5 6.5-5"/>',
   code: '<path d="M7 6 3 10l4 4M13 6l4 4-4 4"/>',
@@ -24,17 +25,20 @@ const ICONS = {
 const svg = (name) => `<svg viewBox="0 0 20 20" aria-hidden="true">${ICONS[name]}</svg>`;
 
 /**
- * current:   "home" | "career" | "resume" | "projects" | "about" - marks this page in the menu
+ * current:   "home" | "career" | "resume" | "projects" | "eggs" - marks this page in the menu
  * blueprint: whether this page has a behind-the-scenes view
  * Returns { blueprintButton } for the page's createBlueprint().
  */
 export function mountFab({ current, blueprint = false }) {
+  // opening the secrets page is a secret too, and it earns the page a spot
+  // in the top bar and the menu
+  if (current === "eggs") discover("door");
   const links = [
     { id: "home", label: current === "home" ? "Back to the top" : "Home", href: current === "home" ? "#top" : "./", icon: "home" },
     { id: "career", label: "Career", href: "career.html", icon: "career" },
     { id: "resume", label: "Résumé", href: "resume.html", icon: "resume" },
     { id: "projects", label: "Projects", href: "projects.html", icon: "projects" },
-    { id: "about", label: "About", href: "about.html", icon: "about" },
+    ...(isFound("door") ? [{ id: "eggs", label: "Secrets", href: "eggs.html", icon: "secrets" }] : []),
     { id: "pdf", label: "Download my résumé", href: "resume/Ben-Conlin-Resume.pdf", icon: "pdf", download: true },
     { id: "email", label: "Email me", href: `mailto:${nextChapter.email}`, icon: "email" },
   ];
@@ -66,6 +70,8 @@ export function mountFab({ current, blueprint = false }) {
     </button>`;
   document.body.appendChild(root);
   installConsole();
+  mountSecrets(current);
+  secretsInNav(current);
 
   // ── The menu ──
   const main = root.querySelector(".fab__main");
@@ -320,4 +326,19 @@ function inviteToSound(root, soundBtn) {
   });
   card.querySelector(".sound-invite__close").addEventListener("click", dismiss);
   soundBtn.addEventListener("click", dismiss);
+}
+
+/** Once the secrets page has been found, it's in the top bar on every page. */
+function secretsInNav(current) {
+  const nav = document.querySelector(".site-head__nav");
+  if (!nav) return;
+  onEggs(() => {
+    if (!isFound("door") || nav.querySelector(".nav-secrets")) return;
+    const a = document.createElement("a");
+    a.href = "eggs.html";
+    a.className = "nav-secrets";
+    a.innerHTML = `<svg viewBox="0 0 20 20" aria-hidden="true">${ICONS.secrets}</svg>Secrets`;
+    if (current === "eggs") a.setAttribute("aria-current", "page");
+    nav.appendChild(a);
+  });
 }
