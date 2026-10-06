@@ -1,7 +1,7 @@
 // What some secrets draw over the page: plain lines in the site's colors,
 // moving just enough to show the idea, then gone.
 
-import { chime, pluck, PENTATONIC } from "../site/sound.js";
+import { chime, PENTATONIC } from "../site/sound.js";
 import { fibonacciSquares, PHI } from "./patterns.js";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -43,49 +43,7 @@ function play(ms, fn, done) {
   requestAnimationFrame(tick);
 }
 
-// ── π: a circle unrolled ───────────────────────────────────
-/**
- * The circle you drew peels off onto a line from its bottom point, as if
- * it rolled one full turn. Marks every diameter along the way: it takes
- * three and a bit to go around.
- */
-export function unrollPi({ x, y, r }) {
-  const C = 2 * Math.PI * r;
-  const svg = layer(7);
-  // make room for the line: slide the circle left if it would run off
-  const x0 = Math.max(20, Math.min(x, innerWidth - C - 30));
-  const base = y + r;
-  const circle = add(svg, "path", { class: "fx-line", d: "" });
-  const line = add(svg, "path", { class: "fx-line fx-line--hot", d: "" });
-  const ticks = add(svg, "g", { class: "fx-ticks" });
-  const label = add(svg, "text", { class: "fx-text", x: x0, y: base + 34 });
-  const ring = (cx) =>
-    `M${cx} ${base}A${r} ${r} 0 1 0 ${cx} ${base - 2 * r}A${r} ${r} 0 1 0 ${cx} ${base}`;
-  play(450, (u) => circle.setAttribute("d", ring(x + (x0 - x) * ease(u))), () => {
-    circle.setAttribute("stroke-dasharray", `${C} ${C}`);
-    let marked = 0;
-    play(2200, (u) => {
-      const k = ease(u);
-      circle.setAttribute("stroke-dashoffset", (-k * C).toFixed(1));
-      line.setAttribute("d", `M${x0} ${base}h${(k * C).toFixed(1)}`);
-      // a mark at each whole diameter, with a note
-      while (marked < 3 && k * C >= (marked + 1) * 2 * r) {
-        marked++;
-        const tx = x0 + marked * 2 * r;
-        add(ticks, "path", { d: `M${tx} ${base - 8}v16` });
-        add(ticks, "text", { class: "fx-text fx-text--small", x: tx, y: base - 14, "text-anchor": "middle" }).textContent = marked;
-        pluck(220 * [1, 1.25, 1.5][marked - 1], 0.6);
-      }
-    }, () => {
-      add(ticks, "path", { d: `M${x0 + C} ${base - 12}v24`, class: "fx-hot" });
-      const digits = "π = 3.14159 26535 89793 23846";
-      play(1600, (u) => (label.textContent = digits.slice(0, Math.round(u * digits.length))));
-      chime(PENTATONIC[5], 0.04);
-    });
-  });
-}
-
-// ── Fibonacci: squares and the spiral through them ─────────
+// ── φ: the squares of a golden rectangle, and the spiral through them ─────────
 function arcPath(squares, unit, ox, oy) {
   return squares
     .map(({ center, from, to, s }, k) => {
@@ -117,19 +75,6 @@ function drawSquares(svg, squares, unit, ox, oy, { stepMs = 140, sound = true } 
   });
   const spiral = add(svg, "path", { class: "fx-line fx-line--hot", d: arcPath(squares, unit, ox, oy), pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1 });
   setTimeout(() => play(1400, (u) => spiral.setAttribute("stroke-dashoffset", (1 - ease(u)).toFixed(3))), calm() ? 0 : squares.length * stepMs);
-}
-
-/** 1, 1, 2, 3, 5, 8...: each square as big as the two before it, tiled out from where you clicked. */
-export function fibonacciSpiral(x, y) {
-  const squares = fibonacciSquares(9);
-  const { box } = squares[squares.length - 1];
-  const w = box.x1 - box.x0;
-  const h = box.y1 - box.y0;
-  const unit = Math.min((innerWidth - 40) / w, (innerHeight - 40) / h, 460 / w);
-  // centered on the click, but kept on screen
-  const ox = Math.max(20, Math.min(innerWidth - 20 - w * unit, x - (w * unit) / 2)) - box.x0 * unit;
-  const oy = Math.max(20, Math.min(innerHeight - 20 - h * unit, y - (h * unit) / 2)) - box.y0 * unit;
-  drawSquares(layer(6), squares, unit, ox, oy);
 }
 
 /** The window is golden: show the squares it's made of. */

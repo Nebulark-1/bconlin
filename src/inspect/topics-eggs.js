@@ -10,6 +10,7 @@ import scenesSrc from "../secrets/scenes.js?raw";
 import secretsIndexSrc from "../secrets/index.js?raw";
 import patternsSrc from "../secrets/patterns.js?raw";
 import effectsSrc from "../secrets/effects.js?raw";
+import spaceSrc from "../secrets/space.js?raw";
 import { egg, EGGS, isFound, foundCount } from "../site/eggs.js";
 
 const C = { text: "#bfe6ff", dim: "rgba(160,200,240,.45)", gold: "#ffe2c4" };
@@ -62,9 +63,9 @@ const SOURCES = {
     { file: "src/secrets/index.js", src: secretsIndexSrc, name: "listenIdle" },
     { file: "src/secrets/scenes.js", src: scenesSrc, name: "tanks" },
   ],
-  jump: [
-    { file: "src/secrets/index.js", src: secretsIndexSrc, name: "listenJump" },
-    { file: "src/secrets/scenes.js", src: scenesSrc, name: "jump" },
+  space: [
+    { file: "src/secrets/space.js", src: spaceSrc, name: "placeOf" },
+    { file: "src/secrets/space.js", src: spaceSrc, name: "mountSpace" },
   ],
   redbull: [
     { file: "src/secrets/index.js", src: secretsIndexSrc, name: "redbull" },
@@ -72,14 +73,6 @@ const SOURCES = {
   konami: [
     { file: "src/secrets/patterns.js", src: patternsSrc, name: "konami" },
     { file: "src/secrets/effects.js", src: effectsSrc, name: "eightBit" },
-  ],
-  pi: [
-    { file: "src/secrets/patterns.js", src: patternsSrc, name: "circleFrom" },
-    { file: "src/secrets/effects.js", src: effectsSrc, name: "unrollPi" },
-  ],
-  fibonacci: [
-    { file: "src/secrets/patterns.js", src: patternsSrc, name: "fibonacciRhythm" },
-    { file: "src/secrets/patterns.js", src: patternsSrc, name: "fibonacciSquares" },
   ],
   golden: [
     { file: "src/secrets/patterns.js", src: patternsSrc, name: "isGolden" },

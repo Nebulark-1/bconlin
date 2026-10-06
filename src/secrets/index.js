@@ -1,9 +1,10 @@
 import "../styles/secrets.css";
 import { discover, isFound, isOn } from "../site/eggs.js";
 import { addCommands } from "../site/console.js";
-import { konami, circleFrom, fibonacciRhythm, isGolden, isElevenEleven, isNight } from "./patterns.js";
-import { unrollPi, fibonacciSpiral, goldenWindow, eightBit, shootingStar } from "./effects.js";
+import { konami, isGolden, isElevenEleven, isNight } from "./patterns.js";
+import { goldenWindow, eightBit, shootingStar } from "./effects.js";
 import { openTale } from "./tale.js";
+import { mountSpace } from "./space.js";
 
 // The secrets that live everywhere, plus a few that belong to one page.
 // Every page mounts these through mountFab(). No secret here is typed:
@@ -48,7 +49,7 @@ const HOOKS = {
   best: () => (isFound("breath") && isOn("breath") ? remember("bc-breath") : 0),
 };
 
-// Clicks and strokes only count on empty page, not on anything you can use.
+// Holds only count on the picture itself, not on anything you can use.
 const busy = (el) => el.closest?.("a, button, input, textarea, select, label, summary, [role=button], [contenteditable], .fab, .tale, .inspector, .bp-chips, .lanes, .harp, .card");
 
 // ── ↑ ↑ ↓ ↓ ← → ← → B A ────────────────────────────────────
@@ -57,44 +58,6 @@ function listenKonami() {
   addEventListener("keydown", (e) => {
     if (e.target.closest?.("input, textarea, [contenteditable]")) return;
     if (feed(e.key)) found("konami", () => eightBit());
-  });
-}
-
-// ── π: draw a circle ───────────────────────────────────────
-function listenCircle() {
-  let stroke = null;
-  addEventListener("pointerdown", (e) => {
-    stroke = e.button === 0 && !busy(e.target) ? [{ x: e.clientX, y: e.clientY }] : null;
-  });
-  addEventListener("pointermove", (e) => {
-    if (!stroke) return;
-    const last = stroke[stroke.length - 1];
-    if (Math.hypot(e.clientX - last.x, e.clientY - last.y) > 4) stroke.push({ x: e.clientX, y: e.clientY });
-  });
-  addEventListener("pointercancel", () => (stroke = null));
-  addEventListener("pointerup", () => {
-    const circle = stroke && circleFrom(stroke);
-    stroke = null;
-    if (circle) {
-      getSelection()?.removeAllRanges();
-      found("pi", () => unrollPi(circle));
-    }
-  });
-}
-
-// ── 1, 1, 2, 3, 5: click empty space in that rhythm ────────
-function listenFibonacci() {
-  const rhythm = fibonacciRhythm();
-  let at = null;
-  let timer = 0;
-  addEventListener("click", (e) => {
-    if (busy(e.target)) return;
-    rhythm.click(performance.now());
-    at = { x: e.clientX, y: e.clientY };
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      if (rhythm.pause(performance.now())) found("fibonacci", () => fibonacciSpiral(at.x, at.y));
-    }, 500);
   });
 }
 
@@ -123,27 +86,6 @@ function listenClock() {
   };
   check();
   setInterval(check, 10000);
-}
-
-// ── Already at the top? Keep going up ──────────────────────
-function listenJump() {
-  let pulls = [];
-  const pull = (amount) => {
-    const now = performance.now();
-    pulls = [...pulls.filter((p) => now - p.t < 1500), { t: now, amount }];
-    if (pulls.reduce((s, p) => s + p.amount, 0) > 1400) {
-      pulls = [];
-      found("jump", () => openTale("jump"));
-    }
-  };
-  addEventListener("wheel", (e) => scrollY <= 0 && e.deltaY < 0 && pull(Math.min(200, -e.deltaY)), { passive: true });
-  let y0 = null;
-  addEventListener("touchstart", (e) => (y0 = scrollY <= 0 ? e.touches[0].clientY : null), { passive: true });
-  addEventListener("touchmove", (e) => {
-    if (y0 == null || scrollY > 0) return;
-    const dy = e.touches[0].clientY - y0;
-    if (dy > 0) pull(dy * 1.5), (y0 = e.touches[0].clientY);
-  }, { passive: true });
 }
 
 // ── Sit still for a minute (anywhere but home, which hums) ─
@@ -249,17 +191,17 @@ export function mountSecrets(page) {
   if (mounted) return;
   mounted = true;
   listenKonami();
-  listenCircle();
-  listenFibonacci();
   listenGolden();
   listenClock();
-  listenJump();
   listenIdle(page);
   redbull();
   // page elements may still be building; wait a beat
   queueMicrotask(() => {
     if (page === "career") listenLake();
-    if (page === "home") campfire();
+    if (page === "home") {
+      campfire();
+      mountSpace();
+    }
     if (page === "eggs") paper();
   });
 }

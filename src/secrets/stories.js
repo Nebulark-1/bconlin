@@ -41,14 +41,6 @@ export const STORIES = {
       "The dream is a 75 gallon with real schooling.",
     ],
   },
-  jump: {
-    title: "Static line",
-    scene: "jump",
-    text: [
-      "Once, south of Colorado Springs. It was a static line jump, so I was entirely alone. Letting go of the plane was awe and sheer terror at once. I was 100% in the moment, with nothing on my mind but what was right in front of me.",
-      "My brothers and my dad all jumped too, which made the day extra special. It was the coolest thing ever.",
-    ],
-  },
   redbull: {
     title: "Red Bull, call me",
     scene: "long",

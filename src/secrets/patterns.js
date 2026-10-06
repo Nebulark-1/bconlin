@@ -22,63 +22,6 @@ export function konami() {
   };
 }
 
-/**
- * Was this stroke a circle? Find its middle, then ask three things: does
- * it stay about the same distance from the middle the whole way round, does
- * it go all the way round, and does it end near where it started?
- * Returns the circle ({ x, y, r }) or null.
- */
-export function circleFrom(points) {
-  if (points.length < 16) return null;
-  const x = points.reduce((s, p) => s + p.x, 0) / points.length;
-  const y = points.reduce((s, p) => s + p.y, 0) / points.length;
-  const radii = points.map((p) => Math.hypot(p.x - x, p.y - y));
-  const r = radii.reduce((s, v) => s + v, 0) / radii.length;
-  if (r < 36) return null;
-  const spread = Math.sqrt(radii.reduce((s, v) => s + (v - r) ** 2, 0) / radii.length) / r;
-  if (spread > 0.2) return null;
-  let turned = 0;
-  for (let k = 1; k < points.length; k++) {
-    let d = Math.atan2(points[k].y - y, points[k].x - x) - Math.atan2(points[k - 1].y - y, points[k - 1].x - x);
-    if (d > Math.PI) d -= 2 * Math.PI;
-    if (d < -Math.PI) d += 2 * Math.PI;
-    turned += d;
-  }
-  if (Math.abs(turned) < Math.PI * 1.75) return null;
-  const first = points[0];
-  const last = points[points.length - 1];
-  if (Math.hypot(last.x - first.x, last.y - first.y) > r * 0.8) return null;
-  return { x, y, r };
-}
-
-/**
- * Clicks in groups: clicks less than `gap` ms apart are one group. Feed it
- * click times; it says when the groups so far end in 1, 1, 2, 3, 5.
- * (The 5 is only known to be done when the next pause starts, so it also
- * takes a `now` with no click, from a timer.)
- */
-export const FIB = [1, 1, 2, 3, 5];
-export function fibonacciRhythm(gap = 450) {
-  let groups = [];
-  let last = -Infinity;
-  const check = () => FIB.every((n, k) => groups[groups.length - FIB.length + k] === n);
-  return {
-    click(t) {
-      if (t - last < gap) groups[groups.length - 1]++;
-      else groups.push(1);
-      last = t;
-      groups = groups.slice(-8);
-    },
-    /** Call after a pause: true if that pause just closed 1, 1, 2, 3, 5. */
-    pause(t) {
-      if (t - last < gap || !groups.length) return false;
-      const hit = check();
-      if (hit) groups = [];
-      return hit;
-    },
-  };
-}
-
 /** The squares of a Fibonacci spiral: sizes 1, 1, 2, 3, 5..., each laid on
  *  the next side of everything so far (right, up, left, down), with the
  *  quarter circle through each that makes the spiral. Units, not pixels. */
