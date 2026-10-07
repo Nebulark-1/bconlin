@@ -704,18 +704,6 @@
 }
 
 /* ── Behind the scenes ─────────────────────────────────── */
-.bp-host {
-  position: fixed;
-  z-index: 30;
-  inset: var(--nav-h) 0 0 0;
-  pointer-events: none;
-  container: plate / size;
-}
-
-.bp-host :is(.bp-chips, .inspector) {
-  pointer-events: auto;
-}
-
 [data-blueprint="on"] .page-home {
   background-color: #051329;
   background-image:

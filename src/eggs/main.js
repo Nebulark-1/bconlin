@@ -2,6 +2,8 @@ import { EGGS, onEggs, isFound, foundAt, isOn, setOn, foundCount, usedHint, used
 import { eggTopics } from "../inspect/topics-eggs.js";
 import { extract, highlight, langOf } from "../inspect/source.js";
 import { mountFab } from "../site/fab.js";
+import { mountBehind } from "../inspect/behind.js";
+import { secretsPageTopics } from "../inspect/topics-secrets.js";
 import { addCommands } from "../site/console.js";
 import { createRain } from "../site/rain.js";
 import { chime, PENTATONIC } from "../site/sound.js";
@@ -11,7 +13,7 @@ import { reducedMotion } from "../engine/scroll.js";
 // (each with an on/off switch and the code behind it), and a spoiler list.
 
 const $ = (sel) => document.querySelector(sel);
-mountFab({ current: "eggs" });
+const fab = mountFab({ current: "eggs", blueprint: true });
 const rain = createRain({ column: 1180 });
 addCommands([
   ["snow(on)", "start or stop the snow", (on = true) => (rain.setSnow(on), rain.stats.enabled ? (on ? "snowing" : "stopped") : "make the window wider to see it")],
@@ -236,3 +238,6 @@ function loop(now) {
 }
 requestAnimationFrame(loop);
 requestAnimationFrame(drawSky);
+
+// ── Behind the scenes ───────────────────────────────────────
+mountBehind(fab, secretsPageTopics, {}, () => [`found     ${foundCount()} of ${EGGS.length}`, `stars lit ${order.length}`]);
