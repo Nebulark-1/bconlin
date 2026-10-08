@@ -849,6 +849,38 @@
   resize: vertical;
 }
 
+/* the New fact form */
+.st-nf {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.st-nf select,
+.st-nf input {
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: #06060f;
+  color: var(--text);
+  font: 0.85rem var(--font-body);
+}
+
+.st-nf-new {
+  margin: 0 0 10px;
+  padding: 12px 12px 2px;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+}
+
+.st-nf-new[hidden] {
+  display: none;
+}
+
 .st-dialog__actions {
   display: flex;
   justify-content: flex-end;

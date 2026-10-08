@@ -6,7 +6,7 @@
 
 const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
-const slug = (text, taken) => {
+export const slug = (text, taken) => {
   const base = text.toLowerCase().replace(/[^a-z0-9 ]/g, "").split(" ").filter((w) => w.length > 3).slice(0, 2).join("") || "line";
   let id = base;
   for (let n = 2; taken.has(id); n++) id = `${base}${n}`;

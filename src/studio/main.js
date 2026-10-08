@@ -1,7 +1,7 @@
 import { compose, renderPaper, SECTIONS } from "../resume/paper.js";
 import { measure, grade, lastLineRange } from "../resume/linefit.js";
 import { rankWordings, relevance, termsIn, hasTerm } from "../resume/wordings.js";
-import { mountReview } from "./review.js";
+import { mountReview, slug } from "./review.js";
 
 // The résumé studio: my private editor for the bank. The page is drawn at
 // exactly 8.5 inches, so every line breaks where it will when printed.
@@ -271,6 +271,7 @@ function drawBench(room) {
       <h2>Bench <span>${plural(list.length, "fact")} not on the page</span></h2>
       <p class="${free ? "has-room" : ""}">${free ? `about ${plural(free, "line")} free` : "the page is full"}</p>
       ${sorts}
+      <button type="button" class="st-btn" data-new-fact>New fact</button>
     </div>
     <div class="st-sections"></div>
     <ol></ol>`;
@@ -491,7 +492,7 @@ async function choosePosting(id) {
 }
 
 async function readPosting(text) {
-  const dialog = $(".st-dialog");
+  const dialog = $(".st-job");
   dialog.querySelector("[data-read]").disabled = true;
   dialog.querySelector(".st-dialog__status").textContent = "Claude is reading it…";
   const r = await ask("posting", { text, lenses: bank.lenses });
@@ -577,22 +578,81 @@ function controls() {
   $("[data-posting]").addEventListener("change", (e) => {
     if (e.target.value !== "new") return choosePosting(e.target.value);
     e.target.value = posting?.id || "";
-    const dialog = $(".st-dialog");
+    const dialog = $(".st-job");
     dialog.querySelector("textarea").value = "";
     dialog.querySelector("[data-read]").disabled = false;
     dialog.querySelector(".st-dialog__status").textContent = "";
     dialog.showModal();
   });
   $("[data-read]").addEventListener("click", () => {
-    const text = $(".st-dialog textarea").value.trim();
+    const text = $(".st-job textarea").value.trim();
     if (text.length > 80) readPosting(text);
   });
-  $("[data-cancel]").addEventListener("click", () => $(".st-dialog").close());
+  $("[data-cancel]").addEventListener("click", () => $(".st-job").close());
   $("[data-tag]").addEventListener("click", tagBank);
   $("[data-sent]").addEventListener("click", () => {
     if (confirm(`Record this page as sent to ${posting.company}?`)) markSent();
   });
   $("[data-print]").addEventListener("click", () => window.print());
+  newFactControls();
+}
+
+// ── New facts, typed in (no old résumé needed) ──────────────
+function openNewFact() {
+  const dialog = $(".st-newfact");
+  const sel = dialog.querySelector("[data-nf-entry]");
+  sel.innerHTML =
+    SECTIONS.map(([key, title]) => {
+      const list = bank.entries.filter((e) => e.section === key);
+      return list.length ? `<optgroup label="${title}">${list.map((e) => `<option value="${e.id}">${esc(e.org)} · ${esc(e.role)}</option>`).join("")}</optgroup>` : "";
+    }).join("") + `<option value="new">New job, project, or certification…</option>`;
+  for (const el of dialog.querySelectorAll("input, textarea")) el.value = "";
+  dialog.querySelector("[data-nf-new]").hidden = true;
+  dialog.querySelector(".st-dialog__status").textContent = "";
+  dialog.showModal();
+}
+
+async function addNewFact() {
+  const dialog = $(".st-newfact");
+  const val = (sel) => dialog.querySelector(sel).value.trim();
+  const status = (msg) => (dialog.querySelector(".st-dialog__status").textContent = msg);
+  const text = val("[data-nf-text]").replace(/\s+/g, " ");
+  let entry;
+  if (val("[data-nf-entry]") === "new") {
+    const section = val("[data-nf-section]");
+    if (!val("[data-nf-org]")) return status("Give it a name.");
+    if (!text && section !== "certifications") return status("Write the bullet. Only a certification can go without one.");
+    entry = { id: slug(val("[data-nf-org]"), new Set(bank.entries.map((e) => e.id))), section, org: val("[data-nf-org]"), role: val("[data-nf-role]"), when: val("[data-nf-when]") };
+    if (val("[data-nf-where]")) entry.where = val("[data-nf-where]");
+    Object.assign(entry, { max: 2, bullets: [] });
+    bank.entries.push(entry);
+  } else {
+    if (!text) return status("Write the bullet.");
+    entry = bank.entries.find((e) => e.id === val("[data-nf-entry]"));
+  }
+  if (text) {
+    const id = slug(text, new Set(entry.bullets.map((b) => b.id)));
+    const blank = Object.fromEntries(bank.lenses.map((l) => [l.id, 0]));
+    entry.bullets.push({ id, text, score: blank, tags: [], wordings: [{ text, source: "studio" }], draft: true });
+    // put it on the page I'm working on, whatever its (not yet scored) rank
+    const p = picks();
+    p.pin.push(`${entry.id}-${id}`);
+    if (posting) postingDirty = true;
+  }
+  dialog.close();
+  setDirty(true);
+  await save();
+  refreshTagButton();
+  draw();
+}
+
+function newFactControls() {
+  const dialog = $(".st-newfact");
+  dialog.querySelector("[data-nf-entry]").addEventListener("change", (e) => (dialog.querySelector("[data-nf-new]").hidden = e.target.value !== "new"));
+  dialog.querySelector("[data-nf-add]").addEventListener("click", addNewFact);
+  dialog.querySelector("[data-nf-cancel]").addEventListener("click", () => dialog.close());
+  // the bench is redrawn often, so its New fact button is handled here
+  $(".st-bench").addEventListener("click", (e) => e.target.closest("[data-new-fact]") && openNewFact());
 }
 
 // ── Page or review ──────────────────────────────────────────
