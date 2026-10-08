@@ -7,8 +7,11 @@ export const SECTIONS = [
   ["experience", "Experience"],
   ["projects", "Projects"],
   ["education", "Education"],
+  ["certifications", "Certifications"],
   ["volunteer", "Volunteering"],
 ];
+// sections a one-page résumé always shows, whatever the focus or job, unless switched off
+const ALWAYS = ["education", "certifications"];
 
 /**
  * Choose and order lines for the current settings. A bullet is one fact
@@ -19,34 +22,63 @@ export const SECTIONS = [
  * The studio can also pass scoreOf(bullet) to rank against a job
  * description instead of a focus, and textOf(bullet, entry) to pick the
  * wording that suits it, and lines to fit fewer bullets when its wordings
- * run long.
+ * run long. pin and drop (Sets of "entry-bullet" keys) are the studio's
+ * hand picks: a pinned bullet is always on the page, past its entry's
+ * limit and never trimmed, and a dropped one never is. sections
+ * ({ projects: "on", volunteer: "off" }) overrides which sections a
+ * one-page résumé shows; a section left out follows the usual rules.
  */
-export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES }) {
+export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES, pin = new Set(), drop = new Set(), sections = {} }) {
   const score = scoreOf || ((b) => b.score[lens]);
-  let entries = bank.entries.filter((e) => !(e.optional === "healthcare" && !healthcare)).map((e) => {
-    const ranked = e.bullets.filter((b) => drafts || !b.draft).sort((a, b) => score(b) - score(a));
-    const chosen = full ? ranked : ranked.slice(0, e.max);
-    return { ...e, top: ranked.length ? score(ranked[0]) : 0, bullets: textOf ? chosen.map((b) => ({ ...b, text: textOf(b, e) })) : chosen };
-  }).filter((e) => e.bullets.length);
+  const pinned = (e, b) => pin.has(`${e.id}-${b.id}`);
+  const off = (e) => !full && sections[e.section] === "off";
+  let entries = bank.entries.filter((e) => !(e.optional === "healthcare" && !healthcare) && !off(e)).map((e) => {
+    const ranked = e.bullets.filter((b) => (drafts || !b.draft) && !drop.has(`${e.id}-${b.id}`)).sort((a, b) => score(b) - score(a));
+    const chosen = full ? ranked : ranked.filter((b, i) => i < e.max || pinned(e, b));
+    return {
+      ...e,
+      top: ranked.length ? score(ranked[0]) : 0,
+      pinned: chosen.some((b) => pinned(e, b)),
+      had: e.bullets.length,
+      bullets: textOf ? chosen.map((b) => ({ ...b, text: textOf(b, e) })) : chosen,
+    };
+  // an entry left with nothing to say goes, but one that never had bullets
+  // (a certification: just its name, issuer, and date) stays
+  }).filter((e) => e.bullets.length || !e.had);
   // On one page, an entry earns its place only if it speaks to this focus
   // or job: a project or volunteer role needs a strong line, other work a
-  // fair one. Education always stays, and so does an optional role I've
-  // switched on.
-  if (!full) entries = entries.filter((e) => e.section === "education" || e.optional || e.top >= (e.section === "experience" ? 3 : 6));
+  // fair one. Education and certifications always stay, and so does an
+  // optional role I've switched on. A section I've switched on brings its
+  // entries that are strong for the focus (a 6 or better), and always its
+  // best one. An entry that's only here because I pinned a line from it
+  // shows just the pinned lines.
+  const strength = (e) => Math.max(0, ...e.bullets.map((b) => b.score[lens] || 0));
+  const best = new Map();
+  for (const e of entries) if (!best.has(e.section) || strength(e) > strength(best.get(e.section))) best.set(e.section, e);
+  const switchedOn = (e) => sections[e.section] === "on" && (strength(e) >= 6 || best.get(e.section) === e);
+  if (!full)
+    entries = entries
+      .map((e) => {
+        if (ALWAYS.includes(e.section) || switchedOn(e) || e.optional || e.top >= (e.section === "experience" ? 3 : 6)) return e;
+        return e.pinned ? { ...e, bullets: e.bullets.filter((b) => pinned(e, b)) } : null;
+      })
+      .filter(Boolean);
 
   if (!full) {
     // Trim the weakest lines across the page until it fits, keeping at
-    // least one line per entry.
-    const lines = () => entries.reduce((n, e) => n + e.bullets.length, 0);
+    // least one line per entry and every pinned line. Pinned lines are
+    // extra: they don't count toward the budget, so adding one fills space
+    // instead of bumping another line.
+    const lines = () => entries.reduce((n, e) => n + e.bullets.filter((b) => !pinned(e, b)).length, 0);
     while (lines() > budget) {
       let worst = null;
       for (const e of entries) {
         if (e.bullets.length <= 1) continue;
-        const last = e.bullets[e.bullets.length - 1];
-        if (!worst || score(last) < score(worst.b)) worst = { e, b: last };
+        const last = e.bullets.findLast((b) => !pinned(e, b));
+        if (last && (!worst || score(last) < score(worst.b))) worst = { e, b: last };
       }
       if (!worst) break;
-      worst.e.bullets = worst.e.bullets.slice(0, -1);
+      worst.e.bullets = worst.e.bullets.filter((b) => b !== worst.b);
     }
   }
   // projects in order of how well they fit
@@ -74,7 +106,7 @@ export function renderPaper(el, bank, model) {
         <p class="r-when">${esc(e.when)}</p>
       </div>
       <p class="r-role">${esc(e.role)}</p>
-      <ul>${e.bullets.map((b) => `<li data-id="${e.id}-${b.id}"${b.draft ? ' class="is-draft"' : ""} style="view-transition-name: b-${e.id}-${b.id}">${esc(b.text)}</li>`).join("")}</ul>
+      ${e.bullets.length ? `<ul>${e.bullets.map((b) => `<li data-id="${e.id}-${b.id}"${b.draft ? ' class="is-draft"' : ""} style="view-transition-name: b-${e.id}-${b.id}">${esc(b.text)}</li>`).join("")}</ul>` : ""}
     </div>`;
   el.innerHTML = `
     <header class="r-head">

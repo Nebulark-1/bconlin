@@ -1,4 +1,4 @@
-import { compose, renderPaper } from "../resume/paper.js";
+import { compose, renderPaper, SECTIONS } from "../resume/paper.js";
 import { measure, grade, lastLineRange } from "../resume/linefit.js";
 import { rankWordings, relevance, termsIn, hasTerm } from "../resume/wordings.js";
 import { mountReview } from "./review.js";
@@ -10,9 +10,10 @@ import { mountReview } from "./review.js";
 //                 facts that answer it rise, and each one shows its best
 //                 wording for that posting. Edits become new wordings, and
 //                 "I sent this" records what went out.
-// The gutter grades how well each bullet fills its lines, opens every
-// wording I've written for a bullet (ranked), and asks Claude for shorter
-// or longer ones that keep every fact.
+// The gutter colors each bullet by how well it fills its lines (the page
+// marks a short or spilling last line too), and opens every wording I've
+// written for a bullet, ranked. Under the page, the bench lists every
+// fact that didn't make it, so I can add one by hand to fill spare room.
 
 const $ = (sel) => document.querySelector(sel);
 const paper = $(".paper");
@@ -30,13 +31,13 @@ const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
 let bank = null;
 let version = null; // which save of the bank this window is working from
-const state = { lens: "best", full: false, healthcare: true };
+const state = { lens: "best", full: false, healthcare: true, benchBy: "match" };
+const focusPicks = { pin: [], drop: [], sections: {} }; // hand picks without a job (this session only)
 let postings = [];
 let posting = null; // the job description being drafted for, if any
 let dirty = false;
 let postingDirty = false;
 let openWordings = null; // the bullet whose wordings are showing
-const asks = new Map(); // data-id → { goal, id } while Claude is working, or { goal, variants } once it answers
 
 // ── The bank ────────────────────────────────────────────────
 function bulletOf(dataId) {
@@ -102,18 +103,55 @@ function fitOf(text) {
 // ── Which facts, which wordings ─────────────────────────────
 /** What wordings are judged on: the job's keywords, or the bank's vocabulary. */
 const terms = () => (posting ? posting.keywords : bank.vocabulary);
+const lensNow = () => (posting ? posting.lens : state.lens);
+
+/** How strongly a fact belongs on this page: the job's keywords first, or just the focus. */
+function scorer() {
+  if (!posting) return (b) => b.score[state.lens] || 0;
+  const lens = posting.lens;
+  const hits = new Map(allBullets().map(({ bullet }) => [bullet, relevance(bullet, posting).weight]));
+  const most = Math.max(1, ...hits.values());
+  // the posting's keywords lead, on a curve so a fact with half the best
+  // match still scores well; the focus breaks ties and fills gaps
+  return (b) => 7 * Math.sqrt(hits.get(b) / most) + 0.3 * (b.score[lens] || 0);
+}
+/** The wording a fact would show on this page. */
+const textFor = (b, e) => (posting ? posting.draft[`${e.id}-${b.id}`] || rankWordings(b, posting.keywords, fitOf)[0].text : b.text);
+
+/** Bullets and sections I've added or removed by hand: saved with the job, or kept for this session. */
+function picks() {
+  if (!posting) return focusPicks;
+  posting.pin ??= [];
+  posting.drop ??= [];
+  posting.sections ??= {};
+  return posting;
+}
+/** Switch a section on or off for this page, or back to auto (the usual rules). */
+function setSection(key, mode) {
+  const { sections } = picks();
+  if (mode === "auto") delete sections[key];
+  else sections[key] = mode;
+  if (posting) (postingDirty = true), refreshSave();
+  draw();
+}
+/** Put a fact on the page (on) or take it off, whatever the ranking says. */
+function pick(key, on) {
+  const p = picks();
+  p.pin = p.pin.filter((k) => k !== key);
+  p.drop = p.drop.filter((k) => k !== key);
+  (on ? p.pin : p.drop).push(key);
+  if (posting) (postingDirty = true), refreshSave();
+  openWordings = null;
+  draw();
+}
 
 function model(lines) {
-  const opts = { ...state, lines, drafts: state.full || !!posting };
+  const { pin, drop, sections } = picks();
+  const opts = { ...state, lines, drafts: state.full || !!posting, pin: new Set(pin), drop: new Set(drop), sections };
   if (posting) {
-    const lens = posting.lens;
-    const hits = new Map(allBullets().map(({ bullet }) => [bullet, relevance(bullet, posting).weight]));
-    const most = Math.max(1, ...hits.values());
-    // the posting's keywords lead, on a curve so a fact with half the best
-    // match still scores well; the focus breaks ties and fills gaps
-    opts.lens = lens;
-    opts.scoreOf = (b) => 7 * Math.sqrt(hits.get(b) / most) + 0.3 * (b.score[lens] || 0);
-    opts.textOf = (b, e) => posting.draft[`${e.id}-${b.id}`] || rankWordings(b, posting.keywords, fitOf)[0].text;
+    opts.lens = posting.lens;
+    opts.scoreOf = scorer();
+    opts.textOf = textFor;
   }
   const m = compose(bank, opts);
   if (posting?.summary) m.summary = posting.summary;
@@ -188,10 +226,91 @@ function regrade() {
     const pageEnd = paper.getBoundingClientRect().top + 11 * 96;
     const last = paper.lastElementChild?.getBoundingClientRect().bottom ?? 0;
     sheet.classList.toggle("is-over", last > pageEnd - 0.5 * 96);
+    drawBench(pageEnd - 0.5 * 96 - last);
   }, 16);
 }
 
-const LABEL = { full: "fills its line", short: "room on the last line", spill: "spills" };
+// ── The bench: facts that aren't on the page ───────────────
+/** How many printed bullet lines fit in this much space (px), less one gap between bullets. */
+function linesIn(px) {
+  const li = paper.querySelector("li[data-id]");
+  if (!li) return 0;
+  const css = getComputedStyle(li);
+  const line = parseFloat(css.lineHeight) || 18;
+  const gap = (parseFloat(css.marginTop) || 0) + (parseFloat(css.marginBottom) || 0);
+  return Math.max(0, Math.floor((px - gap) / line));
+}
+
+function drawBench(room) {
+  const box = $(".st-bench");
+  box.hidden = state.full; // the whole bank is already showing
+  if (state.full) return;
+  const free = linesIn(room);
+  const onPage = new Set([...paper.querySelectorAll("li[data-id]")].map((li) => li.dataset.id));
+  const { drop, sections } = picks();
+  const match = scorer();
+  const lens = lensNow();
+  const strength = (b) => b.score[lens] || 0;
+  const byMatch = posting && state.benchBy === "match";
+  const list = allBullets()
+    .filter(({ entry, bullet, key }) => !onPage.has(key) && (posting || !bullet.draft) && !(entry.optional === "healthcare" && !state.healthcare) && sections[entry.section] !== "off")
+    .map((x) => {
+      const text = textFor(x.bullet, x.entry);
+      return { ...x, text, fit: fitOf(text), found: posting ? termsIn(text, posting.keywords).map((k) => k.term) : [] };
+    })
+    .sort((a, b) => (byMatch ? match(b.bullet) - match(a.bullet) : 0) || strength(b.bullet) - strength(a.bullet) || match(b.bullet) - match(a.bullet));
+
+  const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+  const sorts = posting
+    ? `<div class="st-seg">${[["match", "Job match"], ["strength", "Strength"]]
+        .map(([k, label]) => `<button type="button" data-bench-by="${k}" aria-pressed="${state.benchBy === k}">${label}</button>`)
+        .join("")}</div>`
+    : "";
+  box.innerHTML = `
+    <div class="st-bench__head">
+      <h2>Bench <span>${plural(list.length, "fact")} not on the page</span></h2>
+      <p class="${free ? "has-room" : ""}">${free ? `about ${plural(free, "line")} free` : "the page is full"}</p>
+      ${sorts}
+    </div>
+    <div class="st-sections"></div>
+    <ol></ol>`;
+  box.querySelectorAll("[data-bench-by]").forEach((b) => b.addEventListener("click", () => ((state.benchBy = b.dataset.benchBy), regrade())));
+
+  // sections: auto follows the usual rules (and says what they decided); on or off overrides them
+  const shown = new Set([...paper.querySelectorAll(".r-section h2")].map((h) => h.textContent));
+  const row = box.querySelector(".st-sections");
+  for (const [key, title] of SECTIONS.filter(([key]) => bank.entries.some((e) => e.section === key))) {
+    const mode = sections[key] || "auto";
+    const group = document.createElement("div");
+    group.className = `st-section${shown.has(title) ? " is-shown" : ""}`;
+    group.innerHTML = `<span>${title}${mode === "auto" ? `<i>${shown.has(title) ? "showing" : "hidden"}</i>` : ""}</span>`;
+    const seg = document.createElement("div");
+    seg.className = "st-seg";
+    for (const m of ["auto", "on", "off"]) {
+      const b = button(m[0].toUpperCase() + m.slice(1), () => setSection(key, m));
+      b.setAttribute("aria-pressed", String(m === mode));
+      seg.append(b);
+    }
+    group.append(seg);
+    row.append(group);
+  }
+  const ol = box.querySelector("ol");
+  for (const x of list) {
+    const fits = x.fit.lines <= free;
+    const li = document.createElement("li");
+    li.className = `is-${x.fit.grade}${fits ? " fits" : ""}`;
+    const meta = [
+      `${plural(x.fit.lines, "line")}${fits ? " · fits" : ""}`,
+      `${lens} ${strength(x.bullet)}`,
+      posting ? x.found.join(", ") || "no keywords" : "",
+      drop.includes(x.key) ? "removed" : "",
+      x.bullet.draft ? "draft" : "",
+    ].filter(Boolean);
+    li.innerHTML = `<p class="st-offers__grade">${esc(meta.join(" · "))}</p><p class="st-bench__text">${esc(x.text)}</p><p class="st-bench__where">${esc(x.entry.org)} · ${esc(x.entry.role)}</p>`;
+    li.prepend(button("Add", () => pick(x.key, true), "st-bench__add"));
+    ol.append(li);
+  }
+}
 
 function button(label, onClick, cls = "") {
   const b = document.createElement("button");
@@ -202,38 +321,27 @@ function button(label, onClick, cls = "") {
   return b;
 }
 
-/** The gutter note beside one bullet: its grade, what to do, its wordings, and Claude's offers. */
+/** The gutter note beside one bullet: a bar colored by its line fit, its keywords, and its wordings. */
 function chip(el, g, y) {
   const key = keyOf(el);
   const box = document.createElement("div");
   box.className = `st-chip is-${g.grade}`;
   box.style.top = `${y}px`;
-  const fillBar = `<span class="st-chip__bar"><b style="width:${Math.round(g.fill * 100)}%"></b></span>`;
-  let advice = "";
-  if (g.grade === "spill") advice = `cut ${g.cut} or add ${g.add}`;
-  else if (g.grade === "short") advice = `add ${g.add} or cut ${g.cut}`;
-  box.innerHTML = `
-    <p class="st-chip__head">${fillBar}<span>${g.lines} line${g.lines === 1 ? "" : "s"} · ${LABEL[g.grade]}</span></p>
-    ${advice ? `<p class="st-chip__advice">${advice}</p>` : ""}`;
+  box.style.minHeight = `${el.getBoundingClientRect().height - 4}px`; // the bar runs the bullet's height, with a gap before the next
   if (key === "summary") return box;
 
   const { bullet } = bulletOf(key);
-  if (posting) {
-    const found = termsIn(el.textContent, posting.keywords).map((k) => k.term);
-    if (found.length) box.insertAdjacentHTML("beforeend", `<p class="st-chip__terms">${found.map(esc).join(" · ")}</p>`);
-  }
-
+  // one row, so a chip is never taller than a one-line bullet: buttons, then the job's keywords it hits
   const row = document.createElement("p");
   row.className = "st-chip__ask";
   const n = bullet.wordings.length;
   row.append(button(`${n} wording${n === 1 ? "" : "s"}`, () => ((openWordings = openWordings === key ? null : key), regrade()), openWordings === key ? "is-open" : ""));
-  const ask = asks.get(key);
-  if (ask?.id) row.insertAdjacentHTML("beforeend", `<span class="st-wait">asking Claude for a ${ask.goal === "cut" ? "shorter" : "longer"} wording…</span>`);
-  else if (g.grade !== "full") for (const goal of ["cut", "add"]) row.append(button(goal === "cut" ? "Shorter" : "Longer", () => askFit(el, g, goal)));
+  row.append(button(picks().pin.includes(key) ? "Remove (added)" : "Remove", () => pick(key, false), "st-chip__remove"));
+  const found = posting ? termsIn(el.textContent, posting.keywords).map((k) => k.term).join(" · ") : "";
+  if (found) row.insertAdjacentHTML("beforeend", `<span class="st-chip__terms" title="${esc(found)}">${esc(found)}</span>`);
   box.append(row);
 
   if (openWordings === key) box.append(wordingList(el, bullet));
-  if (ask?.variants) box.append(offerList(el, ask.variants));
   return box;
 }
 
@@ -317,42 +425,6 @@ async function ask(task, input) {
       done(p.result);
     }, 2500);
   });
-}
-
-async function askFit(el, g, goal) {
-  const key = keyOf(el);
-  const { entry, bullet } = bulletOf(key);
-  const text = el.textContent.replace(/\s+/g, " ").trim();
-  const len = text.length;
-  const [min, max] = goal === "cut" ? [len - g.cut - 22, len - g.cut - 2] : [len + g.add - 18, len + g.add - 2];
-  const input = { text, goal, min, max, role: `${entry.role}, ${entry.org}`, siblings: entry.bullets.filter((b) => b !== bullet).map((b) => b.text) };
-  // with a job open, the wording has to keep the job's keywords it already has
-  if (posting) input.keep = termsIn(text, posting.keywords).map((k) => k.term);
-  asks.set(key, { goal, id: true });
-  regrade();
-  asks.set(key, { goal, variants: await ask("fit", input) });
-  regrade();
-}
-
-/** Claude's wordings, each measured on the real page before you pick one. */
-function offerList(el, variants) {
-  const list = document.createElement("ol");
-  list.className = "st-offers";
-  for (const text of variants) {
-    const g = fitOf(text);
-    const li = document.createElement("li");
-    li.className = `is-${g.grade}`;
-    const pick = button("", () => {
-      asks.delete(keyOf(el));
-      use(el, text, "claude");
-    });
-    pick.innerHTML = `<span class="st-offers__grade">${g.lines} · ${Math.round(g.fill * 100)}%</span>`;
-    pick.append(text);
-    li.append(pick);
-    list.append(li);
-  }
-  list.append(button("None of these", () => (asks.delete(keyOf(el)), regrade()), "st-offers__none"));
-  return list;
 }
 
 async function usage() {
@@ -468,7 +540,6 @@ paper.addEventListener("input", (e) => {
     posting.draft[el.dataset.id] = text;
     postingDirty = true;
   } else bulletOf(el.dataset.id).bullet.text = text;
-  asks.delete(keyOf(el));
   setDirty(true);
   regrade();
 });
