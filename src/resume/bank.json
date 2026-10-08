@@ -117,6 +117,10 @@
             {
               "text": "Exposed per-attorney and per-matter margins by consolidating decades of firm records and tens of millions in case income into a relational warehouse: cleaned and normalized Excel reports into SQL with VBA, transformed them in Python and SQL, and exported results back to Excel for staff. Reverse-engineered leadership's calculations until my models reconciled to their exact figures; results drove compensation, staffing, and the shift to flat-rate billing.",
               "source": "résumé"
+            },
+            {
+              "text": "Led the design and implementation of a full-stack financial analytics platform leveraging SQL, Python, and a web-based UI to ingest and normalize data, generating real-time profitability and revenue insights across the firm",
+              "source": "studio"
             }
           ]
         },
@@ -286,6 +290,10 @@
             {
               "text": "Translated complex procedures into clear instructional materials, guides, and standardized processes to improve adoption and consistency.",
               "source": "résumé"
+            },
+            {
+              "text": "Prepared and delivered live training programs for staff on systems, workflows, and compliance processes.",
+              "source": "studio"
             }
           ]
         },
@@ -661,6 +669,10 @@
             {
               "text": "Built and deployed a cloud-hosted SaaS platform integrating third-party APIs (Strava, Claude) with relational databases served to users worldwide under sound concurrency controls; analyzes longitudinal physiological data to identify trends and generate actionable insights.",
               "source": "résumé"
+            },
+            {
+              "text": "Designed, built, and deployed a cloud-hosted SaaS platform that designs weekly training from notes and activities",
+              "source": "studio"
             }
           ]
         },
@@ -687,6 +699,10 @@
             },
             {
               "text": "Integrated webhooks, the Claude API, and Stripe; coded with Node, Express, and SQLite; deployed with Docker",
+              "source": "studio"
+            },
+            {
+              "text": "Integrated webhooks, the Claude API, and Stripe; built with Node, Express, and SQLite; deployed with Docker",
               "source": "studio"
             }
           ]
@@ -1160,6 +1176,71 @@
             },
             {
               "text": "Ace Hardware (Customer Service): Developed functional knowledge of many forms of maintenance and craft",
+              "source": "studio"
+            }
+          ],
+          "draft": true
+        }
+      ]
+    },
+    {
+      "id": "everything",
+      "section": "projects",
+      "org": "Everything",
+      "role": "Node, TypeScript, React, PostgreSQL",
+      "when": "2025-Present",
+      "max": 2,
+      "bullets": [
+        {
+          "id": "designedbuilt",
+          "text": "Designed and built an AI-powered learning platform that organizes human knowledge into a branching tree of topics, each with a generated lesson, flashcards, and comprehension checks, reviewed on a spaced repetition schedule built for long-term retention",
+          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
+          "tags": [],
+          "wordings": [
+            {
+              "text": "Designed and built an AI-powered learning platform that organizes human knowledge into a branching tree of topics, each with a generated lesson, flashcards, and comprehension checks, reviewed on a spaced repetition schedule built for long-term retention",
+              "source": "studio"
+            },
+            {
+              "text": "Designed and built an AI-powered learning platform that organizes knowledge into a branching tree, of generated lessons, flashcards, and comprehension checks, reviewed on a spaced repetition schedule for long-term retention",
+              "source": "studio"
+            },
+            {
+              "text": "Designed and built a learn-it-all AI-powered platform that organizes knowledge into a branching tree of generated lessons, flashcards, and comprehension checks, reviewed on a spaced repetition schedule for long-term retention",
+              "source": "studio"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "modeledtree",
+          "text": "Modeled the tree as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds; about 5,300 lines of Node, TypeScript, React, and SQL",
+          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
+          "tags": [],
+          "wordings": [
+            {
+              "text": "Modeled the tree as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds; about 5,300 lines of Node, TypeScript, React, and SQL",
+              "source": "studio"
+            },
+            {
+              "text": "Modeled as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds",
+              "source": "studio"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "builtqueue",
+          "text": "Built an AI job queue that writes, validates, and web-fact-checks each topic, correcting 5 of 75 checked claims before learners saw them; benchmarked its duplicate detector at about 90% accuracy with zero false merges across 732 judgments",
+          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
+          "tags": [],
+          "wordings": [
+            {
+              "text": "Built an AI job queue that writes, validates, and web-fact-checks each topic, correcting 5 of 75 checked claims before learners saw them; benchmarked its duplicate detector at about 90% accuracy with zero false merges across 732 judgments",
+              "source": "studio"
+            },
+            {
+              "text": "Built an AI job queue that writes, validates, and web-fact-checks each topic; benchmarked its duplicate detector at about 90% accuracy with zero false merges across 732 judgments",
               "source": "studio"
             }
           ],

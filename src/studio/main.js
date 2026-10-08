@@ -32,7 +32,7 @@ const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
 let bank = null;
 let version = null; // which save of the bank this window is working from
 const state = { lens: "best", full: false, healthcare: true, benchBy: "match" };
-const focusPicks = { pin: [], drop: [], sections: {} }; // hand picks without a job (this session only)
+const focusPicks = { pin: [], drop: [], sections: {}, skills: { pin: [], drop: [], spoken: true } }; // hand picks without a job (this session only)
 let postings = [];
 let posting = null; // the job description being drafted for, if any
 let dirty = false;
@@ -124,7 +124,25 @@ function picks() {
   posting.pin ??= [];
   posting.drop ??= [];
   posting.sections ??= {};
+  posting.skills ??= { pin: [], drop: [], spoken: true };
   return posting;
+}
+/** Show a skill on this page (on) or leave it off, whatever its score says. */
+function pickSkill(name, on) {
+  const s = picks().skills;
+  s.pin = s.pin.filter((n) => n !== name);
+  s.drop = s.drop.filter((n) => n !== name);
+  (on ? s.pin : s.drop).push(name);
+  if (posting) (postingDirty = true), refreshSave();
+  draw();
+}
+/** A skill the bank doesn't have yet: it joins the row (unscored) and goes on this page. */
+function addSkill(row, name) {
+  const r = bank.skills.find((x) => x.row === row);
+  if (!name || bank.skills.some((x) => x.items.some(([n]) => n.toLowerCase() === name.toLowerCase()))) return;
+  r.items.push([name, Object.fromEntries(bank.lenses.map((l) => [l.id, 0]))]);
+  setDirty(true);
+  pickSkill(name, true);
 }
 /** Switch a section on or off for this page, or back to auto (the usual rules). */
 function setSection(key, mode) {
@@ -146,8 +164,8 @@ function pick(key, on) {
 }
 
 function model(lines) {
-  const { pin, drop, sections } = picks();
-  const opts = { ...state, lines, drafts: state.full || !!posting, pin: new Set(pin), drop: new Set(drop), sections };
+  const { pin, drop, sections, skills } = picks();
+  const opts = { ...state, lines, drafts: state.full || !!posting, pin: new Set(pin), drop: new Set(drop), sections, skills };
   if (posting) {
     opts.lens = posting.lens;
     opts.scoreOf = scorer();
@@ -162,11 +180,12 @@ function model(lines) {
 /** Is the page longer than one sheet (with its bottom margin)? */
 const overflows = () => (paper.lastElementChild?.getBoundingClientRect().bottom ?? 0) > paper.getBoundingClientRect().top + 10.5 * 96;
 
+let shownModel = null; // what draw() last put on the page
 function draw() {
   // one page means one page: with long wordings, fit fewer bullets
   let lines = 16;
-  renderPaper(paper, bank, model(lines));
-  while (!state.full && overflows() && lines > 8) renderPaper(paper, bank, model(--lines));
+  renderPaper(paper, bank, (shownModel = model(lines)));
+  while (!state.full && overflows() && lines > 8) renderPaper(paper, bank, (shownModel = model(--lines)));
   for (const el of paper.querySelectorAll("li[data-id], .r-summary")) {
     el.contentEditable = "plaintext-only";
     el.spellcheck = true;
@@ -230,6 +249,46 @@ function regrade() {
   }, 16);
 }
 
+// ── Skills: every skill in each row, on the page or not ────
+/** Click a skill to put it on this page or take it off; type one in to add it to the bank. */
+function drawSkills(box, lens) {
+  const { skills: picked } = picks();
+  const shown = new Map(shownModel.skills.map((r) => [r.row, new Set(r.items)]));
+  const pill = (label, on, onClick, title) => {
+    const b = button(label, onClick, `st-skill${on ? " is-on" : ""}`);
+    b.title = title;
+    return b;
+  };
+  for (const { row, items } of bank.skills) {
+    const line = document.createElement("div");
+    line.className = "st-skills__row";
+    line.innerHTML = `<b>${esc(row)}</b>`;
+    const on = shown.get(row) || new Set();
+    for (const [name, score] of [...items].sort((a, b) => (b[1][lens] || 0) - (a[1][lens] || 0))) {
+      const isOn = on.has(name);
+      const why = picked.pin.includes(name) ? "added by hand" : picked.drop.includes(name) ? "removed by hand" : `${lens} ${score[lens] || 0}`;
+      line.append(pill(name, isOn, () => pickSkill(name, !isOn), `${isOn ? "On the page" : "Off the page"} (${why}). Click to ${isOn ? "remove" : "add"}.`));
+    }
+    const input = document.createElement("input");
+    input.className = "st-skills__add";
+    input.placeholder = "+ new skill";
+    input.addEventListener("keydown", (e) => e.key === "Enter" && addSkill(row, input.value.trim()));
+    line.append(input);
+    box.append(line);
+  }
+  const spoken = document.createElement("div");
+  spoken.className = "st-skills__row";
+  spoken.innerHTML = `<b>Spoken</b>`;
+  spoken.append(
+    pill(bank.spoken, picked.spoken !== false, () => {
+      picked.spoken = picked.spoken === false;
+      if (posting) (postingDirty = true), refreshSave();
+      draw();
+    }, "Click to show or leave off the Spoken row"),
+  );
+  box.append(spoken);
+}
+
 // ── The bench: facts that aren't on the page ───────────────
 /** How many printed bullet lines fit in this much space (px), less one gap between bullets. */
 function linesIn(px) {
@@ -274,6 +333,7 @@ function drawBench(room) {
       <button type="button" class="st-btn" data-new-fact>New fact</button>
     </div>
     <div class="st-sections"></div>
+    <div class="st-skills"></div>
     <ol></ol>`;
   box.querySelectorAll("[data-bench-by]").forEach((b) => b.addEventListener("click", () => ((state.benchBy = b.dataset.benchBy), regrade())));
 
@@ -295,6 +355,7 @@ function drawBench(room) {
     group.append(seg);
     row.append(group);
   }
+  drawSkills(box.querySelector(".st-skills"), lens);
   const ol = box.querySelector("ol");
   for (const x of list) {
     const fits = x.fit.lines <= free;

@@ -27,8 +27,11 @@ const ALWAYS = ["education", "certifications"];
  * limit and never trimmed, and a dropped one never is. sections
  * ({ projects: "on", volunteer: "off" }) overrides which sections a
  * one-page résumé shows; a section left out follows the usual rules.
+ * skills ({ pin: [name], drop: [name], spoken: false }) does the same for
+ * the skills: a pinned skill is shown past its row's five, a dropped one
+ * never is, and spoken: false leaves off the Spoken row.
  */
-export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES, pin = new Set(), drop = new Set(), sections = {} }) {
+export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES, pin = new Set(), drop = new Set(), sections = {}, skills: skillPicks = {} }) {
   const score = scoreOf || ((b) => b.score[lens]);
   const pinned = (e, b) => pin.has(`${e.id}-${b.id}`);
   const off = (e) => !full && sections[e.section] === "off";
@@ -85,13 +88,21 @@ export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf,
   const projects = entries.filter((e) => e.section === "projects").sort((a, b) => b.top - a.top);
   entries = [...entries.filter((e) => e.section === "experience"), ...projects, ...entries.filter((e) => !["experience", "projects"].includes(e.section))];
 
-  const skills = bank.skills.map(({ row, items }) => ({
-    row,
-    items: [...items].sort((a, b) => b[1][lens] - a[1][lens]).slice(0, full ? items.length : 5).map(([name]) => name),
-  }));
+  const { pin: skillPin = [], drop: skillDrop = [], spoken = true } = skillPicks;
+  const skills = bank.skills
+    .map(({ row, items }) => ({
+      row,
+      // the row's five best, then my picks: a removed skill leaves a gap
+      // rather than letting the sixth in, so removing one shortens the row
+      items: [...items]
+        .sort((a, b) => (b[1][lens] || 0) - (a[1][lens] || 0))
+        .filter(([name], i) => (full || i < 5 || skillPin.includes(name)) && !skillDrop.includes(name))
+        .map(([name]) => name),
+    }))
+    .filter((r) => r.items.length);
   const shown = entries.reduce((n, e) => n + e.bullets.length, 0);
   const total = bank.entries.reduce((n, e) => n + e.bullets.filter((b) => drafts || !b.draft).length, 0);
-  return { summary: bank.summary[lens], entries, skills, shown, total };
+  return { summary: bank.summary[lens], entries, skills, spoken: spoken ? bank.spoken : "", shown, total };
 }
 
 const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
@@ -121,6 +132,6 @@ export function renderPaper(el, bank, model) {
     <section class="r-section" style="view-transition-name: s-skills">
       <h2>Skills</h2>
       ${model.skills.map((r) => `<p class="r-skill"><b>${r.row}:</b> <span data-skill="${r.row}">${esc(r.items.join(", "))}</span></p>`).join("")}
-      <p class="r-skill"><b>Spoken:</b> ${bank.spoken}</p>
+      ${model.spoken ? `<p class="r-skill"><b>Spoken:</b> ${esc(model.spoken)}</p>` : ""}
     </section>`;
 }
