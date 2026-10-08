@@ -214,12 +214,27 @@ export function uchScene(root, chapter, blueprint) {
 
   let phase = 0;
   let time = 0;
+  // where in a beat (0 → 1) the sound marks fall: R wave, end of T, pulse peak
+  const BEAT_MARKS = [
+    [0.4, "R"],
+    [0.72, "T"],
+    [0.83, "pulse"],
+  ];
   function sweep(dt, hr) {
     const pxPerSec = 130;
     const cols = Math.max(1, Math.round(pxPerSec * dt));
     for (let c = 0; c < cols; c++) {
       time += 1 / pxPerSec;
+      const before = phase;
       phase = advance(phase, 1 / pxPerSec, hr, time);
+      // tell anyone listening (the sound) when the trace passes a beat's
+      // landmarks: the R wave (first heart sound), the end of the T wave
+      // (second heart sound), and the pulse reaching the finger (the beep)
+      const wrapped = phase < before;
+      for (const [at, wave] of BEAT_MARKS) {
+        const crossed = wrapped ? at > before || at <= phase : before < at && at <= phase;
+        if (crossed) root.dispatchEvent(new CustomEvent("beat", { detail: { wave } }));
+      }
       for (const s of strips) {
         if (!s.w) continue;
         const y = s.h * (s.wave === ecg ? 0.62 : 0.75) - s.wave(phase) * s.h * (s.wave === ecg ? 0.5 : 0.55);

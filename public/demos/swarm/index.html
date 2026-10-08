@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SwarmSim</title>
+<meta name="description" content="A flocking simulation on the GPU. Flocks of birds chase invisible targets and scatter from hawks.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas id="view"></canvas>
+<canvas id="overlay"></canvas>
+
+<div id="hud"></div>
+
+<button id="panelToggle" class="fab" aria-controls="panel" aria-expanded="true" title="Show or hide controls (H)">Controls</button>
+
+<aside id="panel" aria-label="Simulation controls">
+  <header>
+    <h1>Swarm<span>Sim</span></h1>
+    <p class="lede">Each bird steers only by its neighbors. Flocks chase invisible targets
+      and scatter from hawks.</p>
+    <div id="gpu">Starting GPU…</div>
+  </header>
+
+  <div class="toolbar">
+    <label class="field">Preset
+      <select id="preset"></select>
+    </label>
+    <label class="field">Color
+      <select id="colorMode">
+        <option value="0">Speed</option>
+        <option value="1">Heading</option>
+        <option value="2">Mono</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="toolbar">
+    <button id="pause" title="Space">Pause</button>
+    <button id="reset" title="R">Respawn</button>
+    <button id="recenter" title="C">Recenter</button>
+  </div>
+
+  <div class="toggles">
+    <label><input type="checkbox" id="autoCam" checked> Auto camera</label>
+    <label><input type="checkbox" id="showField"> Show lures</label>
+    <label><input type="checkbox" id="follow"> Follow cursor</label>
+  </div>
+
+  <div id="controls"></div>
+
+  <details class="group">
+    <summary>Performance</summary>
+    <div class="perf">
+      <label class="field">Buffer capacity
+        <select id="capacity" title="Boid slots to allocate. Changing this respawns the swarm.">
+          <option value="524288">512k</option>
+          <option value="1048576">1M</option>
+          <option value="2097152">2M</option>
+          <option value="4194304">4M</option>
+        </select>
+      </label>
+    </div>
+  </details>
+
+  <footer id="help"></footer>
+</aside>
+
+<div id="boot">
+  <div class="spin"></div>
+  <p>Starting GPU…</p>
+</div>
+
+<script src="js/shaders.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/field.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

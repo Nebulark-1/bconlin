@@ -538,23 +538,28 @@ main {
 }
 
 .next__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(100%, 380px);
+  margin: 0 auto;
 }
 
 .next__btn {
-  padding: 11px 20px;
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
   color: var(--text);
   font-size: 0.92rem;
   font-weight: 500;
+  text-align: center;
   text-decoration: none;
   transition:
     border-color 0.2s,
-    background 0.2s;
+    background 0.2s,
+    transform 0.2s;
 }
 
 .next__btn:hover {
@@ -562,15 +567,60 @@ main {
 }
 
 .next__btn--primary {
+  padding: 16px 24px;
   border-color: var(--accent);
   background: var(--accent);
   color: #1a0d06;
+  font-size: 1.05rem;
   font-weight: 600;
+  box-shadow: 0 10px 40px -12px var(--accent);
 }
 
-.next__btn--ghost {
-  border-color: transparent;
+.next__btn--primary:hover {
+  transform: translateY(-2px);
+}
+
+/* the "or" between the two résumé options, a short rule on each side */
+.next__or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 60%;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--muted);
+}
+
+.next__or::before,
+.next__or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.next__reach {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 10px;
+}
+
+.next__link {
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.next__link:hover {
+  color: var(--text);
+  border-color: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {

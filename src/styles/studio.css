@@ -1,0 +1,921 @@
+/* ── Résumé studio ─────────────────────────────────────────
+   A desk with the page on it, drawn at exactly 8.5 inches so lines break
+   where they will in print, and a gutter of notes down its right side. */
+
+.studio {
+  --full: #4fd18b;
+  --short: #f2c14e;
+  --spill: #ff6b5b;
+  min-height: 100vh;
+  background:
+    radial-gradient(60% 40% at 50% 0%, rgba(255, 180, 140, 0.06), transparent 70%),
+    var(--bg);
+}
+
+/* ── The bar ── */
+.st-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(4, 4, 12, 0.88);
+  backdrop-filter: blur(10px);
+  font-size: 0.85rem;
+}
+
+.st-bar__name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.st-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.st-field select {
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: #0d0d1a;
+  color: var(--text);
+  font: inherit;
+}
+
+.st-seg {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.st-seg button {
+  padding: 6px 14px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.st-seg button[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+}
+
+.st-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.st-tally {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.st-tally i {
+  width: 8px;
+  height: 8px;
+  margin-left: 8px;
+  border-radius: 50%;
+}
+
+.st-tally .is-full { background: var(--full); }
+.st-tally .is-short { background: var(--short); }
+.st-tally .is-spill { background: var(--spill); }
+
+.st-usage {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.st-save {
+  padding: 7px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #1a0d06;
+  font: 600 0.85rem var(--font-body);
+  cursor: pointer;
+}
+
+.st-save:disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  cursor: default;
+}
+
+/* ── The desk ── */
+.st-desk {
+  margin-left: 0; /* the studio has no site rail to clear */
+  padding: 40px 24px 120px;
+  overflow-x: auto;
+}
+
+.st-sheet {
+  position: relative;
+  width: calc(8.5in + 300px);
+  margin: 0 auto;
+}
+
+/* exactly the printed page: same width, padding, and type as print */
+.studio .paper {
+  width: 8.5in;
+  min-height: 11in;
+  padding: 0.5in 0.55in;
+  font-size: 9.6pt;
+  border-radius: 2px;
+}
+
+.studio .paper [contenteditable] {
+  border-radius: 3px;
+  outline: none;
+  transition: background 0.15s;
+}
+
+.studio .paper [contenteditable]:hover {
+  background: rgba(180, 83, 42, 0.05);
+}
+
+.studio .paper [contenteditable]:focus {
+  background: rgba(180, 83, 42, 0.09);
+}
+
+::highlight(st-spill) {
+  background-color: rgba(255, 90, 70, 0.32);
+}
+
+::highlight(st-short) {
+  background-color: rgba(242, 193, 78, 0.28);
+}
+
+/* where page one ends */
+.st-pagebreak {
+  position: absolute;
+  top: 11in;
+  left: 0;
+  width: 8.5in;
+  border-top: 1px dashed rgba(255, 107, 91, 0.25);
+  pointer-events: none;
+}
+
+.st-pagebreak span {
+  position: absolute;
+  right: 6px;
+  top: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(255, 107, 91, 0.5);
+}
+
+.st-sheet.is-over .st-pagebreak {
+  border-top: 2px solid var(--spill);
+}
+
+/* ── The gutter ── */
+.st-gutter {
+  position: absolute;
+  top: 0;
+  left: calc(8.5in + 18px);
+  width: 282px;
+}
+
+.st-chip {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  padding-left: 12px;
+  border-left: 2px solid var(--c);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.st-chip.is-full { --c: rgba(79, 209, 139, 0.35); }
+.st-chip.is-short { --c: var(--short); }
+.st-chip.is-spill { --c: var(--spill); }
+
+.st-chip:has(.st-offers) {
+  z-index: 2;
+}
+
+.st-chip p {
+  margin: 0;
+}
+
+.st-chip__ask {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* short enough to sit beside a one-line bullet */
+.st-chip__ask button {
+  flex: none;
+  padding: 0 8px !important;
+  line-height: 1.25;
+}
+
+.st-chip__ask button,
+.st-offers__none {
+  padding: 2px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.st-chip__ask button:hover {
+  border-color: var(--accent);
+}
+
+/* waiting on Claude (the Review view's sort) */
+.st-wait {
+  color: var(--accent);
+  animation: st-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes st-pulse {
+  50% { opacity: 0.45; }
+}
+
+/* Claude's wordings */
+.st-offers {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: #0d0d1a;
+  list-style: none;
+  box-shadow: 0 20px 40px -20px #000;
+}
+
+.st-offers li button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-left: 2px solid var(--c);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font: 0.74rem/1.45 var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.st-offers li button:hover {
+  border-color: var(--accent);
+}
+
+.st-offers li.is-full { --c: var(--full); }
+.st-offers li.is-short { --c: var(--short); }
+.st-offers li.is-spill { --c: var(--spill); }
+
+.st-offers__grade {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--c);
+}
+
+.st-offers__none {
+  justify-self: start;
+  color: var(--muted);
+}
+
+.st-chip__ask .st-chip__remove {
+  color: var(--muted);
+}
+
+.st-chip__ask .st-chip__remove:hover {
+  border-color: var(--spill);
+  color: var(--spill);
+}
+
+/* ── The bench: facts that aren't on the page ── */
+.st-bench {
+  width: 8.5in;
+  /* lined up under the page, which sits at the left of the centered sheet */
+  margin: 28px 0 0 max(0px, (100% - 8.5in - 300px) / 2);
+}
+
+.st-bench[hidden] {
+  display: none;
+}
+
+.st-bench__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.st-bench__head h2 {
+  margin: 0;
+  font: 600 1rem var(--font-display);
+  color: var(--text);
+}
+
+.st-bench__head h2 span {
+  margin-left: 6px;
+  font: 400 0.78rem var(--font-body);
+  color: var(--muted);
+}
+
+.st-bench__head p {
+  margin: 0;
+  font: 0.75rem var(--font-mono);
+  color: var(--muted);
+}
+
+.st-bench__head p.has-room {
+  color: var(--full);
+}
+
+.st-bench__head .st-seg {
+  margin-left: auto;
+}
+
+/* which sections the page shows: auto, on, or off */
+.st-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-bottom: 14px;
+}
+
+.st-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.st-section.is-shown > span {
+  color: var(--text);
+}
+
+.st-section i {
+  margin-left: 6px;
+  font: normal 0.68rem var(--font-mono);
+  color: var(--muted);
+}
+
+.st-section .st-seg button {
+  padding: 3px 10px;
+  font-size: 0.72rem;
+}
+
+.st-bench ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.st-bench li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: start;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid var(--c);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.st-bench li.is-full { --c: var(--full); }
+.st-bench li.is-short { --c: var(--short); }
+.st-bench li.is-spill { --c: var(--spill); }
+
+/* doesn't fit in the room left: still addable, just quieter */
+.st-bench li:not(.fits) {
+  opacity: 0.6;
+}
+
+.st-bench li:not(.fits):hover {
+  opacity: 1;
+}
+
+.st-bench li > p {
+  grid-column: 2;
+  margin: 0;
+}
+
+.st-bench__add {
+  grid-row: span 3;
+  padding: 3px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: none;
+  color: var(--accent);
+  font: 600 0.74rem var(--font-body);
+  cursor: pointer;
+}
+
+.st-bench__add:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.st-bench__text {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.st-bench__where {
+  margin-top: 3px !important;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ── Page or review ── */
+.studio[data-view="review"] .st-page-only,
+.studio[data-view="page"] .st-review {
+  display: none;
+}
+
+/* a bullet from an old résumé that hasn't been scored yet */
+.studio .paper li.is-draft {
+  text-decoration: underline dotted rgba(180, 83, 42, 0.5);
+  text-underline-offset: 3px;
+}
+
+/* ── Review ── */
+.st-review {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 36px 24px 120px;
+}
+
+.rv-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.6rem;
+}
+
+.rv-head p,
+.rv-wait {
+  margin: 6px 0 24px;
+  color: var(--muted);
+}
+
+.rv-start {
+  padding: 60px 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+.rv-raw {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.rv-entry {
+  margin-top: 36px;
+}
+
+.rv-entry h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.15rem;
+}
+
+.rv-entry h3 small {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.rv-new {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(255, 180, 140, 0.15);
+  color: var(--accent);
+  font: 500 0.66rem var(--font-mono);
+  font-style: normal;
+}
+
+.rv-card {
+  margin: 10px 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.rv-card.is-new {
+  border-color: rgba(255, 180, 140, 0.3);
+}
+
+.rv-card.is-done {
+  padding: 8px 16px;
+  opacity: 0.45;
+}
+
+.rv-card p {
+  margin: 0;
+}
+
+.rv-from {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.rv-done {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rv-bank {
+  margin-top: 8px !important;
+  padding: 8px 10px;
+  border-left: 2px solid var(--full);
+  background: rgba(79, 209, 139, 0.06);
+}
+
+.rv-bank b {
+  display: block;
+  font: 500 0.66rem var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--full);
+}
+
+.rv-words {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rv-words li {
+  padding-left: 12px;
+  border-left: 2px solid rgba(255, 255, 255, 0.15);
+  color: var(--muted);
+}
+
+.rv-words button {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rv-words button:hover {
+  border-color: var(--accent);
+  background: rgba(255, 180, 140, 0.06);
+}
+
+.rv-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.rv-actions button {
+  padding: 5px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.rv-actions button:hover {
+  border-color: var(--accent);
+}
+
+.rv-actions .is-quiet {
+  margin-left: auto;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.rv-other {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.rv-other summary {
+  cursor: pointer;
+}
+
+.rv-why {
+  margin-top: 4px !important;
+  font-size: 0.74rem;
+  color: var(--accent);
+}
+
+.rv-decided {
+  margin-top: 48px;
+}
+
+.rv-decided > summary {
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ── Jobs ── */
+.st-btn {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: 500 0.82rem var(--font-body);
+  cursor: pointer;
+}
+
+.st-btn:hover {
+  border-color: var(--accent);
+}
+
+.st-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* the job's keywords: on the page, in the bank only, or missing */
+.st-keys {
+  max-width: calc(8.5in + 300px);
+  margin: 24px auto 0;
+  padding: 0 24px;
+}
+
+.st-keys[hidden] {
+  display: none;
+}
+
+.st-keys p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.st-keys p b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.st-keys div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.st-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid var(--c);
+  border-radius: 999px;
+  color: var(--c);
+  font: 500 0.72rem var(--font-mono);
+}
+
+.st-key i {
+  font-style: normal;
+  font-size: 0.6rem;
+  letter-spacing: -0.1em;
+  opacity: 0.7;
+}
+
+.st-key.is-on { --c: var(--full); }
+.st-key.is-bank { --c: var(--short); }
+.st-key.is-none { --c: var(--spill); }
+
+.st-chip__terms {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--full);
+}
+
+.st-chip__ask .is-open {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* every wording of a bullet */
+.st-wordings__head {
+  margin: 0 0 2px;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.st-wordings__head em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.st-wordings li {
+  position: relative;
+}
+
+.st-wordings li.is-current button:first-child {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.st-wordings li.is-covered {
+  opacity: 0.5;
+}
+
+.st-wordings__drop {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: none !important;
+  color: var(--muted) !important;
+  font-size: 0.9rem !important;
+  text-align: center !important;
+  opacity: 0;
+}
+
+.st-wordings li:hover .st-wordings__drop {
+  opacity: 1;
+}
+
+.st-wordings__drop:hover {
+  color: var(--spill) !important;
+}
+
+/* the hidden copy of the page that measures any wording */
+.st-measure {
+  position: absolute;
+  top: 0;
+  left: -10000px;
+  min-height: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* pasting a job description */
+.st-dialog {
+  width: min(720px, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: #0d0d1a;
+  color: var(--text);
+}
+
+.st-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.st-dialog h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.st-dialog p {
+  margin: 6px 0 14px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.st-dialog textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: #06060f;
+  color: var(--text);
+  font: 0.85rem/1.5 var(--font-body);
+  resize: vertical;
+}
+
+/* the New fact form */
+.st-nf {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.st-nf select,
+.st-nf input {
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: #06060f;
+  color: var(--text);
+  font: 0.85rem var(--font-body);
+}
+
+.st-nf-new {
+  margin: 0 0 10px;
+  padding: 12px 12px 2px;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+}
+
+.st-nf-new[hidden] {
+  display: none;
+}
+
+.st-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* printing from the studio: only the page */
+@media print {
+  .st-bar,
+  .st-keys,
+  .st-gutter,
+  .st-bench,
+  .st-pagebreak,
+  .st-review,
+  .st-measure {
+    display: none !important;
+  }
+  .studio {
+    background: #fff;
+  }
+  .st-desk {
+    padding: 0;
+    overflow: visible;
+  }
+  .st-sheet {
+    width: auto;
+  }
+  .studio .paper {
+    min-height: 0;
+    box-shadow: none;
+  }
+  .studio .paper [contenteditable] {
+    background: none !important;
+  }
+  .studio .paper li.is-draft {
+    text-decoration: none;
+  }
+}

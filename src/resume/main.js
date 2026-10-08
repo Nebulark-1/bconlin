@@ -1,8 +1,12 @@
-import { PROFILE, LENSES, SUMMARY, ENTRIES, SKILLS, LANGUAGES_SPOKEN } from "./bank.js";
+import bank, { LENSES } from "./bank.js";
+import { compose, renderPaper } from "./paper.js";
 import { mountFab } from "../site/fab.js";
 import { showHireDraft } from "./hire.js";
+import { measure, grade } from "./linefit.js";
+import { mountBehind } from "../inspect/behind.js";
+import { resumeTopics } from "../inspect/topics-resume.js";
 
-mountFab({ current: "resume" });
+const fab = mountFab({ current: "resume", blueprint: true });
 // ben.hire() from the console comes here with ?hire
 if (new URLSearchParams(location.search).has("hire")) showHireDraft();
 
@@ -11,13 +15,6 @@ if (new URLSearchParams(location.search).has("hire")) showHireDraft();
 // the swap plays out on the page. It only chooses and orders lines; every
 // line was written by me.
 
-const ONE_PAGE_LINES = 16; // bullets that fit on one page with the rest
-const SECTIONS = [
-  ["experience", "Experience"],
-  ["projects", "Projects"],
-  ["education", "Education"],
-];
-
 const params = new URLSearchParams(location.search);
 const state = {
   lens: LENSES.some((l) => l.id === params.get("focus")) ? params.get("focus") : "best",
@@ -25,74 +22,9 @@ const state = {
   healthcare: params.get("healthcare") !== "off",
 };
 
-/** Choose and order lines for the current settings. */
-export function compose({ lens, full, healthcare }) {
-  const score = (b) => b.score[lens];
-  let entries = ENTRIES.filter((e) => !(e.optional === "healthcare" && !healthcare)).map((e) => {
-    const ranked = [...e.bullets].sort((a, b) => score(b) - score(a));
-    return { ...e, top: score(ranked[0]), bullets: full ? ranked : ranked.slice(0, e.max) };
-  });
-  // a project earns its place on one page only if it speaks to this focus
-  if (!full) entries = entries.filter((e) => e.section !== "projects" || e.top >= 6);
-
-  if (!full) {
-    // Trim the weakest lines across the page until it fits, keeping at
-    // least one line per entry.
-    const lines = () => entries.reduce((n, e) => n + e.bullets.length, 0);
-    while (lines() > ONE_PAGE_LINES) {
-      let worst = null;
-      for (const e of entries) {
-        if (e.bullets.length <= 1) continue;
-        const last = e.bullets[e.bullets.length - 1];
-        if (!worst || score(last) < score(worst.b)) worst = { e, b: last };
-      }
-      if (!worst) break;
-      worst.e.bullets = worst.e.bullets.slice(0, -1);
-    }
-  }
-  // projects in order of how well they fit
-  const projects = entries.filter((e) => e.section === "projects").sort((a, b) => b.top - a.top);
-  entries = [...entries.filter((e) => e.section === "experience"), ...projects, ...entries.filter((e) => e.section === "education")];
-
-  const skills = SKILLS.map(({ row, items }) => ({
-    row,
-    items: [...items].sort((a, b) => b[1][lens] - a[1][lens]).slice(0, full ? items.length : 5).map(([name]) => name),
-  }));
-  const shown = entries.reduce((n, e) => n + e.bullets.length, 0);
-  const total = ENTRIES.reduce((n, e) => n + e.bullets.length, 0);
-  return { summary: SUMMARY[lens], entries, skills, shown, total };
-}
-
 // ── Rendering ────────────────────────────────────────────────
 const paper = document.querySelector(".paper");
-const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-
-function render(model) {
-  const block = (e) => `
-    <div class="r-entry" style="view-transition-name: e-${e.id}">
-      <div class="r-entry__head">
-        <p><b>${esc(e.org)}</b>${e.where ? `<span class="r-where">${esc(e.where)}</span>` : ""}</p>
-        <p class="r-when">${esc(e.when)}</p>
-      </div>
-      <p class="r-role">${esc(e.role)}</p>
-      <ul>${e.bullets.map((b) => `<li data-id="${e.id}-${b.id}" style="view-transition-name: b-${e.id}-${b.id}">${esc(b.text)}</li>`).join("")}</ul>
-    </div>`;
-  paper.innerHTML = `
-    <header class="r-head">
-      <h1>${PROFILE.name}</h1>
-      <p>${PROFILE.location} · <a href="mailto:${PROFILE.email}">${PROFILE.email}</a> · <a href="https://www.${PROFILE.linkedin}">${PROFILE.linkedin}</a> · <a href="https://${PROFILE.site}">${PROFILE.site}</a></p>
-    </header>
-    <p class="r-summary" style="view-transition-name: summary">${esc(model.summary)}</p>
-    ${SECTIONS.map(([key, title]) => {
-      const list = model.entries.filter((e) => e.section === key);
-      return list.length ? `<section class="r-section" style="view-transition-name: s-${key}"><h2>${title}</h2>${list.map(block).join("")}</section>` : "";
-    }).join("")}
-    <section class="r-section" style="view-transition-name: s-skills">
-      <h2>Skills</h2>
-      ${model.skills.map((r) => `<p class="r-skill"><b>${r.row}:</b> <span data-skill="${r.row}">${esc(r.items.join(", "))}</span></p>`).join("")}
-      <p class="r-skill"><b>Spoken:</b> ${LANGUAGES_SPOKEN}</p>
-    </section>`;
-}
+const render = (model) => renderPaper(paper, bank, model);
 
 // Text that changed resolves out of a scramble, left to right.
 const GLYPHS = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -113,7 +45,7 @@ function scramble(el, text, ms = 700) {
 
 let current = null;
 function update(animate = true) {
-  const next = compose(state);
+  const next = compose(bank, state);
   const before = new Set(paper.querySelectorAll("li[data-id]").length ? [...paper.querySelectorAll("li[data-id]")].map((li) => li.dataset.id) : []);
   const prevSummary = current?.summary;
   const prevSkills = current ? Object.fromEntries(current.skills.map((r) => [r.row, r.items.join(", ")])) : {};
@@ -164,3 +96,29 @@ document.querySelector("[data-healthcare]").addEventListener("click", () => {
 document.querySelector("[data-print]").addEventListener("click", () => window.print());
 
 update(false);
+
+// ── Behind the scenes ────────────────────────────────────────
+// how full each bullet's last line is, measured at most once a second
+let fitsAt = 0;
+let fits = [];
+const stats = {
+  bank,
+  get state() {
+    return state;
+  },
+  get model() {
+    return current;
+  },
+  fits() {
+    if (performance.now() - fitsAt > 1000) {
+      fitsAt = performance.now();
+      fits = [...paper.querySelectorAll("li[data-id]")].map((li) => grade(measure(li)));
+    }
+    return fits;
+  },
+};
+mountBehind(fab, resumeTopics, stats, () => [
+  `focus     ${state.lens}`,
+  `lines     ${current.shown} of ${current.total}`,
+  `length    ${state.full ? "everything" : "one page"}`,
+]);

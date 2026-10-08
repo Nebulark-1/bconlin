@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WorldSim</title>
+    <style>
+      :root {
+        --bg: #0a0c10;
+        --panel: rgba(16, 20, 27, 0.88);
+        --border: rgba(255, 255, 255, 0.09);
+        --text: #dfe5ee;
+        --text-dim: #8794a6;
+        --accent: #e8a54b;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font: 13px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      #worldsim {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        outline: none;
+      }
+      .panel {
+        position: fixed;
+        background: var(--panel);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      }
+      #loading {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(360px, calc(100% - 32px));
+        padding: 20px 22px;
+        text-align: center;
+      }
+      #loading h1 {
+        margin: 0 0 6px;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      #status { margin: 0 0 14px; }
+      .bar {
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+      .bar div {
+        height: 100%;
+        width: 0;
+        background: var(--accent);
+        transition: width 0.2s;
+      }
+      #intro {
+        left: 14px;
+        bottom: 14px;
+        width: min(330px, calc(100% - 28px));
+        padding: 12px 14px;
+        display: none;
+      }
+      #intro h2 {
+        margin: 0 0 6px;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      #intro p { margin: 0 0 8px; color: var(--text); }
+      #intro .keys { color: var(--text-dim); font-size: 12px; margin: 0; }
+      #intro button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        font-size: 16px;
+        cursor: pointer;
+      }
+      #error { color: #ff8a80; display: none; margin-top: 10px; }
+    </style>
+  </head>
+  <body>
+    <canvas id="worldsim" tabindex="0"></canvas>
+
+    <div id="loading" class="panel">
+      <h1>WorldSim</h1>
+      <p id="status">Loading the village</p>
+      <div class="bar"><div id="progress"></div></div>
+      <p id="error"></p>
+    </div>
+
+    <div id="intro" class="panel">
+      <button id="close" aria-label="Close">&times;</button>
+      <h2 id="intro-title">A village, mid-history</h2>
+      <p>It began with two people and a forest. Fire, farming, stone and the
+        monument were each worked out by someone doing the work, then taught
+        to the others. The history panel shows who and when.</p>
+      <p class="keys">Right-drag to turn, scroll to zoom, WASD to move.
+        Tab picks a person, F follows them. [ and ] change speed.</p>
+    </div>
+
+    <script type="module">
+      const status = document.getElementById("status");
+      const bar = document.getElementById("progress");
+
+      function fail(message) {
+        const el = document.getElementById("error");
+        el.textContent = message;
+        el.style.display = "block";
+      }
+
+      // Download with progress, so a multi-megabyte engine does not look stuck.
+      async function download(url, label, from, to) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`${url}: ${response.status}`);
+        const total = Number(response.headers.get("content-length")) || 0;
+        const reader = response.body.getReader();
+        const chunks = [];
+        let received = 0;
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          received += value.length;
+          if (total) {
+            bar.style.width = `${from + (to - from) * Math.min(received / total, 1)}%`;
+            status.textContent = `${label} ${(received / 1e6).toFixed(1)} of ${(total / 1e6).toFixed(1)} MB`;
+          }
+        }
+        const bytes = new Uint8Array(received);
+        let offset = 0;
+        for (const chunk of chunks) {
+          bytes.set(chunk, offset);
+          offset += chunk.length;
+        }
+        return bytes;
+      }
+
+      try {
+        const snapshot = await download("snapshot.json", "Loading the village", 0, 10);
+        const text = new TextDecoder().decode(snapshot);
+        // The engine reads its starting world from here when it boots.
+        window.WORLDSIM_SNAPSHOT = text;
+        const day = JSON.parse(text).day;
+        document.getElementById("intro-title").textContent = `The village on day ${day}`;
+
+        const wasm = await download("worldsim_bg.wasm", "Loading the engine", 10, 100);
+        status.textContent = "Starting";
+        const { default: init } = await import("./worldsim.js");
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("intro").style.display = "block";
+        document.getElementById("worldsim").focus();
+        // Bevy runs its own loop from here and never returns.
+        await init({ module_or_path: wasm });
+      } catch (e) {
+        // winit ends the start-up call with an exception on purpose once its
+        // loop takes over; anything else is a real failure.
+        if (!String(e).includes("Using exceptions for control flow")) {
+          fail(`Could not start: ${e.message ?? e}`);
+          document.getElementById("loading").style.display = "block";
+        }
+      }
+
+      document.getElementById("close").addEventListener("click", () => {
+        document.getElementById("intro").style.display = "none";
+        document.getElementById("worldsim").focus();
+      });
+      document.getElementById("worldsim").addEventListener("pointerdown", (e) => e.target.focus());
+      document.getElementById("worldsim").addEventListener("contextmenu", (e) => e.preventDefault());
+    </script>
+  </body>
+</html>

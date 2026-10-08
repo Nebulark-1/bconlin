@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Résumé Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/resume.css" />
+    <link rel="stylesheet" href="/src/styles/studio.css" />
+  </head>
+  <!-- My private résumé editor. Dev server only: it isn't in the build. -->
+  <body class="studio" data-view="page">
+    <header class="st-bar">
+      <b class="st-bar__name">Studio</b>
+      <div class="st-seg" role="group" aria-label="View">
+        <button type="button" data-view="page" aria-pressed="true">Page</button>
+        <button type="button" data-view="review" aria-pressed="false">Review</button>
+      </div>
+      <label class="st-field st-page-only">
+        <span>Job</span>
+        <select data-posting></select>
+      </label>
+      <label class="st-field st-page-only">
+        <span>Focus</span>
+        <select data-lens></select>
+      </label>
+      <div class="st-seg st-page-only" role="group" aria-label="Length">
+        <button type="button" data-length="page" aria-pressed="true">One page</button>
+        <button type="button" data-length="full" aria-pressed="false">Whole bank</button>
+      </div>
+      <label class="st-check st-page-only"><input type="checkbox" data-healthcare checked /> Healthcare role</label>
+      <p class="st-tally st-page-only" aria-live="polite"></p>
+      <p class="st-usage" title="Claude calls so far"></p>
+      <button type="button" class="st-btn" data-tag hidden>Tag facts</button>
+      <button type="button" class="st-btn st-page-only" data-print>Print</button>
+      <button type="button" class="st-btn st-page-only" data-sent hidden>I sent this</button>
+      <button type="button" class="st-save" data-save disabled>Saved</button>
+    </header>
+
+    <section class="st-keys st-page-only" aria-label="This job's keywords" hidden></section>
+
+    <main class="st-desk st-page-only">
+      <div class="st-sheet">
+        <article class="paper" aria-label="Résumé"></article>
+        <div class="st-pagebreak" aria-hidden="true"><span>page 2</span></div>
+        <div class="st-gutter" aria-label="Line fit"></div>
+      </div>
+      <section class="st-bench" aria-label="Facts not on the page"></section>
+    </main>
+
+    <section class="st-review" aria-label="Review old résumés"></section>
+
+    <dialog class="st-dialog st-job">
+      <h2>New job description</h2>
+      <p>Paste the whole posting. Claude reads its keywords and which focus fits it best.</p>
+      <textarea rows="16" placeholder="Paste the job description here"></textarea>
+      <p class="st-dialog__status" aria-live="polite"></p>
+      <div class="st-dialog__actions">
+        <button type="button" class="st-btn" data-cancel>Cancel</button>
+        <button type="button" class="st-save" data-read>Read it</button>
+      </div>
+    </dialog>
+
+    <dialog class="st-dialog st-newfact">
+      <h2>New fact</h2>
+      <p>One accomplishment or responsibility, in your words. It stays a draft, off the public page, until it's tagged and you publish it from its wordings.</p>
+      <label class="st-nf"><span>Goes under</span><select data-nf-entry></select></label>
+      <fieldset class="st-nf-new" data-nf-new hidden>
+        <label class="st-nf"><span>Section</span>
+          <select data-nf-section>
+            <option value="projects">Projects</option>
+            <option value="experience">Experience</option>
+            <option value="certifications">Certifications</option>
+            <option value="education">Education</option>
+            <option value="volunteer">Volunteering</option>
+          </select>
+        </label>
+        <label class="st-nf"><span>Name</span><input data-nf-org placeholder="Everything, or CompTIA" /></label>
+        <label class="st-nf"><span>Role or detail</span><input data-nf-role placeholder="Founder and developer · Python, Postgres, or A+" /></label>
+        <label class="st-nf"><span>When</span><input data-nf-when placeholder="2025–Present, or Personal" /></label>
+        <label class="st-nf"><span>Where</span><input data-nf-where placeholder="optional" /></label>
+      </fieldset>
+      <textarea rows="4" data-nf-text placeholder="The bullet. A certification can leave this empty."></textarea>
+      <p class="st-dialog__status" aria-live="polite"></p>
+      <div class="st-dialog__actions">
+        <button type="button" class="st-btn" data-nf-cancel>Cancel</button>
+        <button type="button" class="st-save" data-nf-add>Add it</button>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/studio/main.js"></script>
+  </body>
+</html>
