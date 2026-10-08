@@ -32,7 +32,7 @@ const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
 let bank = null;
 let version = null; // which save of the bank this window is working from
 const state = { lens: "best", full: false, healthcare: true, benchBy: "match" };
-const focusPicks = { pin: [], drop: [], sections: {}, skills: { pin: [], drop: [], spoken: true } }; // hand picks without a job (this session only)
+const focusPicks = { pin: [], drop: [], sections: {}, skills: { pin: [], drop: [], spoken: true }, order: { entries: null, bullets: {} } }; // hand picks without a job (this session only)
 let postings = [];
 let posting = null; // the job description being drafted for, if any
 let dirty = false;
@@ -125,7 +125,36 @@ function picks() {
   posting.drop ??= [];
   posting.sections ??= {};
   posting.skills ??= { pin: [], drop: [], spoken: true };
+  posting.order ??= { entries: null, bullets: {} };
   return posting;
+}
+/**
+ * Move a bullet (data-id "entry-bullet") or an entry (its id) one place up
+ * (-1) or down (+1) among its neighbors on the page. The order saved is
+ * the whole visible order of that list, so it holds as the page changes.
+ */
+function move(kind, key, dir) {
+  const { order } = picks();
+  const ids =
+    kind === "bullet"
+      ? [...paper.querySelectorAll(`li[data-id^="${key.split("-")[0]}-"]`)].map((li) => li.dataset.id.slice(li.dataset.id.indexOf("-") + 1))
+      : [...paper.querySelector(`[data-entry="${key}"]`).closest(".r-section").querySelectorAll("[data-entry]")].map((el) => el.dataset.entry);
+  const id = kind === "bullet" ? key.slice(key.indexOf("-") + 1) : key;
+  const i = ids.indexOf(id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= ids.length) return;
+  [ids[i], ids[j]] = [ids[j], ids[i]];
+  if (kind === "bullet") order.bullets[key.split("-")[0]] = ids;
+  // entries: keep the other sections' saved order, with this section's new order in front
+  else order.entries = [...ids, ...(order.entries || []).filter((x) => !ids.includes(x))];
+  if (posting) (postingDirty = true), refreshSave();
+  draw();
+}
+const hasOrder = () => !!(picks().order.entries || Object.keys(picks().order.bullets).length);
+function resetOrder() {
+  picks().order = { entries: null, bullets: {} };
+  if (posting) (postingDirty = true), refreshSave();
+  draw();
 }
 /** Show a skill on this page (on) or leave it off, whatever its score says. */
 function pickSkill(name, on) {
@@ -164,8 +193,8 @@ function pick(key, on) {
 }
 
 function model(lines) {
-  const { pin, drop, sections, skills } = picks();
-  const opts = { ...state, lines, drafts: state.full || !!posting, pin: new Set(pin), drop: new Set(drop), sections, skills };
+  const { pin, drop, sections, skills, order } = picks();
+  const opts = { ...state, lines, drafts: state.full || !!posting, pin: new Set(pin), drop: new Set(drop), sections, skills, order };
   if (posting) {
     opts.lens = posting.lens;
     opts.scoreOf = scorer();
@@ -235,6 +264,20 @@ function regrade() {
         if (r) marks[g.grade].push(r);
       }
       gutter.append(chip(el, g, el.getBoundingClientRect().top - top));
+    }
+    // beside each job or project's heading: move it among the others in its section
+    for (const head of paper.querySelectorAll(".r-entry__head")) {
+      const entry = head.closest("[data-entry]");
+      const all = [...entry.closest(".r-section").querySelectorAll("[data-entry]")];
+      if (all.length < 2) continue;
+      const box = document.createElement("div");
+      box.className = "st-chip st-chip--entry";
+      box.style.top = `${head.getBoundingClientRect().top - top}px`;
+      const row = document.createElement("p");
+      row.className = "st-chip__ask";
+      row.append(...arrows("entry", entry.dataset.entry, all.indexOf(entry), all.length));
+      box.append(row);
+      gutter.append(box);
     }
     if (window.CSS?.highlights) {
       CSS.highlights.set("st-spill", new Highlight(...marks.spill));
@@ -330,12 +373,14 @@ function drawBench(room) {
       <h2>Bench <span>${plural(list.length, "fact")} not on the page</span></h2>
       <p class="${free ? "has-room" : ""}">${free ? `about ${plural(free, "line")} free` : "the page is full"}</p>
       ${sorts}
+      ${hasOrder() ? `<button type="button" class="st-btn" data-reset-order title="Go back to ordering by strength">Reset order</button>` : ""}
       <button type="button" class="st-btn" data-new-fact>New fact</button>
     </div>
     <div class="st-sections"></div>
     <div class="st-skills"></div>
     <ol></ol>`;
   box.querySelectorAll("[data-bench-by]").forEach((b) => b.addEventListener("click", () => ((state.benchBy = b.dataset.benchBy), regrade())));
+  box.querySelector("[data-reset-order]")?.addEventListener("click", resetOrder);
 
   // sections: auto follows the usual rules (and says what they decided); on or off overrides them
   const shown = new Set([...paper.querySelectorAll(".r-section h2")].map((h) => h.textContent));
@@ -383,6 +428,19 @@ function button(label, onClick, cls = "") {
   return b;
 }
 
+/** ↑ and ↓ buttons that move a bullet or an entry; the ends of the list get a disabled one. */
+function arrows(kind, key, i, n) {
+  return [
+    [-1, "↑", "Move up"],
+    [1, "↓", "Move down"],
+  ].map(([dir, label, title]) => {
+    const b = button(label, () => move(kind, key, dir), "st-move");
+    b.title = title;
+    b.disabled = i + dir < 0 || i + dir >= n;
+    return b;
+  });
+}
+
 /** The gutter note beside one bullet: a bar colored by its line fit, its keywords, and its wordings. */
 function chip(el, g, y) {
   const key = keyOf(el);
@@ -396,6 +454,8 @@ function chip(el, g, y) {
   // one row, so a chip is never taller than a one-line bullet: buttons, then the job's keywords it hits
   const row = document.createElement("p");
   row.className = "st-chip__ask";
+  const siblings = [...el.parentElement.children];
+  if (siblings.length > 1) row.append(...arrows("bullet", key, siblings.indexOf(el), siblings.length));
   const n = bullet.wordings.length;
   row.append(button(`${n} wording${n === 1 ? "" : "s"}`, () => ((openWordings = openWordings === key ? null : key), regrade()), openWordings === key ? "is-open" : ""));
   row.append(button(picks().pin.includes(key) ? "Remove (added)" : "Remove", () => pick(key, false), "st-chip__remove"));
