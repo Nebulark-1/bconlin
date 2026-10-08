@@ -81,7 +81,7 @@
             {
               "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite, Full-stack) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal.",
               "source": "studio",
-              "used": 2
+              "used": 4
             }
           ]
         },
@@ -123,7 +123,7 @@
             {
               "text": "Led the design and implementation of a full-stack financial analytics platform leveraging SQL, Python, and a web-based UI to ingest and normalize data, generating real-time profitability and revenue insights across the firm",
               "source": "studio",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -166,7 +166,7 @@
             {
               "text": "Designed and developed a centralized full-stack intranet supporting SOPs, onboarding and training, HR resources, employee benefits, and internal communications. Later converted to React to improve frontend flexibility.",
               "source": "résumé",
-              "used": 1
+              "used": 2
             },
             {
               "text": "Developed the firm intranet, leveraging WordPress, plugins, and custom code to automate daily administrative overhead, training, and SOPs.",
@@ -191,7 +191,7 @@
             {
               "text": "Cut IT costs 82% by bringing IT in-house for 20+ staff, from $135 to $25 an hour",
               "source": "bank",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -256,7 +256,7 @@
             {
               "text": "Automated provisioning, imaging, patching, and backups across a 20+ user environment, including remote employees, and replaced ad hoc permissions with role-based access",
               "source": "studio",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -291,7 +291,8 @@
             },
             {
               "text": "Designed and delivered live training programs for staff on systems, workflows, and compliance processes.",
-              "source": "résumé"
+              "source": "résumé",
+              "used": 1
             },
             {
               "text": "Translated complex procedures into clear instructional materials, guides, and standardized processes to improve adoption and consistency.",
@@ -300,7 +301,7 @@
             {
               "text": "Prepared and delivered live training programs for staff on systems, workflows, and compliance processes.",
               "source": "studio",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -662,7 +663,7 @@
             {
               "text": "Coordinate patient flow through 20+ pre- and post-op bays supporting 12 ORs at a Level I trauma center",
               "source": "bank",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -675,7 +676,7 @@
             {
               "text": "Support patients before and after anesthesia alongside nurses, anesthesia providers, and surgeons",
               "source": "bank",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -688,7 +689,7 @@
             {
               "text": "Use Epic daily in a HIPAA-regulated, mission-critical environment",
               "source": "bank",
-              "used": 1
+              "used": 2
             }
           ]
         }
@@ -719,7 +720,7 @@
             {
               "text": "Designed, built, and deployed a cloud-hosted SaaS platform that designs weekly training from notes and activities",
               "source": "studio",
-              "used": 2
+              "used": 4
             }
           ]
         },
@@ -747,12 +748,12 @@
             {
               "text": "Integrated webhooks, the Claude API, and Stripe; coded with Node, Express, and SQLite; deployed with Docker",
               "source": "studio",
-              "used": 1
+              "used": 2
             },
             {
               "text": "Integrated webhooks, the Claude API, and Stripe; built with Node, Express, and SQLite; deployed with Docker",
               "source": "studio",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -785,7 +786,7 @@
             {
               "text": "Analyzes longitudinal training and physiological data to surface trends and adjust each plan",
               "source": "bank",
-              "used": 1
+              "used": 2
             }
           ]
         }
@@ -825,7 +826,7 @@
             {
               "text": "Founded and scaled a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end; sold to a larger set of developers.",
               "source": "studio",
-              "used": 2
+              "used": 4
             }
           ]
         }
@@ -923,7 +924,7 @@
             {
               "text": "Student Body President (2024-2025): Represented 8000+ students to university leadership; organized the efforts of the 30+ student representatives; managed $1M+ budget across 200+ student organizations",
               "source": "résumé",
-              "used": 2
+              "used": 4
             },
             {
               "text": "Student Body President, Ex-officio of Student Affairs (2024-2025): Represented 8000+ students to university leadership; increased student involvement 37% through marketing campaigns",
@@ -959,7 +960,7 @@
             {
               "text": "Drafted the university's AI policy as the only student on its AI Working Group, then trained faculty to apply it",
               "source": "bank",
-              "used": 2
+              "used": 4
             }
           ]
         },
@@ -1015,7 +1016,7 @@
             {
               "text": "Division II Distance Runner 2022 - 2024: Balanced 20 hours/week training and competition with academic load",
               "source": "studio",
-              "used": 1
+              "used": 2
             }
           ]
         },
@@ -1301,7 +1302,7 @@
             {
               "text": "Designed and built a learn-it-all AI-powered platform that organizes knowledge into a branching tree of generated lessons, flashcards, and comprehension checks, reviewed on a spaced repetition schedule for long-term retention",
               "source": "studio",
-              "used": 2
+              "used": 4
             }
           ],
           "draft": true
@@ -1333,7 +1334,8 @@
             },
             {
               "text": "Modeled the tree as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             }
           ],
           "draft": true
