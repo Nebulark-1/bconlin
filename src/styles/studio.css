@@ -227,6 +227,26 @@
   white-space: nowrap;
 }
 
+/* ↑ ↓: move a bullet, or a job or project */
+.st-chip__ask .st-move {
+  padding: 0 6px !important;
+  color: var(--muted);
+}
+
+.st-chip__ask .st-move:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.st-chip__ask .st-move:not(:disabled):hover {
+  color: var(--text);
+}
+
+/* an entry's arrows sit beside its heading, with no fit color */
+.st-chip--entry {
+  border-left-color: transparent;
+}
+
 /* short enough to sit beside a one-line bullet */
 .st-chip__ask button {
   flex: none;

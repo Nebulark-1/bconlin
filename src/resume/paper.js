@@ -29,9 +29,12 @@ const ALWAYS = ["education", "certifications"];
  * one-page résumé shows; a section left out follows the usual rules.
  * skills ({ pin: [name], drop: [name], spoken: false }) does the same for
  * the skills: a pinned skill is shown past its row's five, a dropped one
- * never is, and spoken: false leaves off the Spoken row.
+ * never is, and spoken: false leaves off the Spoken row. order
+ * ({ entries: [entryId], bullets: { entryId: [bulletId] } }) is the order
+ * I've put things in by hand; it changes only the order, never what's
+ * chosen, and anything it doesn't list keeps its usual place after.
  */
-export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES, pin = new Set(), drop = new Set(), sections = {}, skills: skillPicks = {} }) {
+export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES, pin = new Set(), drop = new Set(), sections = {}, skills: skillPicks = {}, order = {} }) {
   const score = scoreOf || ((b) => b.score[lens]);
   const pinned = (e, b) => pin.has(`${e.id}-${b.id}`);
   const off = (e) => !full && sections[e.section] === "off";
@@ -88,6 +91,13 @@ export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf,
   const projects = entries.filter((e) => e.section === "projects").sort((a, b) => b.top - a.top);
   entries = [...entries.filter((e) => e.section === "experience"), ...projects, ...entries.filter((e) => !["experience", "projects"].includes(e.section))];
 
+  // then my own order, if I've set one (after trimming, which needs the
+  // bullets weakest-last); the sorts are stable, so anything unlisted keeps
+  // its place behind the listed ones
+  const rank = (list, id) => (list?.includes(id) ? list.indexOf(id) : Infinity);
+  if (order.entries) entries.sort((a, b) => rank(order.entries, a.id) - rank(order.entries, b.id) || 0);
+  for (const e of entries) if (order.bullets?.[e.id]) e.bullets.sort((a, b) => rank(order.bullets[e.id], a.id) - rank(order.bullets[e.id], b.id) || 0);
+
   const { pin: skillPin = [], drop: skillDrop = [], spoken = true } = skillPicks;
   const skills = bank.skills
     .map(({ row, items }) => ({
@@ -111,7 +121,7 @@ const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 export function renderPaper(el, bank, model) {
   const { profile } = bank;
   const block = (e) => `
-    <div class="r-entry" style="view-transition-name: e-${e.id}">
+    <div class="r-entry" data-entry="${e.id}" style="view-transition-name: e-${e.id}">
       <div class="r-entry__head">
         <p><b>${esc(e.org)}</b>${e.where ? `<span class="r-where">${esc(e.where)}</span>` : ""}</p>
         <p class="r-when">${esc(e.when)}</p>

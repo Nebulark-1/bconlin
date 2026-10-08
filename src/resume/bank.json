@@ -48,7 +48,8 @@
           "wordings": [
             {
               "text": "Cut a six-year tax audit from a projected 200+ attorney hours ($80,000) to about 50 by building a transaction-extraction pipeline that produced a cross-validated ledger matching every expense to its receipt",
-              "source": "bank"
+              "source": "bank",
+              "used": 1
             }
           ]
         },
@@ -79,7 +80,8 @@
             },
             {
               "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite, Full-stack) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal.",
-              "source": "studio"
+              "source": "studio",
+              "used": 2
             }
           ]
         },
@@ -120,7 +122,8 @@
             },
             {
               "text": "Led the design and implementation of a full-stack financial analytics platform leveraging SQL, Python, and a web-based UI to ingest and normalize data, generating real-time profitability and revenue insights across the firm",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             }
           ]
         },
@@ -162,7 +165,8 @@
             },
             {
               "text": "Designed and developed a centralized full-stack intranet supporting SOPs, onboarding and training, HR resources, employee benefits, and internal communications. Later converted to React to improve frontend flexibility.",
-              "source": "résumé"
+              "source": "résumé",
+              "used": 1
             },
             {
               "text": "Developed the firm intranet, leveraging WordPress, plugins, and custom code to automate daily administrative overhead, training, and SOPs.",
@@ -186,7 +190,8 @@
           "wordings": [
             {
               "text": "Cut IT costs 82% by bringing IT in-house for 20+ staff, from $135 to $25 an hour",
-              "source": "bank"
+              "source": "bank",
+              "used": 1
             }
           ]
         },
@@ -250,7 +255,8 @@
             },
             {
               "text": "Automated provisioning, imaging, patching, and backups across a 20+ user environment, including remote employees, and replaced ad hoc permissions with role-based access",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             }
           ]
         },
@@ -293,7 +299,8 @@
             },
             {
               "text": "Prepared and delivered live training programs for staff on systems, workflows, and compliance processes.",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             }
           ]
         },
@@ -485,7 +492,8 @@
             },
             {
               "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating analysis for IRS matters.",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             }
           ],
           "draft": true
@@ -537,8 +545,18 @@
         {
           "id": "producedperformance",
           "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; resolved client escalations and implemented comms metrics to prevent recurrences.",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 6, "swe": 2, "data": 8, "it": 4, "ops": 9 },
+          "tags": [
+            "financial analysis",
+            "reporting",
+            "budgeting",
+            "staffing",
+            "kpis",
+            "client escalations",
+            "stakeholder communication",
+            "process improvement",
+            "operations"
+          ],
           "wordings": [
             {
               "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; resolved client escalations and implemented comms metrics to prevent recurrences.",
@@ -554,8 +572,19 @@
         {
           "id": "provideendtoend",
           "text": "Provide end-to-end IT for 30+ employees (devices, updates, security), reducing contractor support.",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 7, "swe": 3, "data": 2, "it": 10, "ops": 6 },
+          "tags": [
+            "it support",
+            "help desk",
+            "end-user support",
+            "endpoint management",
+            "device management",
+            "patching",
+            "security",
+            "it administration",
+            "vendor management",
+            "cost reduction"
+          ],
           "wordings": [
             {
               "text": "Provide end-to-end IT for 30+ employees (devices, updates, security), reducing contractor support.",
@@ -579,8 +608,17 @@
         {
           "id": "modernizedfile",
           "text": "Modernized file structure and access controls, reducing misfiles/deletions and improving collaboration for 30+ staff.",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 5, "swe": 2, "data": 4, "it": 8, "ops": 6 },
+          "tags": [
+            "access control",
+            "permissions",
+            "file management",
+            "document management",
+            "information governance",
+            "collaboration tools",
+            "it administration",
+            "change management"
+          ],
           "wordings": [
             {
               "text": "Modernized file structure and access controls, reducing misfiles/deletions and improving collaboration for 30+ staff.",
@@ -623,7 +661,8 @@
           "wordings": [
             {
               "text": "Coordinate patient flow through 20+ pre- and post-op bays supporting 12 ORs at a Level I trauma center",
-              "source": "bank"
+              "source": "bank",
+              "used": 1
             }
           ]
         },
@@ -635,7 +674,8 @@
           "wordings": [
             {
               "text": "Support patients before and after anesthesia alongside nurses, anesthesia providers, and surgeons",
-              "source": "bank"
+              "source": "bank",
+              "used": 1
             }
           ]
         },
@@ -644,7 +684,13 @@
           "text": "Use Epic daily in a HIPAA-regulated, mission-critical environment",
           "score": { "best": 3, "swe": 4, "data": 4, "it": 6, "ops": 4 },
           "tags": ["epic", "ehr", "hipaa", "healthcare it", "compliance"],
-          "wordings": [{ "text": "Use Epic daily in a HIPAA-regulated, mission-critical environment", "source": "bank" }]
+          "wordings": [
+            {
+              "text": "Use Epic daily in a HIPAA-regulated, mission-critical environment",
+              "source": "bank",
+              "used": 1
+            }
+          ]
         }
       ]
     },
@@ -672,7 +718,8 @@
             },
             {
               "text": "Designed, built, and deployed a cloud-hosted SaaS platform that designs weekly training from notes and activities",
-              "source": "studio"
+              "source": "studio",
+              "used": 2
             }
           ]
         },
@@ -699,11 +746,13 @@
             },
             {
               "text": "Integrated webhooks, the Claude API, and Stripe; coded with Node, Express, and SQLite; deployed with Docker",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             },
             {
               "text": "Integrated webhooks, the Claude API, and Stripe; built with Node, Express, and SQLite; deployed with Docker",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             }
           ]
         },
@@ -735,7 +784,8 @@
           "wordings": [
             {
               "text": "Analyzes longitudinal training and physiological data to surface trends and adjust each plan",
-              "source": "bank"
+              "source": "bank",
+              "used": 1
             }
           ]
         }
@@ -774,7 +824,8 @@
             },
             {
               "text": "Founded and scaled a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end; sold to a larger set of developers.",
-              "source": "studio"
+              "source": "studio",
+              "used": 2
             }
           ]
         }
@@ -871,7 +922,8 @@
             },
             {
               "text": "Student Body President (2024-2025): Represented 8000+ students to university leadership; organized the efforts of the 30+ student representatives; managed $1M+ budget across 200+ student organizations",
-              "source": "résumé"
+              "source": "résumé",
+              "used": 2
             },
             {
               "text": "Student Body President, Ex-officio of Student Affairs (2024-2025): Represented 8000+ students to university leadership; increased student involvement 37% through marketing campaigns",
@@ -906,7 +958,8 @@
           "wordings": [
             {
               "text": "Drafted the university's AI policy as the only student on its AI Working Group, then trained faculty to apply it",
-              "source": "bank"
+              "source": "bank",
+              "used": 2
             }
           ]
         },
@@ -961,7 +1014,8 @@
             },
             {
               "text": "Division II Distance Runner 2022 - 2024: Balanced 20 hours/week training and competition with academic load",
-              "source": "studio"
+              "source": "studio",
+              "used": 1
             }
           ]
         },
@@ -1015,8 +1069,16 @@
         {
           "id": "oversawofficial",
           "text": "Oversaw all official Constitution and Bylaw Amendments, settled all internal disputes",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 3, "swe": 1, "data": 1, "it": 2, "ops": 6 },
+          "tags": [
+            "governance",
+            "policy",
+            "conflict resolution",
+            "dispute resolution",
+            "compliance",
+            "student government",
+            "leadership"
+          ],
           "wordings": [
             {
               "text": "Oversaw all official Constitution and Bylaw Amendments, settled all internal disputes",
@@ -1028,8 +1090,18 @@
         {
           "id": "directeddevelopment",
           "text": "Directed development of a health analytics platform integrating RESTful APIs and relational databases to analyze longitudinal physiological data, identifying trends and generating actionable insights.",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 6, "swe": 7, "data": 8, "it": 4, "ops": 5 },
+          "tags": [
+            "rest apis",
+            "relational databases",
+            "health analytics",
+            "healthcare",
+            "data analysis",
+            "team leadership",
+            "software development",
+            "sql",
+            "api integration"
+          ],
           "wordings": [
             {
               "text": "Directed development of a health analytics platform integrating RESTful APIs and relational databases to analyze longitudinal physiological data, identifying trends and generating actionable insights.",
@@ -1163,8 +1235,17 @@
         {
           "id": "hardwarecustomer",
           "text": "Ace Hardware (Customer Service): Developed functional knowledge of many forms of maintenance and craft",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 2, "swe": 1, "data": 0, "it": 4, "ops": 3 },
+          "tags": [
+            "customer service",
+            "troubleshooting",
+            "problem solving",
+            "retail",
+            "maintenance",
+            "electrical",
+            "repair",
+            "self-directed learning"
+          ],
           "wordings": [
             {
               "text": "Ace Hardware (Customer Service): Developed functional knowledge of plumbing, carpentry, electrical work, machine and auto repair, painting, lawn-care, and a knack at figuring out the things I didn’t know",
@@ -1194,8 +1275,20 @@
         {
           "id": "designedbuilt",
           "text": "Designed and built an AI-powered learning platform that organizes human knowledge into a branching tree of topics, each with a generated lesson, flashcards, and comprehension checks, reviewed on a spaced repetition schedule built for long-term retention",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 8, "swe": 9, "data": 6, "it": 4, "ops": 3 },
+          "tags": [
+            "ai",
+            "llm",
+            "machine learning",
+            "edtech",
+            "spaced repetition",
+            "full stack",
+            "product design",
+            "knowledge management",
+            "react",
+            "node.js",
+            "continuous learning"
+          ],
           "wordings": [
             {
               "text": "Designed and built an AI-powered learning platform that organizes human knowledge into a branching tree of topics, each with a generated lesson, flashcards, and comprehension checks, reviewed on a spaced repetition schedule built for long-term retention",
@@ -1207,7 +1300,8 @@
             },
             {
               "text": "Designed and built a learn-it-all AI-powered platform that organizes knowledge into a branching tree of generated lessons, flashcards, and comprehension checks, reviewed on a spaced repetition schedule for long-term retention",
-              "source": "studio"
+              "source": "studio",
+              "used": 2
             }
           ],
           "draft": true
@@ -1215,8 +1309,19 @@
         {
           "id": "modeledtree",
           "text": "Modeled the tree as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds; about 5,300 lines of Node, TypeScript, React, and SQL",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 8, "swe": 9, "data": 9, "it": 5, "ops": 2 },
+          "tags": [
+            "postgresql",
+            "sql",
+            "graph databases",
+            "data modeling",
+            "database design",
+            "query optimization",
+            "performance",
+            "typescript",
+            "react",
+            "node.js"
+          ],
           "wordings": [
             {
               "text": "Modeled the tree as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds; about 5,300 lines of Node, TypeScript, React, and SQL",
@@ -1225,6 +1330,10 @@
             {
               "text": "Modeled as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds",
               "source": "studio"
+            },
+            {
+              "text": "Modeled the tree as a graph in PostgreSQL with typed nodes, multi-parent edges, and a precomputed ancestor table, cutting branch queries from 20-second timeouts to under 0.6 seconds",
+              "source": "studio"
             }
           ],
           "draft": true
@@ -1232,8 +1341,19 @@
         {
           "id": "builtqueue",
           "text": "Built an AI job queue that writes, validates, and web-fact-checks each topic, correcting 5 of 75 checked claims before learners saw them; benchmarked its duplicate detector at about 90% accuracy with zero false merges across 732 judgments",
-          "score": { "best": 0, "swe": 0, "data": 0, "it": 0, "ops": 0 },
-          "tags": [],
+          "score": { "best": 8, "swe": 9, "data": 8, "it": 4, "ops": 3 },
+          "tags": [
+            "ai",
+            "llm",
+            "job queue",
+            "automation",
+            "validation",
+            "fact-checking",
+            "benchmarking",
+            "testing",
+            "quality assurance",
+            "data pipelines"
+          ],
           "wordings": [
             {
               "text": "Built an AI job queue that writes, validates, and web-fact-checks each topic, correcting 5 of 75 checked claims before learners saw them; benchmarked its duplicate detector at about 90% accuracy with zero false merges across 732 judgments",
