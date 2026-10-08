@@ -6,6 +6,13 @@ import rainSrc from "../site/rain.js?raw";
 import soundSrc from "../site/sound.js?raw";
 import fabSrc from "../site/fab.js?raw";
 import consoleSrc from "../site/console.js?raw";
+import lakeSrc from "../secrets/lake.js?raw";
+import floodSrc from "../secrets/flood.js?raw";
+import craneSrc from "../secrets/crane.js?raw";
+import campfireSrc from "../secrets/campfire.js?raw";
+import patternsSrc from "../secrets/patterns.js?raw";
+import effectsSrc from "../secrets/effects.js?raw";
+import spaceSrc from "../secrets/space.js?raw";
 import { egg, EGGS, isFound, foundCount } from "../site/eggs.js";
 
 const C = { text: "#bfe6ff", dim: "rgba(160,200,240,.45)", gold: "#ffe2c4" };
@@ -34,6 +41,45 @@ const SOURCES = {
   console: [
     { file: "src/site/console.js", src: consoleSrc, name: "addCommands" },
     { file: "src/site/console.js", src: consoleSrc, name: "barrelRoll" },
+  ],
+  door: [
+    { file: "src/site/fab.js", src: fabSrc, name: "secretsInNav" },
+  ],
+  dive: [
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "start" },
+  ],
+  yooper: [
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "lakebed" },
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "drawStone" },
+  ],
+  breath: [
+    { file: "src/secrets/lake.js", src: lakeSrc, name: "diveStep" },
+  ],
+  cranes: [
+    { file: "src/secrets/crane.js", src: craneSrc, name: "mountCrane" },
+    { file: "src/secrets/crane.js", src: craneSrc, name: "fly" },
+  ],
+  herman: [
+    { file: "src/secrets/campfire.js", src: campfireSrc, name: "snowfall" },
+  ],
+  tanks: [
+    { file: "src/secrets/flood.js", src: floodSrc, name: "fill" },
+  ],
+  space: [
+    { file: "src/secrets/space.js", src: spaceSrc, name: "placeOf" },
+    { file: "src/secrets/space.js", src: spaceSrc, name: "mountSpace" },
+  ],
+  konami: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "konami" },
+    { file: "src/secrets/effects.js", src: effectsSrc, name: "eightBit" },
+  ],
+  golden: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "isGolden" },
+    { file: "src/secrets/effects.js", src: effectsSrc, name: "goldenWindow" },
+  ],
+  wish: [
+    { file: "src/secrets/patterns.js", src: patternsSrc, name: "isElevenEleven" },
+    { file: "src/secrets/effects.js", src: effectsSrc, name: "shootingStar" },
   ],
 };
 

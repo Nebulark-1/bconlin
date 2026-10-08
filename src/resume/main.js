@@ -2,8 +2,11 @@ import bank, { LENSES } from "./bank.js";
 import { compose, renderPaper } from "./paper.js";
 import { mountFab } from "../site/fab.js";
 import { showHireDraft } from "./hire.js";
+import { measure, grade } from "./linefit.js";
+import { mountBehind } from "../inspect/behind.js";
+import { resumeTopics } from "../inspect/topics-resume.js";
 
-mountFab({ current: "resume" });
+const fab = mountFab({ current: "resume", blueprint: true });
 // ben.hire() from the console comes here with ?hire
 if (new URLSearchParams(location.search).has("hire")) showHireDraft();
 
@@ -93,3 +96,29 @@ document.querySelector("[data-healthcare]").addEventListener("click", () => {
 document.querySelector("[data-print]").addEventListener("click", () => window.print());
 
 update(false);
+
+// ── Behind the scenes ────────────────────────────────────────
+// how full each bullet's last line is, measured at most once a second
+let fitsAt = 0;
+let fits = [];
+const stats = {
+  bank,
+  get state() {
+    return state;
+  },
+  get model() {
+    return current;
+  },
+  fits() {
+    if (performance.now() - fitsAt > 1000) {
+      fitsAt = performance.now();
+      fits = [...paper.querySelectorAll("li[data-id]")].map((li) => grade(measure(li)));
+    }
+    return fits;
+  },
+};
+mountBehind(fab, resumeTopics, stats, () => [
+  `focus     ${state.lens}`,
+  `lines     ${current.shown} of ${current.total}`,
+  `length    ${state.full ? "everything" : "one page"}`,
+]);

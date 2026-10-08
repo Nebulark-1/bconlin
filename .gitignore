@@ -13,3 +13,6 @@ resumes/
 
 # my old projects, unzipped here for review (private, and far too big to commit)
 old_projects/
+
+# fonts fetched by tools/og.py
+tools/.fonts/

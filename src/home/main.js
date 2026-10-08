@@ -347,7 +347,9 @@ function frame(now) {
     const t = reducedMotion ? 1 : easeOutCubic(clamp((now - start - 300) / 1800));
     figures[k].textContent = FORMAT[k](lerp(r.from, r.to, t));
   });
-  document.body.style.setProperty("--scrolled", clamp(window.scrollY / 200).toFixed(3));
+  // (measured from the hero, in case there's sky above it)
+  const above = document.querySelector(".space")?.offsetHeight || 0;
+  document.body.style.setProperty("--scrolled", clamp((window.scrollY - above) / 200).toFixed(3));
 
   if (bp) {
     const s = field.stats;

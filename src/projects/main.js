@@ -1,12 +1,14 @@
 import { PROJECTS, ROLES, SKILL_GROUPS, STATUS } from "./data.js";
 import { mountFab } from "../site/fab.js";
+import { mountBehind } from "../inspect/behind.js";
+import { projectsTopics } from "../inspect/topics-projects.js";
 
 // The projects page. The skills grid at the top is the filter: each dot is a
 // skill a project shows, backed by a specific bullet or tool. Picking skills
 // filters and ranks the projects and marks the bullets that prove them. The
 // state lives in the URL, so a filtered view can be shared.
 
-mountFab({ current: "projects" });
+const fab = mountFab({ current: "projects", blueprint: true });
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const esc = (t) =>
@@ -362,3 +364,10 @@ $(".pj-list").innerHTML = PROJECTS.map(card).join("");
 bindGrid();
 bindBar();
 update();
+
+// ── Behind the scenes ───────────────────────────────────────
+mountBehind(fab, projectsTopics, { state, projects: PROJECTS, ordered }, () => [
+  `skills    ${state.skills.size ? [...state.skills].join(", ") : "none"}`,
+  `sort      ${state.sort}`,
+  `showing   ${ordered().length} of ${PROJECTS.length}`,
+]);

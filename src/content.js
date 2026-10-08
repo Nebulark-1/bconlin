@@ -50,7 +50,7 @@ export const chapters = [
         bullets: [
           "Trained and competed about 20 hours a week alongside a full computer science course load",
           "Coached 50+ high school cross country runners as a volunteer (2020–2022); every one set a personal best",
-          "Finished an Ironman in 2026",
+          "Finished Ironman 70.3 Boulder in 2026",
         ],
       },
     ],

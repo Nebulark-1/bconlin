@@ -30,7 +30,7 @@ export function addCommands(list, first = false) {
 export const soundNote = () => !isSoundOn() && console.info("(sound's off, so this one's silent. Turn it on bottom right.)");
 
 const FACTS = [
-  "I finished an Ironman in 2026.",
+  "I finished Ironman 70.3 Boulder in 2026.",
   "I ran Division I cross country and track at BYU, then Division II at Michigan Tech.",
   "Houghton gets 200+ inches of snow a year. I loved every inch.",
   "I've freedived to 80 feet to chase a rock I thought was cool.",
