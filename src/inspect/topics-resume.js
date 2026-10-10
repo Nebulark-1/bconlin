@@ -123,20 +123,20 @@ const wordingsTopic = {
   vizHeight: 110,
   title: "Picking the wording for the page",
   summary:
-    "A bullet is one fact with any number of wordings. The fact decides whether it belongs; the wording is chosen for the page: first the one with the most keywords the job asks for (applicant tracking systems match words literally), then the one that fills its lines best, then the one I've sent most. A wording another beats on every count is covered and never chosen. My private editor uses this against real job descriptions.",
+    "A bullet is one fact with any number of wordings. The fact decides whether it belongs; the wording is chosen on substance: first the one with the most keywords the job asks for (applicant tracking systems match words literally), then the one with the fewest problems (a number the fact's other wordings have and this one drops, a banned word like \"leveraging\"), then the one with the most numbers, then the one I've sent most. A wording another beats on every count is covered and never chosen. My private editor uses this against real job descriptions, and leans each new job's picks toward what I added and removed on jobs like it.",
   sources: [
     { file: "src/resume/wordings.js", src: wordingsSrc, name: "rankWordings" },
     { file: "src/resume/wordings.js", src: wordingsSrc, name: "hasTerm" },
   ],
   viz(ctx, w, h) {
-    const keys = ["keywords found", "line fit", "times sent"];
-    const bw = (w - 60) / 3;
+    const keys = ["keywords", "fewest problems", "most numbers", "times sent"];
+    const bw = (w - 70) / 4;
     keys.forEach((k, i) => {
       const x = 20 + i * (bw + 10);
       ctx.strokeStyle = i === 0 ? C.accent : C.line;
       ctx.strokeRect(x, 30, bw, 36);
       label(ctx, `${i + 1}. ${k}`, x + bw / 2, 52, i === 0 ? C.accent : C.text, 10, "center");
-      if (i < 2) label(ctx, "then", x + bw + 5, 52, C.dim, 9, "center");
+      if (i < 3) label(ctx, "then", x + bw + 5, 52, C.dim, 9, "center");
     });
     label(ctx, "ties go to the next rule", w / 2, 92, C.dim, 9, "center");
   },

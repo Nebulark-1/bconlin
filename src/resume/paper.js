@@ -29,12 +29,13 @@ const ALWAYS = ["education", "certifications"];
  * one-page résumé shows; a section left out follows the usual rules.
  * skills ({ pin: [name], drop: [name], spoken: false }) does the same for
  * the skills: a pinned skill is shown past its row's five, a dropped one
- * never is, and spoken: false leaves off the Spoken row. order
+ * never is, and spoken: false leaves off the Spoken row. skillScoreOf
+ * (name, scores) ranks skills for a job instead of by the focus alone. order
  * ({ entries: [entryId], bullets: { entryId: [bulletId] } }) is the order
  * I've put things in by hand; it changes only the order, never what's
  * chosen, and anything it doesn't list keeps its usual place after.
  */
-export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES, pin = new Set(), drop = new Set(), sections = {}, skills: skillPicks = {}, order = {} }) {
+export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf, textOf, lines: budget = ONE_PAGE_LINES, pin = new Set(), drop = new Set(), sections = {}, skills: skillPicks = {}, skillScoreOf, order = {} }) {
   const score = scoreOf || ((b) => b.score[lens]);
   const pinned = (e, b) => pin.has(`${e.id}-${b.id}`);
   const off = (e) => !full && sections[e.section] === "off";
@@ -99,13 +100,14 @@ export function compose(bank, { lens, full, healthcare, drafts = false, scoreOf,
   for (const e of entries) if (order.bullets?.[e.id]) e.bullets.sort((a, b) => rank(order.bullets[e.id], a.id) - rank(order.bullets[e.id], b.id) || 0);
 
   const { pin: skillPin = [], drop: skillDrop = [], spoken = true } = skillPicks;
+  const skillScore = skillScoreOf || ((name, s) => s[lens] || 0);
   const skills = bank.skills
     .map(({ row, items }) => ({
       row,
       // the row's five best, then my picks: a removed skill leaves a gap
       // rather than letting the sixth in, so removing one shortens the row
       items: [...items]
-        .sort((a, b) => (b[1][lens] || 0) - (a[1][lens] || 0))
+        .sort((a, b) => skillScore(...b) - skillScore(...a))
         .filter(([name], i) => (full || i < 5 || skillPin.includes(name)) && !skillDrop.includes(name))
         .map(([name]) => name),
     }))
