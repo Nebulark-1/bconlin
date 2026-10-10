@@ -78,29 +78,8 @@
   color: var(--muted);
 }
 
-.st-tally {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0 0 0 auto;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.st-tally i {
-  width: 8px;
-  height: 8px;
-  margin-left: 8px;
-  border-radius: 50%;
-}
-
-.st-tally .is-full { background: var(--full); }
-.st-tally .is-short { background: var(--short); }
-.st-tally .is-spill { background: var(--spill); }
-
 .st-usage {
-  margin: 0;
+  margin: 0 0 0 auto;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--muted);
@@ -158,14 +137,6 @@
   background: rgba(180, 83, 42, 0.09);
 }
 
-::highlight(st-spill) {
-  background-color: rgba(255, 90, 70, 0.32);
-}
-
-::highlight(st-short) {
-  background-color: rgba(242, 193, 78, 0.28);
-}
-
 /* where page one ends */
 .st-pagebreak {
   position: absolute;
@@ -208,9 +179,9 @@
   color: var(--muted);
 }
 
-.st-chip.is-full { --c: rgba(79, 209, 139, 0.35); }
-.st-chip.is-short { --c: var(--short); }
-.st-chip.is-spill { --c: var(--spill); }
+/* the bar beside a bullet: quiet, or amber when its wording drops a number or breaks a rule */
+.st-chip { --c: rgba(255, 255, 255, 0.12); }
+.st-chip.is-warn { --c: var(--short); }
 
 .st-chip:has(.st-offers) {
   z-index: 2;
@@ -310,11 +281,10 @@
   border-color: var(--accent);
 }
 
-.st-offers li.is-full { --c: var(--full); }
-.st-offers li.is-short { --c: var(--short); }
-.st-offers li.is-spill { --c: var(--spill); }
+.st-offers li { --c: rgba(255, 255, 255, 0.12); }
+.st-offers li.is-warn { --c: var(--short); }
 
-.st-offers__grade {
+.st-offers__meta {
   display: block;
   margin-bottom: 3px;
   font-family: var(--font-mono);
@@ -486,9 +456,8 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-.st-bench li.is-full { --c: var(--full); }
-.st-bench li.is-short { --c: var(--short); }
-.st-bench li.is-spill { --c: var(--spill); }
+.st-bench li { --c: rgba(255, 255, 255, 0.12); }
+.st-bench li.fits { --c: var(--full); }
 
 /* doesn't fit in the room left: still addable, just quieter */
 .st-bench li:not(.fits) {

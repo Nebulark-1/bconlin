@@ -48,14 +48,13 @@
           "wordings": [
             {
               "text": "Cut a six-year tax audit from a projected 200+ attorney hours ($80,000) to about 50 by building a transaction-extraction pipeline that produced a cross-validated ledger matching every expense to its receipt",
-              "source": "bank",
-              "used": 1
+              "source": "bank"
             }
           ]
         },
         {
           "id": "docs",
-          "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite, Full-stack) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal.",
+          "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite, Full-stack) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal",
           "score": { "best": 10, "swe": 10, "data": 8, "it": 7, "ops": 6 },
           "tags": [
             "python",
@@ -75,13 +74,13 @@
               "source": "bank"
             },
             {
-              "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal.",
+              "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal",
               "source": "résumé"
             },
             {
-              "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite, Full-stack) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal.",
+              "text": "Eliminated hundreds of hours of annual manual filing with a document classification pipeline (Python, SQLite, Full-stack) ingesting tens of thousands of documents a year: OCR and in-house Whisper transcription, deterministic routing for known forms, and human-in-the-loop review fed back as training signal",
               "source": "studio",
-              "used": 4
+              "used": 2
             }
           ]
         },
@@ -105,25 +104,25 @@
               "source": "bank"
             },
             {
-              "text": "Built and maintained a relational SQL database consolidating decades of firm data into a single source of truth.",
+              "text": "Built and maintained a relational SQL database consolidating decades of firm data into a single source of truth",
               "source": "résumé"
             },
             {
-              "text": "Developed a financial database analyzing firm profitability, revenue streams, and expenses to provide an accurate picture of the financial health of the organization, as well as diagnose and address problems.",
+              "text": "Developed a financial database analyzing firm profitability, revenue streams, and expenses to provide an accurate picture of the financial health of the organization, as well as diagnose and address problems",
               "source": "résumé"
             },
             {
-              "text": "Led the architecture and implementation of a full-stack financial analytics platform leveraging SQL, Python, and a web-based UI to ingest and normalize hundreds of thousands of data points, generating real-time profitability and revenue insights across individuals, practice areas, and the firm. Reports are delivered on weekly and monthly cadences and used by senior leadership to guide policy, compensation, and strategic planning.",
+              "text": "Led the architecture and implementation of a full-stack financial analytics platform leveraging SQL, Python, and a web-based UI to ingest and normalize hundreds of thousands of data points, generating real-time profitability and revenue insights across individuals, practice areas, and the firm. Reports are delivered on weekly and monthly cadences and used by senior leadership to guide policy, compensation, and strategic planning",
               "source": "résumé"
             },
             {
-              "text": "Exposed per-attorney and per-matter margins by consolidating decades of firm records and tens of millions in case income into a relational warehouse: cleaned and normalized Excel reports into SQL with VBA, transformed them in Python and SQL, and exported results back to Excel for staff. Reverse-engineered leadership's calculations until my models reconciled to their exact figures; results drove compensation, staffing, and the shift to flat-rate billing.",
+              "text": "Exposed per-attorney and per-matter margins by consolidating decades of firm records and tens of millions in case income into a relational warehouse: cleaned and normalized Excel reports into SQL with VBA, transformed them in Python and SQL, and exported results back to Excel for staff. Reverse-engineered leadership's calculations until my models reconciled to their exact figures; results drove compensation, staffing, and the shift to flat-rate billing",
               "source": "résumé"
             },
             {
               "text": "Led the design and implementation of a full-stack financial analytics platform leveraging SQL, Python, and a web-based UI to ingest and normalize data, generating real-time profitability and revenue insights across the firm",
               "source": "studio",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -138,14 +137,14 @@
               "source": "bank"
             },
             {
-              "text": "Promoted twice in twelve months as internally-built automation scaled across the firm, eliminating hundreds of hours of annual manual work.",
+              "text": "Promoted twice in twelve months as internally-built automation scaled across the firm, eliminating hundreds of hours of annual manual work",
               "source": "résumé"
             }
           ]
         },
         {
           "id": "intranet",
-          "text": "Designed and developed a centralized full-stack intranet supporting SOPs, onboarding and training, HR resources, employee benefits, and internal communications. Later converted to React to improve frontend flexibility.",
+          "text": "Designed and developed a centralized full-stack intranet supporting SOPs, onboarding and training, HR resources, employee benefits, and internal communications. Later converted to React to improve frontend flexibility",
           "score": { "best": 8, "swe": 8, "data": 4, "it": 7, "ops": 9 },
           "tags": [
             "full stack",
@@ -164,21 +163,25 @@
               "source": "bank"
             },
             {
-              "text": "Designed and developed a centralized full-stack intranet supporting SOPs, onboarding and training, HR resources, employee benefits, and internal communications. Later converted to React to improve frontend flexibility.",
+              "text": "Designed and developed a centralized full-stack intranet supporting SOPs, onboarding and training, HR resources, employee benefits, and internal communications. Later converted to React to improve frontend flexibility",
               "source": "résumé",
-              "used": 2
+              "used": 1
             },
             {
-              "text": "Developed the firm intranet, leveraging WordPress, plugins, and custom code to automate daily administrative overhead, training, and SOPs.",
+              "text": "Developed the firm intranet, leveraging WordPress, plugins, and custom code to automate daily administrative overhead, training, and SOPs",
               "source": "résumé"
             },
             {
-              "text": "Designed the architecture and led a team in developing a firmwide intranet platform automating time tracking, PTO, intake, IT requests, and benefits administration; 200+ hours/week saved at full adoption.",
+              "text": "Designed the architecture and led a team in developing a firmwide intranet platform automating time tracking, PTO, intake, IT requests, and benefits administration; 200+ hours/week saved at full adoption",
               "source": "résumé"
             },
             {
-              "text": "Building firm intranet automating time tracking, PTO, intake, IT, and benefits; projected 200+ hours/week saved at full adoption; 50+ hours/week saved to date.",
+              "text": "Building firm intranet automating time tracking, PTO, intake, IT, and benefits; projected 200+ hours/week saved at full adoption; 50+ hours/week saved to date",
               "source": "résumé"
+            },
+            {
+              "text": "Designed and developed a full-stack intranet for SOPs, onboarding and training, HR resources, benefits, and a help desk form with urgency levels",
+              "source": "studio"
             }
           ]
         },
@@ -191,7 +194,7 @@
             {
               "text": "Cut IT costs 82% by bringing IT in-house for 20+ staff, from $135 to $25 an hour",
               "source": "bank",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -256,7 +259,7 @@
             {
               "text": "Automated provisioning, imaging, patching, and backups across a 20+ user environment, including remote employees, and replaced ad hoc permissions with role-based access",
               "source": "studio",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -278,30 +281,30 @@
               "source": "bank"
             },
             {
-              "text": "Centralized ops knowledge into a searchable manual, cutting leadership interruptions ~50% and eliminating most \"drop-everything\" requests.",
+              "text": "Centralized ops knowledge into a searchable manual, cutting leadership interruptions ~50% and eliminating most \"drop-everything\" requests",
               "source": "résumé"
             },
             {
-              "text": "Designed a centralized, searchable operations knowledge system, reducing leadership interruptions by ~50% and eliminating most high-urgency ad-hoc requests.",
+              "text": "Designed a centralized, searchable operations knowledge system, reducing leadership interruptions by ~50% and eliminating most high-urgency ad-hoc requests",
               "source": "résumé"
             },
             {
-              "text": "Wrote the firm's operations manual on the intranet and led staff trainings to standardize processes; drafted client engagement letters, billing-expectation documents, and first-draft client contracts for attorney review, validating clauses with Lexis research.",
+              "text": "Wrote the firm's operations manual on the intranet and led staff trainings to standardize processes; drafted client engagement letters, billing-expectation documents, and first-draft client contracts for attorney review, validating clauses with Lexis research",
               "source": "résumé"
             },
             {
-              "text": "Designed and delivered live training programs for staff on systems, workflows, and compliance processes.",
+              "text": "Designed and delivered live training programs for staff on systems, workflows, and compliance processes",
               "source": "résumé",
               "used": 1
             },
             {
-              "text": "Translated complex procedures into clear instructional materials, guides, and standardized processes to improve adoption and consistency.",
+              "text": "Translated complex procedures into clear instructional materials, guides, and standardized processes to improve adoption and consistency",
               "source": "résumé"
             },
             {
-              "text": "Prepared and delivered live training programs for staff on systems, workflows, and compliance processes.",
+              "text": "Prepared and delivered live training programs for staff on systems, workflows, and compliance processes",
               "source": "studio",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -335,15 +338,15 @@
               "source": "bank"
             },
             {
-              "text": "Managed administration for 100+ active tax cases year handling financial records, IRS correspondence, and filings, providing domain knowledge that directly informed the classification tooling.",
+              "text": "Managed administration for 100+ active tax cases year handling financial records, IRS correspondence, and filings, providing domain knowledge that directly informed the classification tooling",
               "source": "résumé"
             },
             {
-              "text": "Managed 100+ active cases / year; handle transcripts, notices, POAs, onboarding, filings.",
+              "text": "Managed 100+ active cases / year; handle transcripts, notices, POAs, onboarding, filings",
               "source": "résumé"
             },
             {
-              "text": "Manage 100+ active cases / year; handle transcripts, notices, POAs, onboarding, filings.",
+              "text": "Manage 100+ active cases / year; handle transcripts, notices, POAs, onboarding, filings",
               "source": "résumé"
             }
           ]
@@ -369,7 +372,7 @@
               "source": "studio"
             },
             {
-              "text": "Performed discovery and comms for multiple $10M+ purchase agreements; drafted R-1 nonprofit visa applications.",
+              "text": "Performed discovery and comms for multiple $10M+ purchase agreements; drafted R-1 nonprofit visa applications",
               "source": "résumé"
             },
             {
@@ -396,7 +399,7 @@
         },
         {
           "id": "highvolumedrafting",
-          "text": "Own high-volume drafting and prep work, freeing EAs for strategy and negotiations; primary daily liaison to clients.",
+          "text": "Own high-volume drafting and prep work, freeing EAs for strategy and negotiations; primary daily liaison to clients",
           "score": { "best": 3, "swe": 1, "data": 2, "it": 1, "ops": 6 },
           "tags": [
             "legal drafting",
@@ -407,19 +410,19 @@
           ],
           "wordings": [
             {
-              "text": "Own high-volume drafting and prep work, freeing EAs for strategy and negotiations; primary daily liaison to clients.",
+              "text": "Own high-volume drafting and prep work, freeing EAs for strategy and negotiations; primary daily liaison to clients",
               "source": "résumé"
             },
             {
-              "text": "Own high-volume drafting and prep work, freeing EAs for strategy; primary daily liaison to clients.",
+              "text": "Own high-volume drafting and prep work, freeing EAs for strategy; primary daily liaison to clients",
               "source": "résumé"
             },
             {
-              "text": "Owned high-volume drafting and prep work; primary daily liaison to clients.",
+              "text": "Owned high-volume drafting and prep work; primary daily liaison to clients",
               "source": "résumé"
             },
             {
-              "text": "Own high-volume drafting and prep work; primary daily liaison to clients.",
+              "text": "Own high-volume drafting and prep work; primary daily liaison to clients",
               "source": "résumé"
             }
           ],
@@ -427,7 +430,7 @@
         },
         {
           "id": "docsingest",
-          "text": "Built an end-to-end pipeline ingesting DOCX, PDF, TXT, HTML, and audio (transcribed in-house by chaining a Whisper pipeline I created), then stripping, reformatting, and tokenizing the text.",
+          "text": "Built an end-to-end pipeline ingesting DOCX, PDF, TXT, HTML, and audio (transcribed in-house by chaining a Whisper pipeline I created), then stripping, reformatting, and tokenizing the text",
           "score": { "best": 7, "swe": 9, "data": 8, "it": 4, "ops": 3 },
           "tags": [
             "python",
@@ -441,7 +444,7 @@
           ],
           "wordings": [
             {
-              "text": "Built an end-to-end pipeline ingesting DOCX, PDF, TXT, HTML, and audio (transcribed in-house by chaining a Whisper pipeline I created), then stripping, reformatting, and tokenizing the text.",
+              "text": "Built an end-to-end pipeline ingesting DOCX, PDF, TXT, HTML, and audio (transcribed in-house by chaining a Whisper pipeline I created), then stripping, reformatting, and tokenizing the text",
               "source": "résumé"
             }
           ],
@@ -449,7 +452,7 @@
         },
         {
           "id": "docsnaming",
-          "text": "Trained a neural network to generate name candidates based on those tokens, combining learned classification, deterministic conventions, and automated folder creation and routing to ingest tens of thousands of documents.",
+          "text": "Trained a neural network to generate name candidates based on those tokens, combining learned classification, deterministic conventions, and automated folder creation and routing to ingest tens of thousands of documents",
           "score": { "best": 7, "swe": 9, "data": 8, "it": 3, "ops": 2 },
           "tags": [
             "machine learning",
@@ -462,7 +465,7 @@
           ],
           "wordings": [
             {
-              "text": "Trained a neural network to generate name candidates based on those tokens, combining learned classification, deterministic conventions, and automated folder creation and routing to ingest tens of thousands of documents.",
+              "text": "Trained a neural network to generate name candidates based on those tokens, combining learned classification, deterministic conventions, and automated folder creation and routing to ingest tens of thousands of documents",
               "source": "résumé"
             }
           ],
@@ -470,12 +473,12 @@
         },
         {
           "id": "docsfeedback",
-          "text": "Implemented a human-in-the-loop preference-ranking loop: the model proposed ranked name candidates, and analyst rankings plus corrected ground truth fed back as training signal across thousands of documents.",
+          "text": "Implemented a human-in-the-loop preference-ranking loop: the model proposed ranked name candidates, and analyst rankings plus corrected ground truth fed back as training signal across thousands of documents",
           "score": { "best": 7, "swe": 9, "data": 8, "it": 3, "ops": 3 },
           "tags": ["machine learning", "human in the loop", "ranking", "model training", "data labeling", "ml ops"],
           "wordings": [
             {
-              "text": "Implemented a human-in-the-loop preference-ranking loop: the model proposed ranked name candidates, and analyst rankings plus corrected ground truth fed back as training signal across thousands of documents.",
+              "text": "Implemented a human-in-the-loop preference-ranking loop: the model proposed ranked name candidates, and analyst rankings plus corrected ground truth fed back as training signal across thousands of documents",
               "source": "résumé"
             }
           ],
@@ -483,25 +486,24 @@
         },
         {
           "id": "parsers",
-          "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating financial analysis for IRS matters.",
+          "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating financial analysis for IRS matters",
           "score": { "best": 5, "swe": 7, "data": 7, "it": 3, "ops": 3 },
           "tags": ["python", "pdf parsing", "data extraction", "automation", "financial analysis", "tax"],
           "wordings": [
             {
-              "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating financial analysis for IRS matters.",
+              "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating financial analysis for IRS matters",
               "source": "résumé"
             },
             {
-              "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating analysis for IRS matters.",
-              "source": "studio",
-              "used": 1
+              "text": "Built PDF/transcript parsers for data extraction, cutting review time and accelerating analysis for IRS matters",
+              "source": "studio"
             }
           ],
           "draft": true
         },
         {
           "id": "interim",
-          "text": "Ran daily staff ops (7 reports: 3 legal assistants, 3 paralegals, 1 receptionist) improving coordination, accountability.",
+          "text": "Ran daily staff ops (7 reports: 3 legal assistants, 3 paralegals, 1 receptionist) improving coordination, accountability",
           "score": { "best": 6, "swe": 2, "data": 3, "it": 3, "ops": 9 },
           "tags": [
             "people management",
@@ -512,12 +514,8 @@
           ],
           "wordings": [
             {
-              "text": "Ran daily staff ops (7 reports: 3 legal assistants, 3 paralegals, 1 receptionist) improving coordination, accountability.",
-              "source": "résumé"
-            },
-            {
               "text": "Ran daily staff ops (7 reports: 3 legal assistants, 3 paralegals, 1 receptionist) improving coordination, accountability",
-              "source": "studio"
+              "source": "résumé"
             }
           ],
           "draft": true
@@ -533,7 +531,7 @@
               "source": "résumé"
             },
             {
-              "text": "Supported entity formations, acquisitions, real-estate sales, and litigation prep; owned filings, deadlines, and comms.",
+              "text": "Supported entity formations, acquisitions, real-estate sales, and litigation prep; owned filings, deadlines, and comms",
               "source": "résumé"
             },
             {
@@ -545,7 +543,7 @@
         },
         {
           "id": "producedperformance",
-          "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; resolved client escalations and implemented comms metrics to prevent recurrences.",
+          "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; resolved client escalations and implemented comms metrics to prevent recurrences",
           "score": { "best": 6, "swe": 2, "data": 8, "it": 4, "ops": 9 },
           "tags": [
             "financial analysis",
@@ -560,11 +558,11 @@
           ],
           "wordings": [
             {
-              "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; resolved client escalations and implemented comms metrics to prevent recurrences.",
+              "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; resolved client escalations and implemented comms metrics to prevent recurrences",
               "source": "résumé"
             },
             {
-              "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; primary escalation for client issues, implemented communication protocols to prevent recurrences.",
+              "text": "Produced performance, revenue, and overhead analyses to inform staffing and budget decisions; primary escalation for client issues, implemented communication protocols to prevent recurrences",
               "source": "studio"
             }
           ],
@@ -572,7 +570,7 @@
         },
         {
           "id": "provideendtoend",
-          "text": "Provide end-to-end IT for 30+ employees (devices, updates, security), reducing contractor support.",
+          "text": "Provide end-to-end IT for 20+ employees (devices, updates, security), reducing contractor support",
           "score": { "best": 7, "swe": 3, "data": 2, "it": 10, "ops": 6 },
           "tags": [
             "it support",
@@ -588,19 +586,23 @@
           ],
           "wordings": [
             {
-              "text": "Provide end-to-end IT for 30+ employees (devices, updates, security), reducing contractor support.",
+              "text": "Provide end-to-end IT for 20+ employees (devices, updates, security), reducing contractor support",
               "source": "résumé"
             },
             {
-              "text": "Provide end-to-end IT for 20+ employees (devices, updates, security).",
+              "text": "Provide end-to-end IT for 20+ employees (devices, updates, security)",
               "source": "résumé"
             },
             {
-              "text": "Provided end-to-end IT support for 20+ employees (devices, updates, security).",
+              "text": "Provided end-to-end IT support for 20+ employees (devices, updates, security)",
               "source": "résumé"
             },
             {
-              "text": "Provide end-to-end IT support for 20+ employees (devices, updates, security), reducing contractor support.",
+              "text": "Provide end-to-end IT support for 20+ employees (devices, updates, security), reducing contractor support",
+              "source": "studio"
+            },
+            {
+              "text": "Provide end-to-end IT and help desk support for 20+ employees (devices, updates, security), reducing contractor support",
               "source": "studio"
             }
           ],
@@ -608,7 +610,7 @@
         },
         {
           "id": "modernizedfile",
-          "text": "Modernized file structure and access controls, reducing misfiles/deletions and improving collaboration for 30+ staff.",
+          "text": "Modernized file structure and access controls, reducing misfiles/deletions and improving collaboration for 20+ staff",
           "score": { "best": 5, "swe": 2, "data": 4, "it": 8, "ops": 6 },
           "tags": [
             "access control",
@@ -622,16 +624,43 @@
           ],
           "wordings": [
             {
-              "text": "Modernized file structure and access controls, reducing misfiles/deletions and improving collaboration for 30+ staff.",
+              "text": "Modernized file structure and access controls, reducing misfiles/deletions and improving collaboration for 20+ staff",
               "source": "résumé"
             },
             {
-              "text": "Modernized file structure and access controls, reducing misfiles and improving collaboration for Staff.",
+              "text": "Modernized file structure and access controls, reducing misfiles and improving collaboration for Staff",
               "source": "résumé"
             },
             {
               "text": "Aided during the transition from one file organizational structure to another, improving office efficiency",
               "source": "résumé"
+            }
+          ],
+          "draft": true
+        },
+        {
+          "id": "helpdesk",
+          "text": "Built a help desk request form with urgency levels into the firm intranet, so attorneys stopped interrupting work for issues that could wait for an after-hours fix",
+          "score": { "best": 5, "swe": 4, "data": 2, "it": 9, "ops": 7 },
+          "tags": [
+            "help desk",
+            "ticketing",
+            "it support",
+            "intranet",
+            "prioritization",
+            "triage",
+            "service desk",
+            "end-user support",
+            "process improvement"
+          ],
+          "wordings": [
+            {
+              "text": "Built a help desk request form with urgency levels into the firm intranet, so attorneys stopped interrupting work for issues that could wait for an after-hours fix",
+              "source": "studio"
+            },
+            {
+              "text": "Added a help desk form with urgency levels to the firm intranet, moving non-urgent IT fixes to after hours instead of mid-day interruptions",
+              "source": "studio"
             }
           ],
           "draft": true
@@ -663,7 +692,7 @@
             {
               "text": "Coordinate patient flow through 20+ pre- and post-op bays supporting 12 ORs at a Level I trauma center",
               "source": "bank",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -676,7 +705,7 @@
             {
               "text": "Support patients before and after anesthesia alongside nurses, anesthesia providers, and surgeons",
               "source": "bank",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -689,7 +718,7 @@
             {
               "text": "Use Epic daily in a HIPAA-regulated, mission-critical environment",
               "source": "bank",
-              "used": 2
+              "used": 1
             }
           ]
         }
@@ -714,13 +743,13 @@
               "source": "bank"
             },
             {
-              "text": "Built and deployed a cloud-hosted SaaS platform integrating third-party APIs (Strava, Claude) with relational databases served to users worldwide under sound concurrency controls; analyzes longitudinal physiological data to identify trends and generate actionable insights.",
+              "text": "Built and deployed a cloud-hosted SaaS platform integrating third-party APIs (Strava, Claude) with relational databases served to users worldwide under sound concurrency controls; analyzes longitudinal physiological data to identify trends and generate actionable insights",
               "source": "résumé"
             },
             {
               "text": "Designed, built, and deployed a cloud-hosted SaaS platform that designs weekly training from notes and activities",
               "source": "studio",
-              "used": 4
+              "used": 2
             }
           ]
         },
@@ -748,12 +777,12 @@
             {
               "text": "Integrated webhooks, the Claude API, and Stripe; coded with Node, Express, and SQLite; deployed with Docker",
               "source": "studio",
-              "used": 2
+              "used": 1
             },
             {
               "text": "Integrated webhooks, the Claude API, and Stripe; built with Node, Express, and SQLite; deployed with Docker",
               "source": "studio",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -768,11 +797,11 @@
               "source": "bank"
             },
             {
-              "text": "Assigns training based on periodization principles, replans based on results, and uses safety gates to prevent injury.",
+              "text": "Assigns training based on periodization principles, replans based on results, and uses safety gates to prevent injury",
               "source": "résumé"
             },
             {
-              "text": "Assigns training based on periodization, replans based on results, and uses safety gates to prevent injury.",
+              "text": "Assigns training based on periodization, replans based on results, and uses safety gates to prevent injury",
               "source": "studio"
             }
           ]
@@ -786,7 +815,7 @@
             {
               "text": "Analyzes longitudinal training and physiological data to surface trends and adjust each plan",
               "source": "bank",
-              "used": 2
+              "used": 1
             }
           ]
         }
@@ -802,7 +831,7 @@
       "bullets": [
         {
           "id": "wiki",
-          "text": "Founded and scaled a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end; sold to a larger set of developers.",
+          "text": "Founded and scaled a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end; sold to a larger set of developers",
           "score": { "best": 9, "swe": 9, "data": 7, "it": 9, "ops": 6 },
           "tags": [
             "python",
@@ -820,13 +849,13 @@
               "source": "bank"
             },
             {
-              "text": "Founded and built a wiki/tool platform for a 30,000-member community, serving 10k+ daily visitors and powered by custom Python tools running on a dedicated server.",
+              "text": "Founded and built a wiki/tool platform for a 30,000-member community, serving 10k+ daily visitors and powered by custom Python tools running on a dedicated server",
               "source": "résumé"
             },
             {
-              "text": "Founded and scaled a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end; sold to a larger set of developers.",
+              "text": "Founded and scaled a community wiki and analytics platform serving 30,000+ users and 10,000+ peak daily visitors; owned hosting, database performance, and traffic end to end; sold to a larger set of developers",
               "source": "studio",
-              "used": 4
+              "used": 2
             }
           ]
         }
@@ -924,14 +953,14 @@
             {
               "text": "Student Body President (2024-2025): Represented 8000+ students to university leadership; organized the efforts of the 30+ student representatives; managed $1M+ budget across 200+ student organizations",
               "source": "résumé",
-              "used": 4
+              "used": 2
             },
             {
               "text": "Student Body President, Ex-officio of Student Affairs (2024-2025): Represented 8000+ students to university leadership; increased student involvement 37% through marketing campaigns",
               "source": "résumé"
             },
             {
-              "text": "Student Body President, Ex-officio of Student Affairs (2024-2025): Represented 8000+ students to university leadership; organized and directed the efforts of the 30+ representatives to implement policy changes and create a better environment for students.",
+              "text": "Student Body President, Ex-officio of Student Affairs (2024-2025): Represented 8000+ students to university leadership; organized and directed the efforts of the 30+ representatives to implement policy changes and create a better environment for students",
               "source": "résumé"
             },
             {
@@ -960,7 +989,7 @@
             {
               "text": "Drafted the university's AI policy as the only student on its AI Working Group, then trained faculty to apply it",
               "source": "bank",
-              "used": 4
+              "used": 2
             }
           ]
         },
@@ -1002,7 +1031,7 @@
               "source": "résumé"
             },
             {
-              "text": "Division II Distance Runner 2022 - 2024: Balanced 20 hours/week training and competition with full academic load.",
+              "text": "Division II Distance Runner 2022 - 2024: Balanced 20 hours/week training and competition with full academic load",
               "source": "résumé"
             },
             {
@@ -1016,7 +1045,7 @@
             {
               "text": "Division II Distance Runner 2022 - 2024: Balanced 20 hours/week training and competition with academic load",
               "source": "studio",
-              "used": 2
+              "used": 1
             }
           ]
         },
@@ -1035,7 +1064,7 @@
               "source": "résumé"
             },
             {
-              "text": "Planned free speech initiatives leading to MTU’s #1 national FIRE ranking; organized week-long constitutional convention; led voter engagement that earned MTU \"Voter Friendly Campus\" certification.",
+              "text": "Planned free speech initiatives leading to MTU’s #1 national FIRE ranking; organized week-long constitutional convention; led voter engagement that earned MTU \"Voter Friendly Campus\" certification",
               "source": "résumé"
             }
           ],
@@ -1043,16 +1072,16 @@
         },
         {
           "id": "council",
-          "text": "Partnered with the Dean of Students to revise academic support policies and improve retention initiatives.",
+          "text": "Partnered with the Dean of Students to revise academic support policies and improve retention initiatives",
           "score": { "best": 4, "swe": 1, "data": 2, "it": 1, "ops": 6 },
           "tags": ["policy", "higher education", "student success", "collaboration", "retention"],
           "wordings": [
             {
-              "text": "Partnered with the Dean of Students to revise academic support policies and improve retention initiatives.",
+              "text": "Partnered with the Dean of Students to revise academic support policies and improve retention initiatives",
               "source": "résumé"
             },
             {
-              "text": "Partnered with the Dean of Students to implement university policy changes.",
+              "text": "Partnered with the Dean of Students to implement university policy changes",
               "source": "résumé"
             },
             { "text": "Worked with the Dean of Students to Create MTU policy changes", "source": "résumé" }
@@ -1090,7 +1119,7 @@
         },
         {
           "id": "directeddevelopment",
-          "text": "Directed development of a health analytics platform integrating RESTful APIs and relational databases to analyze longitudinal physiological data, identifying trends and generating actionable insights.",
+          "text": "Directed development of a health analytics platform integrating RESTful APIs and relational databases to analyze longitudinal physiological data, identifying trends and generating actionable insights",
           "score": { "best": 6, "swe": 7, "data": 8, "it": 4, "ops": 5 },
           "tags": [
             "rest apis",
@@ -1105,7 +1134,7 @@
           ],
           "wordings": [
             {
-              "text": "Directed development of a health analytics platform integrating RESTful APIs and relational databases to analyze longitudinal physiological data, identifying trends and generating actionable insights.",
+              "text": "Directed development of a health analytics platform integrating RESTful APIs and relational databases to analyze longitudinal physiological data, identifying trends and generating actionable insights",
               "source": "résumé"
             }
           ],
@@ -1141,16 +1170,16 @@
       "bullets": [
         {
           "id": "campaign",
-          "text": "Built and executed fundraising, field, and comms plan; managed social, mailers, door-to-door, and media outreach.",
+          "text": "Built and executed fundraising, field, and comms plan; managed social, mailers, door-to-door, and media outreach",
           "score": { "best": 4, "swe": 1, "data": 2, "it": 1, "ops": 7 },
           "tags": ["campaign management", "fundraising", "marketing", "social media", "outreach", "communications"],
           "wordings": [
             {
-              "text": "Built and executed fundraising, field, and comms plan; managed social, mailers, door-to-door, and media outreach.",
+              "text": "Built and executed fundraising, field, and comms plan; managed social, mailers, door-to-door, and media outreach",
               "source": "résumé"
             },
             {
-              "text": "Built and executed fundraising plan; managed social media, mailers, door-knock campaigns, and outreach.",
+              "text": "Built and executed fundraising plan; managed social media, mailers, door-knock campaigns, and outreach",
               "source": "résumé"
             },
             {
@@ -1181,7 +1210,7 @@
               "source": "résumé"
             },
             {
-              "text": "Coached 50+ athletes; focused on goals and resilience; all achieved PRs.",
+              "text": "Coached 50+ athletes; focused on goals and resilience; all achieved PRs",
               "source": "résumé"
             },
             {
@@ -1189,7 +1218,7 @@
               "source": "résumé"
             },
             {
-              "text": "Designed training plans, provided individualized instruction, and supported athlete development for 50+ students.",
+              "text": "Designed training plans, provided individualized instruction, and supported athlete development for 50+ students",
               "source": "résumé"
             }
           ],
@@ -1207,17 +1236,17 @@
       "bullets": [
         {
           "id": "tutored",
-          "text": "Tutored failing HS/AP math students bringing all students to passing grades.",
+          "text": "Tutored failing HS/AP math students bringing all students to passing grades",
           "score": { "best": 2, "swe": 1, "data": 1, "it": 1, "ops": 4 },
           "tags": ["tutoring", "teaching", "mathematics", "mentoring", "volunteering"],
           "wordings": [
             {
-              "text": "Tutored failing HS/AP math students bringing all students to passing grades.",
+              "text": "Tutored failing HS/AP math students bringing all students to passing grades",
               "source": "résumé"
             },
             { "text": "Tutored students from Rampart High School in Calculus AB and BC", "source": "résumé" },
             {
-              "text": "Developed personalized learning strategies to help struggling students reach academic success.",
+              "text": "Developed personalized learning strategies to help struggling students reach academic success",
               "source": "résumé"
             }
           ],
@@ -1302,7 +1331,7 @@
             {
               "text": "Designed and built a learn-it-all AI-powered platform that organizes knowledge into a branching tree of generated lessons, flashcards, and comprehension checks, reviewed on a spaced repetition schedule for long-term retention",
               "source": "studio",
-              "used": 4
+              "used": 2
             }
           ],
           "draft": true

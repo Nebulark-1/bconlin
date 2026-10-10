@@ -1,6 +1,6 @@
 import { compose, renderPaper, SECTIONS } from "../resume/paper.js";
-import { measure, grade, lastLineRange } from "../resume/linefit.js";
-import { rankWordings, relevance, termsIn, hasTerm } from "../resume/wordings.js";
+import { measure } from "../resume/linefit.js";
+import { rankWordings, relevance, termsIn, hasTerm, substance, learned } from "../resume/wordings.js";
 import { mountReview, slug } from "./review.js";
 
 // The résumé studio: my private editor for the bank. The page is drawn at
@@ -10,10 +10,11 @@ import { mountReview, slug } from "./review.js";
 //                 facts that answer it rise, and each one shows its best
 //                 wording for that posting. Edits become new wordings, and
 //                 "I sent this" records what went out.
-// The gutter colors each bullet by how well it fills its lines (the page
-// marks a short or spilling last line too), and opens every wording I've
-// written for a bullet, ranked. Under the page, the bench lists every
-// fact that didn't make it, so I can add one by hand to fill spare room.
+// The gutter opens every wording I've written for a bullet, ranked on
+// substance, and marks one that drops a number or breaks a rule. Under the
+// page, the bench lists every fact that didn't make it, so I can add one by
+// hand to fill spare room. What I add and remove on one job leans the
+// ranking on the next one like it.
 
 const $ = (sel) => document.querySelector(sel);
 const paper = $(".paper");
@@ -82,22 +83,22 @@ async function save() {
   }
 }
 
-// ── Line fit for any text ───────────────────────────────────
-// A hidden copy of the page holds one bullet at the real width, so any
-// wording can be graded without touching what's showing.
+// ── How many lines a wording takes ──────────────────────────
+// A hidden copy of the page holds one bullet at the real width, so the
+// bench can say whether a fact fits the room left on the page.
 const measurer = document.createElement("article");
 measurer.className = "paper st-measure";
 measurer.setAttribute("aria-hidden", "true");
 measurer.innerHTML = "<ul><li></li></ul>";
 document.body.append(measurer);
-const fits = new Map();
-function fitOf(text) {
-  if (!fits.has(text)) {
+const lineCounts = new Map();
+function linesOf(text) {
+  if (!lineCounts.has(text)) {
     const li = measurer.querySelector("li");
     li.textContent = text;
-    fits.set(text, grade(measure(li)));
+    lineCounts.set(text, measure(li).lines.length);
   }
-  return fits.get(text);
+  return lineCounts.get(text);
 }
 
 // ── Which facts, which wordings ─────────────────────────────
@@ -105,18 +106,27 @@ function fitOf(text) {
 const terms = () => (posting ? posting.keywords : bank.vocabulary);
 const lensNow = () => (posting ? posting.lens : state.lens);
 
+/** What my adds and removes on other jobs say about each fact for this one (empty without a job). */
+const leanings = () => (posting ? learned(posting, postings) : new Map());
+
 /** How strongly a fact belongs on this page: the job's keywords first, or just the focus. */
 function scorer() {
   if (!posting) return (b) => b.score[state.lens] || 0;
   const lens = posting.lens;
   const hits = new Map(allBullets().map(({ bullet }) => [bullet, relevance(bullet, posting).weight]));
   const most = Math.max(1, ...hits.values());
+  const lean = leanings();
+  const keyOfBullet = new Map(allBullets().map(({ bullet, key }) => [bullet, key]));
   // the posting's keywords lead, on a curve so a fact with half the best
-  // match still scores well; the focus breaks ties and fills gaps
-  return (b) => 7 * Math.sqrt(hits.get(b) / most) + 0.3 * (b.score[lens] || 0);
+  // match still scores well; the focus breaks ties and fills gaps; and what
+  // I did on jobs like this one leans it up to 3 points either way
+  return (b) => 7 * Math.sqrt(hits.get(b) / most) + 0.3 * (b.score[lens] || 0) + 3 * (lean.get(keyOfBullet.get(b))?.lean || 0);
 }
 /** The wording a fact would show on this page. */
-const textFor = (b, e) => (posting ? posting.draft[`${e.id}-${b.id}`] || rankWordings(b, posting.keywords, fitOf)[0].text : b.text);
+const textFor = (b, e) => (posting ? posting.draft[`${e.id}-${b.id}`] || rankWordings(b, posting.keywords)[0].text : b.text);
+
+/** How a skill ranks for this page: with a job open, the skills it asks for come first. */
+const skillScoreOf = () => (posting ? (name, s) => (s[posting.lens] || 0) + (termsIn(name, posting.keywords).length ? 10 : 0) : (name, s) => s[state.lens] || 0);
 
 /** Bullets and sections I've added or removed by hand: saved with the job, or kept for this session. */
 function picks() {
@@ -199,6 +209,7 @@ function model(lines) {
     opts.lens = posting.lens;
     opts.scoreOf = scorer();
     opts.textOf = textFor;
+    opts.skillScoreOf = skillScoreOf();
   }
   const m = compose(bank, opts);
   if (posting?.summary) m.summary = posting.summary;
@@ -220,7 +231,7 @@ function draw() {
     el.spellcheck = true;
   }
   drawKeys();
-  regrade();
+  refresh();
 }
 
 /** The job's keywords: on the page, in the bank but not on the page, or nowhere in the bank. */
@@ -243,28 +254,17 @@ function drawKeys() {
   strip.innerHTML = `<p><b>${esc(posting.title)}</b> at ${esc(posting.company)}${sent}</p><div>${chips}</div>`;
 }
 
-/** The things graded: every bullet, and the summary. */
-const graded = () => [...paper.querySelectorAll(".r-summary, li[data-id]")];
 const keyOf = (el) => el.dataset.id || "summary";
 
 let pending = 0;
-function regrade() {
+/** Redraw the gutter and the bench to match the page. */
+function refresh() {
   // a short timer rather than an animation frame, so it still runs in a background tab
   clearTimeout(pending);
   pending = setTimeout(() => {
     const top = sheet.getBoundingClientRect().top;
-    const marks = { spill: [], short: [] };
-    const tally = { full: 0, short: 0, spill: 0 };
     gutter.innerHTML = "";
-    for (const el of graded()) {
-      const g = grade(measure(el));
-      tally[g.grade]++;
-      if (g.grade !== "full") {
-        const r = lastLineRange(el);
-        if (r) marks[g.grade].push(r);
-      }
-      gutter.append(chip(el, g, el.getBoundingClientRect().top - top));
-    }
+    for (const el of paper.querySelectorAll("li[data-id]")) gutter.append(chip(el, el.getBoundingClientRect().top - top));
     // beside each job or project's heading: move it among the others in its section
     for (const head of paper.querySelectorAll(".r-entry__head")) {
       const entry = head.closest("[data-entry]");
@@ -279,11 +279,6 @@ function regrade() {
       box.append(row);
       gutter.append(box);
     }
-    if (window.CSS?.highlights) {
-      CSS.highlights.set("st-spill", new Highlight(...marks.spill));
-      CSS.highlights.set("st-short", new Highlight(...marks.short));
-    }
-    $(".st-tally").innerHTML = `<i class="is-full"></i>${tally.full} full <i class="is-short"></i>${tally.short} short <i class="is-spill"></i>${tally.spill} spill`;
     // does it still fit on one page?
     const pageEnd = paper.getBoundingClientRect().top + 11 * 96;
     const last = paper.lastElementChild?.getBoundingClientRect().bottom ?? 0;
@@ -307,9 +302,11 @@ function drawSkills(box, lens) {
     line.className = "st-skills__row";
     line.innerHTML = `<b>${esc(row)}</b>`;
     const on = shown.get(row) || new Set();
-    for (const [name, score] of [...items].sort((a, b) => (b[1][lens] || 0) - (a[1][lens] || 0))) {
+    const rank = skillScoreOf();
+    for (const [name, score] of [...items].sort((a, b) => rank(...b) - rank(...a))) {
       const isOn = on.has(name);
-      const why = picked.pin.includes(name) ? "added by hand" : picked.drop.includes(name) ? "removed by hand" : `${lens} ${score[lens] || 0}`;
+      const asked = posting && termsIn(name, posting.keywords).length ? ", the job asks for it" : "";
+      const why = picked.pin.includes(name) ? "added by hand" : picked.drop.includes(name) ? "removed by hand" : `${lens} ${score[lens] || 0}${asked}`;
       line.append(pill(name, isOn, () => pickSkill(name, !isOn), `${isOn ? "On the page" : "Off the page"} (${why}). Click to ${isOn ? "remove" : "add"}.`));
     }
     const input = document.createElement("input");
@@ -358,7 +355,7 @@ function drawBench(room) {
     .filter(({ entry, bullet, key }) => !onPage.has(key) && (posting || !bullet.draft) && !(entry.optional === "healthcare" && !state.healthcare) && sections[entry.section] !== "off")
     .map((x) => {
       const text = textFor(x.bullet, x.entry);
-      return { ...x, text, fit: fitOf(text), found: posting ? termsIn(text, posting.keywords).map((k) => k.term) : [] };
+      return { ...x, text, lines: linesOf(text), found: posting ? termsIn(text, posting.keywords).map((k) => k.term) : [] };
     })
     .sort((a, b) => (byMatch ? match(b.bullet) - match(a.bullet) : 0) || strength(b.bullet) - strength(a.bullet) || match(b.bullet) - match(a.bullet));
 
@@ -379,7 +376,7 @@ function drawBench(room) {
     <div class="st-sections"></div>
     <div class="st-skills"></div>
     <ol></ol>`;
-  box.querySelectorAll("[data-bench-by]").forEach((b) => b.addEventListener("click", () => ((state.benchBy = b.dataset.benchBy), regrade())));
+  box.querySelectorAll("[data-bench-by]").forEach((b) => b.addEventListener("click", () => ((state.benchBy = b.dataset.benchBy), refresh())));
   box.querySelector("[data-reset-order]")?.addEventListener("click", resetOrder);
 
   // sections: auto follows the usual rules (and says what they decided); on or off overrides them
@@ -402,18 +399,21 @@ function drawBench(room) {
   }
   drawSkills(box.querySelector(".st-skills"), lens);
   const ol = box.querySelector("ol");
+  const lean = leanings();
   for (const x of list) {
-    const fits = x.fit.lines <= free;
+    const fits = x.lines <= free;
     const li = document.createElement("li");
-    li.className = `is-${x.fit.grade}${fits ? " fits" : ""}`;
+    li.className = fits ? "fits" : "";
+    const l = lean.get(x.key);
     const meta = [
-      `${plural(x.fit.lines, "line")}${fits ? " · fits" : ""}`,
+      `${plural(x.lines, "line")}${fits ? " · fits" : ""}`,
       `${lens} ${strength(x.bullet)}`,
       posting ? x.found.join(", ") || "no keywords" : "",
+      l && Math.abs(l.lean) >= 0.05 ? `${l.lean > 0 ? "added" : "removed"} on ${plural(l.jobs, "similar job")}` : "",
       drop.includes(x.key) ? "removed" : "",
       x.bullet.draft ? "draft" : "",
     ].filter(Boolean);
-    li.innerHTML = `<p class="st-offers__grade">${esc(meta.join(" · "))}</p><p class="st-bench__text">${esc(x.text)}</p><p class="st-bench__where">${esc(x.entry.org)} · ${esc(x.entry.role)}</p>`;
+    li.innerHTML = `<p class="st-offers__meta">${esc(meta.join(" · "))}</p><p class="st-bench__text">${esc(x.text)}</p><p class="st-bench__where">${esc(x.entry.org)} · ${esc(x.entry.role)}</p>`;
     li.prepend(button("Add", () => pick(x.key, true), "st-bench__add"));
     ol.append(li);
   }
@@ -441,23 +441,29 @@ function arrows(kind, key, i, n) {
   });
 }
 
-/** The gutter note beside one bullet: a bar colored by its line fit, its keywords, and its wordings. */
-function chip(el, g, y) {
+/**
+ * The gutter note beside one bullet: move it, its wordings, remove it, and
+ * the job's keywords it hits. Its bar turns amber when the wording on the
+ * page drops one of the fact's numbers or breaks a rule.
+ */
+function chip(el, y) {
   const key = keyOf(el);
+  const { bullet } = bulletOf(key);
+  const text = el.textContent.replace(/\s+/g, " ").trim();
+  const s = substance(text, bullet.wordings.map((w) => w.text));
+  const problems = [...(s.drops.length ? [`drops ${s.drops.join(", ")}`] : []), ...s.flags];
   const box = document.createElement("div");
-  box.className = `st-chip is-${g.grade}`;
+  box.className = `st-chip${problems.length ? " is-warn" : ""}`;
+  box.title = problems.length ? `This wording ${problems.join("; ")}` : "";
   box.style.top = `${y}px`;
   box.style.minHeight = `${el.getBoundingClientRect().height - 4}px`; // the bar runs the bullet's height, with a gap before the next
-  if (key === "summary") return box;
-
-  const { bullet } = bulletOf(key);
   // one row, so a chip is never taller than a one-line bullet: buttons, then the job's keywords it hits
   const row = document.createElement("p");
   row.className = "st-chip__ask";
   const siblings = [...el.parentElement.children];
   if (siblings.length > 1) row.append(...arrows("bullet", key, siblings.indexOf(el), siblings.length));
   const n = bullet.wordings.length;
-  row.append(button(`${n} wording${n === 1 ? "" : "s"}`, () => ((openWordings = openWordings === key ? null : key), regrade()), openWordings === key ? "is-open" : ""));
+  row.append(button(`${n} wording${n === 1 ? "" : "s"}`, () => ((openWordings = openWordings === key ? null : key), refresh()), openWordings === key ? "is-open" : ""));
   row.append(button(picks().pin.includes(key) ? "Remove (added)" : "Remove", () => pick(key, false), "st-chip__remove"));
   const found = posting ? termsIn(el.textContent, posting.keywords).map((k) => k.term).join(" · ") : "";
   if (found) row.insertAdjacentHTML("beforeend", `<span class="st-chip__terms" title="${esc(found)}">${esc(found)}</span>`);
@@ -484,26 +490,27 @@ function use(el, text, source) {
 /** Every wording of a bullet, ranked for what's on screen (the job, or the bank's vocabulary). */
 function wordingList(el, bullet) {
   const shown = el.textContent.replace(/\s+/g, " ").trim();
-  const ranked = rankWordings(bullet, terms(), fitOf);
+  const ranked = rankWordings(bullet, terms());
   const list = document.createElement("ol");
   list.className = "st-offers st-wordings";
   list.insertAdjacentHTML(
     "beforeend",
-    `<p class="st-wordings__head">Ranked by ${posting ? "this job's keywords" : "keywords"}, then line fit${bullet.draft ? " · <em>draft: not on the public page</em>" : ""}</p>`,
+    `<p class="st-wordings__head">Ranked by ${posting ? "this job's keywords" : "keywords"}, then fewest problems, then most numbers${bullet.draft ? " · <em>draft: not on the public page</em>" : ""}</p>`,
   );
   ranked.forEach((w, i) => {
     const li = document.createElement("li");
-    li.className = `is-${w.fit.grade}${w.text === shown ? " is-current" : ""}${w.coveredBy ? " is-covered" : ""}`;
+    li.className = `${w.drops.length || w.flags.length ? "is-warn" : ""}${w.text === shown ? " is-current" : ""}${w.coveredBy ? " is-covered" : ""}`;
     const meta = [
-      `${w.fit.lines} · ${Math.round(w.fit.fill * 100)}%`,
       w.terms.length ? w.terms.join(", ") : "no keywords",
+      w.drops.length ? `drops ${w.drops.join(", ")}` : "",
+      ...w.flags,
       w.used ? `sent ${w.used}×` : "",
       w.source,
       w.coveredBy ? `covered by #${ranked.findIndex((x) => x.text === w.coveredBy) + 1}` : "",
       w.text === shown ? "on the page" : "",
     ].filter(Boolean);
     const pick = button("", () => use(el, w.text, w.source));
-    pick.innerHTML = `<span class="st-offers__grade">#${i + 1} · ${esc(meta.join(" · "))}</span>`;
+    pick.innerHTML = `<span class="st-offers__meta">#${i + 1} · ${esc(meta.join(" · "))}</span>`;
     pick.append(w.text);
     li.append(pick);
     if (w.text !== shown && bullet.wordings.length > 1)
@@ -511,7 +518,7 @@ function wordingList(el, bullet) {
         button("×", () => {
           bullet.wordings = bullet.wordings.filter((x) => x.text !== w.text);
           setDirty(true);
-          regrade();
+          refresh();
         }, "st-wordings__drop"),
       );
     list.append(li);
@@ -634,8 +641,16 @@ async function readPosting(text) {
   await choosePosting(p.id);
 }
 
-/** Record what went out: each line's wording counts as sent once more. */
+/**
+ * Record what went out: each line's wording counts as sent once more. A
+ * job counts once: sending it again first takes back what the last send
+ * counted, so the counts say how many jobs a wording went to.
+ */
 async function markSent() {
+  for (const { key, text } of posting.sent?.lines || []) {
+    const w = bulletOf(key).bullet?.wordings.find((x) => x.text === text);
+    if (w?.used) w.used--;
+  }
   const lines = [...paper.querySelectorAll("li[data-id]")].map((li) => ({ key: li.dataset.id, text: li.textContent.replace(/\s+/g, " ").trim() }));
   for (const { key, text } of lines) {
     const { bullet } = bulletOf(key);
@@ -663,7 +678,7 @@ paper.addEventListener("input", (e) => {
     postingDirty = true;
   } else bulletOf(el.dataset.id).bullet.text = text;
   setDirty(true);
-  regrade();
+  refresh();
 });
 // a bullet is one line of text: Enter finishes editing instead of splitting it
 paper.addEventListener("keydown", (e) => {
@@ -673,11 +688,8 @@ window.addEventListener("keydown", (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === "s") (e.preventDefault(), save());
 });
 window.addEventListener("beforeunload", (e) => (dirty || postingDirty) && e.preventDefault());
-window.addEventListener("resize", regrade);
+window.addEventListener("resize", refresh);
 saveBtn.addEventListener("click", save);
-// printing: just the page, without the marks
-window.addEventListener("beforeprint", () => CSS.highlights?.clear());
-window.addEventListener("afterprint", regrade);
 
 // ── Controls ────────────────────────────────────────────────
 function controls() {
