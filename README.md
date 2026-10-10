@@ -46,7 +46,7 @@ My portfolio: a career told as four illustrated chapters, a résumé that re-ran
 - Fold a paper crane whose folds are real reflections across crane creases (`fold.js`).
 - Leave a page alone and it fills with a fish tank.
 
-**The résumé engine** (`src/resume/`, `tools/`). Each bullet is one fact with any number of wordings. `compose()` ranks facts for a focus and trims the weakest until the page fits. `rankWordings()` picks the wording by the job's keywords first (applicant tracking systems match words literally), then line fit, which is measured on the real page at exactly 8.5 inches. A private studio (`studio.html`, dev server only, never built) edits the bank and asks Claude to read job descriptions or reword a line to fit. Its Vite plugin backend keeps the API key server-side and logs every call's tokens.
+**The résumé engine** (`src/resume/`). Each bullet is one fact with any number of wordings. `compose()` ranks facts for a focus and trims the weakest until the page fits. `rankWordings()` picks the wording on substance: the job's keywords first (applicant tracking systems match words literally), then the fewest problems (a dropped number, a banned word), then the most numbers. I edit the bank in a private studio that isn't in this repo; `vite.config.js` loads it on my machine if it's there, and the site builds the same without it.
 
 **Link previews** (`tools/og.py`). Share images are drawn with Pillow in the site's own fonts and colors. Each page carries Open Graph and Twitter card tags.
 
@@ -72,7 +72,6 @@ Share images: `python tools/og.py` (needs Pillow; it fetches the fonts the first
 
 ```
 index.html career.html resume.html projects.html eggs.html   one entry per page
-studio.html            my private résumé editor (dev server only)
 src/
   engine/              scroll director, beat conductor, card deck, math
   scenes/              the four career chapters (houghton, blg, uch, chaos)
@@ -84,7 +83,7 @@ src/
   site/                header menu, sound, secrets registry, console API, margin rain
   secrets/             each secret's interaction
   styles/              one stylesheet per page, plus shared base and blueprint
-tools/                 studio backend (Vite plugin), Claude prompts, résumé mining, share images
+tools/                 share images (og.py)
 public/                photos, project screenshots, live demos, share images, the résumé PDF
 ```
 
